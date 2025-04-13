@@ -8,21 +8,23 @@ import { Control } from "react-hook-form";
 
 // Country code data
 const countryCodes = [
+  // US and UK
   { code: "+1", flag: "🇺🇸", name: "United States" },
   { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
+  
+  // GCC countries
+  { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
+  { code: "+971", flag: "🇦🇪", name: "United Arab Emirates" },
+  { code: "+974", flag: "🇶🇦", name: "Qatar" },
+  { code: "+968", flag: "🇴🇲", name: "Oman" },
+  { code: "+965", flag: "🇰🇼", name: "Kuwait" },
+  { code: "+973", flag: "🇧🇭", name: "Bahrain" },
+  
+  // South Asian countries
   { code: "+91", flag: "🇮🇳", name: "India" },
-  { code: "+61", flag: "🇦🇺", name: "Australia" },
-  { code: "+86", flag: "🇨🇳", name: "China" },
-  { code: "+49", flag: "🇩🇪", name: "Germany" },
-  { code: "+33", flag: "🇫🇷", name: "France" },
-  { code: "+81", flag: "🇯🇵", name: "Japan" },
-  { code: "+39", flag: "🇮🇹", name: "Italy" },
-  { code: "+34", flag: "🇪🇸", name: "Spain" },
-  { code: "+7", flag: "🇷🇺", name: "Russia" },
-  { code: "+55", flag: "🇧🇷", name: "Brazil" },
-  { code: "+52", flag: "🇲🇽", name: "Mexico" },
-  { code: "+82", flag: "🇰🇷", name: "South Korea" },
-  { code: "+31", flag: "🇳🇱", name: "Netherlands" }
+  { code: "+92", flag: "🇵🇰", name: "Pakistan" },
+  { code: "+880", flag: "🇧🇩", name: "Bangladesh" },
+  { code: "+94", flag: "🇱🇰", name: "Sri Lanka" }
 ];
 
 interface PhoneInputProps {
