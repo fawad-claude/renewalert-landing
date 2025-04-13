@@ -34,10 +34,11 @@ export function HeroSection() {
             </div>
 
             <div className="space-y-6 hidden lg:block">
+              <h3 className="text-lg font-medium text-gray-700 mb-2">Key Benefits</h3>
               <FeatureItem 
                 icon={<ShieldCheck className="text-primary" />}
-                title="Flexible Storage"
-                description="Save data locally or in the cloud, based on your preference"
+                title="Secure & Flexible Storage"
+                description="Save data locally or in the cloud, based on your preference. Your data is encrypted and protected."
               />
               <FeatureItem 
                 icon={<Bell className="text-primary" />}
@@ -49,11 +50,6 @@ export function HeroSection() {
                 title="Mobile Friendly"
                 description="Manage everything from your phone"
               />
-              <FeatureItem 
-                icon={<ShieldCheck className="text-primary" />}
-                title="Secure Storage"
-                description="Your data is encrypted and protected"
-              />
             </div>
           </div>
 
@@ -64,37 +60,32 @@ export function HeroSection() {
         </div>
 
         {/* Features section for mobile only */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6 lg:hidden">
-          <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-              <ShieldCheck size={20} />
+        <div className="mt-12 lg:hidden">
+          <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">Key Benefits</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
+                <ShieldCheck size={20} />
+              </div>
+              <h3 className="font-semibold text-gray-800">Secure & Flexible Storage</h3>
+              <p className="text-gray-600 text-sm">Save data locally or in the cloud, based on your preference. Your data is encrypted and protected.</p>
             </div>
-            <h3 className="font-semibold text-gray-800">Flexible Storage</h3>
-            <p className="text-gray-600 text-sm">Save data locally or in the cloud, based on your preference</p>
-          </div>
-        
-          <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-              <Bell size={20} />
-            </div>
-            <h3 className="font-semibold text-gray-800">Timely Notifications</h3>
-            <p className="text-gray-600 text-sm">Get alerts before your IDs expire</p>
-          </div>
           
-          <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-              <Smartphone size={20} />
+            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
+                <Bell size={20} />
+              </div>
+              <h3 className="font-semibold text-gray-800">Timely Notifications</h3>
+              <p className="text-gray-600 text-sm">Get alerts before your IDs expire</p>
             </div>
-            <h3 className="font-semibold text-gray-800">Mobile Friendly</h3>
-            <p className="text-gray-600 text-sm">Manage everything from your phone</p>
-          </div>
-          
-          <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-              <ShieldCheck size={20} />
+            
+            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
+                <Smartphone size={20} />
+              </div>
+              <h3 className="font-semibold text-gray-800">Mobile Friendly</h3>
+              <p className="text-gray-600 text-sm">Manage everything from your phone</p>
             </div>
-            <h3 className="font-semibold text-gray-800">Secure Storage</h3>
-            <p className="text-gray-600 text-sm">Your data is encrypted and protected</p>
           </div>
         </div>
       </div>
