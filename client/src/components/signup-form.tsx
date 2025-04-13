@@ -7,9 +7,10 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { phoneNumberValidationSchema } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 
@@ -22,11 +23,12 @@ export function SignupForm() {
     defaultValues: {
       countryCode: "+1",
       phoneNumber: "",
+      notes: "",
     },
   });
 
   const mutation = useMutation({
-    mutationFn: (data: { countryCode: string; phoneNumber: string }) =>
+    mutationFn: (data: { countryCode: string; phoneNumber: string; notes?: string }) =>
       apiRequest("POST", "/api/signup", data),
     onSuccess: () => {
       setIsSuccess(true);
@@ -44,7 +46,7 @@ export function SignupForm() {
     },
   });
 
-  function onSubmit(data: { countryCode: string; phoneNumber: string }) {
+  function onSubmit(data: { countryCode: string; phoneNumber: string; notes?: string }) {
     mutation.mutate(data);
   }
 

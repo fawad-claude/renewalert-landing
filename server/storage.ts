@@ -47,6 +47,7 @@ export class MemStorage implements IStorage {
       id, 
       countryCode: phoneNumberData.countryCode, 
       phoneNumber: phoneNumberData.phoneNumber,
+      notes: phoneNumberData.notes || null,
       createdAt: phoneNumberData.createdAt
     };
     
