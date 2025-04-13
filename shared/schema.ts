@@ -10,9 +10,11 @@ export const users = pgTable("users", {
 
 export const phoneNumbers = pgTable("phone_numbers", {
   id: serial("id").primaryKey(),
-  countryCode: text("country_code").notNull(),
-  phoneNumber: text("phone_number").notNull(),
+  countryCode: text("country_code"),
+  phoneNumber: text("phone_number"),
+  email: text("email"),
   notes: text("notes"),
+  optIn: boolean("opt_in").default(false),
   createdAt: text("created_at").notNull(),
 });
 
@@ -24,14 +26,34 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertPhoneNumberSchema = createInsertSchema(phoneNumbers).pick({
   countryCode: true,
   phoneNumber: true,
+  email: true,
   notes: true,
+  optIn: true,
 });
+
+// Custom validation to require either phone or email
+const phoneOrEmailRefine = (data: { phoneNumber?: string; countryCode?: string; email?: string }) => {
+  // Check if either both phone fields are filled or email is filled
+  const hasPhone = data.phoneNumber && data.phoneNumber.length > 0 && data.countryCode && data.countryCode.length > 0;
+  const hasEmail = data.email && data.email.length > 0;
+  
+  return hasPhone || hasEmail;
+};
 
 // Extend the schema with validation rules
 export const phoneNumberValidationSchema = insertPhoneNumberSchema.extend({
-  phoneNumber: z.string().min(6, { message: "Phone number must be at least 6 digits" }).max(15, { message: "Phone number must be at most 15 digits" }).regex(/^[0-9]+$/, { message: "Phone number must contain only digits" }),
-  countryCode: z.string().min(2, { message: "Country code is required" }),
+  phoneNumber: z.string()
+    .min(6, { message: "Phone number must be at least 6 digits" })
+    .max(15, { message: "Phone number must be at most 15 digits" })
+    .regex(/^[0-9]+$/, { message: "Phone number must contain only digits" })
+    .optional(),
+  countryCode: z.string().min(2, { message: "Country code is required if phone number is provided" }).optional(),
+  email: z.string().email({ message: "Please enter a valid email address" }).optional(),
   notes: z.string().optional(),
+  optIn: z.boolean().optional().default(false),
+}).refine(phoneOrEmailRefine, {
+  message: "Either a phone number or an email address is required",
+  path: ["phoneNumber"], // Show error on phone field
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

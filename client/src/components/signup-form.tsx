@@ -11,8 +11,10 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, For
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { Link } from "wouter";
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -23,13 +25,21 @@ export function SignupForm() {
     defaultValues: {
       countryCode: "+1",
       phoneNumber: "",
+      email: "",
       notes: "",
+      optIn: false,
     },
+    mode: "onChange"
   });
 
   const mutation = useMutation({
-    mutationFn: (data: { countryCode: string; phoneNumber: string; notes?: string }) =>
-      apiRequest("POST", "/api/signup", data),
+    mutationFn: (data: { 
+      countryCode?: string; 
+      phoneNumber?: string; 
+      email?: string;
+      notes?: string;
+      optIn?: boolean;
+    }) => apiRequest("POST", "/api/signup", data),
     onSuccess: () => {
       setIsSuccess(true);
       toast({
@@ -46,7 +56,13 @@ export function SignupForm() {
     },
   });
 
-  function onSubmit(data: { countryCode: string; phoneNumber: string; notes?: string }) {
+  function onSubmit(data: { 
+    countryCode?: string; 
+    phoneNumber?: string; 
+    email?: string;
+    notes?: string;
+    optIn?: boolean;
+  }) {
     mutation.mutate(data);
   }
 
@@ -72,7 +88,32 @@ export function SignupForm() {
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="p-3 bg-amber-50 border border-amber-100 rounded-md mb-2 text-sm text-amber-800">
+              Please provide either a phone number or an email address. Both fields are not required, but at least one must be filled in.
+            </div>
+            
             <PhoneInput control={form.control} />
+            
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="email" 
+                      placeholder="Your email address" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    We'll send you notification reminders to this email
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
             <FormField
               control={form.control}
@@ -92,6 +133,29 @@ export function SignupForm() {
               )}
             />
             
+            <FormField
+              control={form.control}
+              name="optIn"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-2 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Opt-in for Notifications
+                    </FormLabel>
+                    <FormDescription>
+                      I agree to receive renewal notifications via email, SMS, or WhatsApp.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            
             <div className="flex items-start space-x-2">
               <Checkbox 
                 id="privacy-policy" 
@@ -102,7 +166,7 @@ export function SignupForm() {
                   htmlFor="privacy-policy" 
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  I agree to the <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+                  I agree to the <a href="#privacy" className="text-primary hover:underline">Privacy Policy</a>
                 </Label>
               </div>
             </div>
