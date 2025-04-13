@@ -10,6 +10,7 @@ export const users = pgTable("users", {
 
 export const phoneNumbers = pgTable("phone_numbers", {
   id: serial("id").primaryKey(),
+  fullName: text("full_name"),
   countryCode: text("country_code"),
   phoneNumber: text("phone_number"),
   email: text("email"),
@@ -24,6 +25,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 });
 
 export const insertPhoneNumberSchema = createInsertSchema(phoneNumbers).pick({
+  fullName: true,
   countryCode: true,
   phoneNumber: true,
   email: true,
@@ -42,6 +44,7 @@ const phoneOrEmailRefine = (data: { phoneNumber?: string; countryCode?: string; 
 
 // Extend the schema with validation rules
 export const phoneNumberValidationSchema = insertPhoneNumberSchema.extend({
+  fullName: z.string().min(2, { message: "Please enter your full name" }),
   phoneNumber: z.string()
     .min(6, { message: "Phone number must be at least 6 digits" })
     .max(15, { message: "Phone number must be at most 15 digits" })

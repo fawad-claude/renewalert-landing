@@ -23,6 +23,7 @@ export function SignupForm() {
   const form = useForm({
     resolver: zodResolver(phoneNumberValidationSchema),
     defaultValues: {
+      fullName: "",
       countryCode: "+1",
       phoneNumber: "",
       email: "",
@@ -34,6 +35,7 @@ export function SignupForm() {
 
   const mutation = useMutation({
     mutationFn: (data: { 
+      fullName: string;
       countryCode?: string; 
       phoneNumber?: string; 
       email?: string;
@@ -57,6 +59,7 @@ export function SignupForm() {
   });
 
   function onSubmit(data: { 
+    fullName: string;
     countryCode?: string; 
     phoneNumber?: string; 
     email?: string;
@@ -92,6 +95,23 @@ export function SignupForm() {
               Please provide either a phone number or an email address. Both fields are not required, but at least one must be filled in.
             </div>
             
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Your full name" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
             <PhoneInput control={form.control} />
             
             <FormField
@@ -107,9 +127,6 @@ export function SignupForm() {
                       {...field} 
                     />
                   </FormControl>
-                  <FormDescription>
-                    We'll send you notification reminders to this email
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -146,10 +163,10 @@ export function SignupForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Opt-in for Notifications
+                      Opt-in for receiving Notifications
                     </FormLabel>
                     <FormDescription>
-                      I agree to receive renewal notifications via email, SMS, or WhatsApp.
+                      I agree to receive product launch notifications via Email, SMS or WhatsApp.
                     </FormDescription>
                   </div>
                 </FormItem>

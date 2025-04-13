@@ -45,6 +45,7 @@ export class MemStorage implements IStorage {
     const id = this.currentPhoneNumberId++;
     const phoneNumber: PhoneNumber = { 
       id, 
+      fullName: phoneNumberData.fullName ?? null,
       countryCode: phoneNumberData.countryCode ?? null, 
       phoneNumber: phoneNumberData.phoneNumber ?? null,
       email: phoneNumberData.email ?? null,
