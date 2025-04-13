@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "wouter";
+import logoPath from "@assets/Renewal Alert Logo.png";
 
 export function Navbar() {
   return (
@@ -8,7 +9,13 @@ export function Navbar() {
         <div className="flex justify-center h-16">
           <div className="flex items-center">
             <Link href="/">
-              <a className="text-primary font-bold text-xl">RenewAlert</a>
+              <a className="flex items-center">
+                <img 
+                  src={logoPath} 
+                  alt="RenewAlert Logo" 
+                  className="h-10" 
+                />
+              </a>
             </Link>
           </div>
         </div>

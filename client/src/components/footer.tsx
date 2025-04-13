@@ -23,18 +23,7 @@ export function Footer() {
             </a>
           </div>
         </div>
-        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex space-x-4 mb-4 md:mb-0">
-            <Link href="#privacy">
-              <a className="text-sm text-gray-500 hover:text-primary">Privacy Policy</a>
-            </Link>
-            <Link href="#terms">
-              <a className="text-sm text-gray-500 hover:text-primary">Terms of Service</a>
-            </Link>
-            <Link href="#contact">
-              <a className="text-sm text-gray-500 hover:text-primary">Contact Us</a>
-            </Link>
-          </div>
+        <div className="mt-4 pt-4 border-t border-gray-200 flex justify-center items-center">
           <div>
             <span className="text-sm text-gray-500">Made with ❤️ for hassle-free renewals</span>
           </div>

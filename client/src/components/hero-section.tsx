@@ -2,6 +2,7 @@ import React from "react";
 import { SignupForm } from "./signup-form";
 import { FeatureItem } from "./feature-item";
 import { Bell, ShieldCheck, Smartphone } from "lucide-react";
+import logoPath from "@assets/Renewal Alert Logo.png";
 
 export function HeroSection() {
   return (
@@ -11,6 +12,13 @@ export function HeroSection() {
           {/* Left content section */}
           <div className="flex-1 max-w-2xl">
             <div className="text-center lg:text-left mb-8">
+              <div className="flex justify-center lg:justify-start mb-4">
+                <img 
+                  src={logoPath} 
+                  alt="RenewAlert Logo" 
+                  className="h-16 mb-4" 
+                />
+              </div>
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Coming Soon
               </span>
@@ -24,31 +32,38 @@ export function HeroSection() {
 
             <div className="prose prose-lg max-w-none text-gray-600 mb-8 text-center lg:text-left">
               <p>
-                Are you tired of the last-minute scramble to renew your passport, visa, or other important documents?{" "}
-                <span className="font-medium">We have the perfect solution for you!</span>
+                Are you tired of the last-minute scramble to renew your
+                passport, visa, or other important documents?{" "}
+                <span className="font-medium">
+                  We have the perfect solution for you!
+                </span>
               </p>
               <p>
-                Our upcoming app is designed to send you timely reminders for all your important renewals, 
-                helping you stay ahead and stress-free. Be the first to experience the convenience of staying organized with ease.
+                Our upcoming mobile app is designed to send you timely reminders
+                for all your important renewals, helping you stay ahead and
+                stress-free. Be the first to experience the convenience of
+                staying organized with ease.
               </p>
             </div>
 
             <div className="space-y-6 hidden lg:block">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Key Benefits</h3>
-              <FeatureItem 
+              <h3 className="text-lg font-medium text-gray-700 mb-2">
+                Key Benefits
+              </h3>
+              <FeatureItem
                 icon={<ShieldCheck className="text-primary" />}
                 title="Secure & Flexible Storage"
                 description="Save data locally or in the cloud, based on your preference. Your data is encrypted and protected."
               />
-              <FeatureItem 
+              <FeatureItem
                 icon={<Bell className="text-primary" />}
                 title="Timely Notifications"
-                description="Get alerts before your IDs expire"
+                description="Setup Multiple reminders and get alerts before your IDs expire."
               />
-              <FeatureItem 
+              <FeatureItem
                 icon={<Smartphone className="text-primary" />}
                 title="Mobile Friendly"
-                description="Manage everything from your phone"
+                description="Manage everything from your phone."
               />
             </div>
           </div>
@@ -61,30 +76,43 @@ export function HeroSection() {
 
         {/* Features section for mobile only */}
         <div className="mt-12 lg:hidden">
-          <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">Key Benefits</h3>
+          <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">
+            Key Benefits
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white shadow-sm rounded-lg p-4 text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
                 <ShieldCheck size={20} />
               </div>
-              <h3 className="font-semibold text-gray-800">Secure & Flexible Storage</h3>
-              <p className="text-gray-600 text-sm">Save data locally or in the cloud, based on your preference. Your data is encrypted and protected.</p>
+              <h3 className="font-semibold text-gray-800">
+                Secure & Flexible Storage
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Save data locally or in the cloud, based on your preference.
+                Your data is encrypted and protected.
+              </p>
             </div>
-          
+
             <div className="bg-white shadow-sm rounded-lg p-4 text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
                 <Bell size={20} />
               </div>
-              <h3 className="font-semibold text-gray-800">Timely Notifications</h3>
-              <p className="text-gray-600 text-sm">Get alerts before your IDs expire</p>
+              <h3 className="font-semibold text-gray-800">
+                Timely Notifications
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Get alerts before your IDs expire
+              </p>
             </div>
-            
+
             <div className="bg-white shadow-sm rounded-lg p-4 text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
                 <Smartphone size={20} />
               </div>
               <h3 className="font-semibold text-gray-800">Mobile Friendly</h3>
-              <p className="text-gray-600 text-sm">Manage everything from your phone</p>
+              <p className="text-gray-600 text-sm">
+                Manage everything from your phone
+              </p>
             </div>
           </div>
         </div>
