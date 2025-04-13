@@ -166,7 +166,7 @@ export function SignupForm() {
                   htmlFor="privacy-policy" 
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  I agree to the <a href="#privacy" className="text-primary hover:underline">Privacy Policy</a>
+                  I agree to the <a href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</a>
                 </Label>
               </div>
             </div>
