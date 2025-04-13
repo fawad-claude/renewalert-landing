@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "wouter";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Instagram } from "lucide-react";
 
 export function Footer() {
   return (
@@ -13,16 +13,13 @@ export function Footer() {
           </div>
           <div className="flex space-x-6">
             <a href="#" className="text-gray-400 hover:text-primary">
-              <Twitter size={20} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-primary">
-              <Facebook size={20} />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x">
+                <path d="M18 6 6 18"/>
+                <path d="m6 6 12 12"/>
+              </svg>
             </a>
             <a href="#" className="text-gray-400 hover:text-primary">
               <Instagram size={20} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-primary">
-              <Linkedin size={20} />
             </a>
           </div>
         </div>

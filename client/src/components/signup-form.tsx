@@ -74,6 +74,24 @@ export function SignupForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <PhoneInput control={form.control} />
             
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Note to Developers</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Any suggestions/comments, please add here." 
+                      className="resize-none" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
             <div className="flex items-start space-x-2">
               <Checkbox 
                 id="privacy-policy" 
