@@ -2,23 +2,17 @@ import React from "react";
 import { SignupForm } from "./signup-form";
 import { FeatureItem } from "./feature-item";
 import { Bell, ShieldCheck, Smartphone } from "lucide-react";
-import logoPath from "@assets/Renewal Alert Logo.png";
+import logoPath from "@assets/Renewal Alert Logo - no BG.png";
 
 export function HeroSection() {
   return (
-    <div className="pt-24 flex-grow flex items-center justify-center bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm">
+    <div className="pt-32 flex-grow flex items-center justify-center bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm">
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16">
           {/* Left content section */}
           <div className="flex-1 max-w-2xl">
             <div className="text-center lg:text-left mb-8">
-              <div className="flex justify-center lg:justify-start mb-4">
-                <img 
-                  src={logoPath} 
-                  alt="RenewAlert Logo" 
-                  className="h-16 mb-4" 
-                />
-              </div>
+
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Coming Soon
               </span>
