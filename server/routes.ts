@@ -1,8 +1,10 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { phoneNumberValidationSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
+import { logSignup, getSignups } from "./utils/signup-logger";
+import { validateApiKey } from "./utils/api-key";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API route to handle phone number submissions
@@ -19,6 +21,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Store the phone number
       const result = await storage.savePhoneNumber(phoneNumberWithTimestamp);
+      
+      // Log the signup
+      logSignup(phoneNumberWithTimestamp);
 
       // Return success response
       return res.status(201).json({
@@ -65,6 +70,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({
         success: false,
         message: "Failed to retrieve phone numbers",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Admin endpoint to get all signups with API key protection
+  app.get("/api/admin/signups", (req: Request, res: Response) => {
+    // Check for API key in header
+    const apiKey = req.headers["x-api-key"] as string;
+    
+    if (!apiKey || !validateApiKey(apiKey)) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized. Valid API key required."
+      });
+    }
+    
+    try {
+      const signups = getSignups();
+      return res.status(200).json({
+        success: true,
+        count: signups.length,
+        data: signups
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to retrieve signups",
         error: error instanceof Error ? error.message : "Unknown error"
       });
     }
