@@ -35,7 +35,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof Error) {
         // Handle validation errors
         if (error.name === "ZodError") {
-          const validationError = fromZodError(error);
+          const validationError = fromZodError(error as any);
           return res.status(400).json({
             success: false,
             message: "Validation Error",
