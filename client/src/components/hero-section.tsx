@@ -21,7 +21,7 @@ export function HeroSection() {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                 {t("hero_title")}
               </h1>
-              <h2 className="text-sm md:text-base text-gray-600 mb-2">
+              <h2 className="text-base md:text-lg text-gray-600 mb-2">
                 {t("hero_subtitle")}
               </h2>
             </div>
