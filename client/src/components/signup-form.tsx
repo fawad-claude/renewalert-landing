@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -15,16 +15,18 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "wouter";
+import { getLocationBasedDialCode } from "@/lib/geolocation";
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
   const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(phoneNumberValidationSchema),
     defaultValues: {
       fullName: "",
-      countryCode: "+965", // Kuwait country code as default
+      countryCode: "+965", // Kuwait as fallback default
       phoneNumber: "",
       email: "",
       notes: "",
@@ -32,6 +34,25 @@ export function SignupForm() {
     },
     mode: "onChange"
   });
+  
+  // Load user's country based on location
+  useEffect(() => {
+    async function loadUserCountry() {
+      try {
+        setIsLoadingLocation(true);
+        const dialCode = await getLocationBasedDialCode();
+        form.setValue('countryCode', dialCode);
+      } catch (error) {
+        console.error('Error setting location-based country:', error);
+        // Default to Kuwait if there's an error
+        form.setValue('countryCode', '+965');
+      } finally {
+        setIsLoadingLocation(false);
+      }
+    }
+    
+    loadUserCountry();
+  }, [form]);
 
   const mutation = useMutation({
     mutationFn: (data: { 
@@ -115,7 +136,7 @@ export function SignupForm() {
               )}
             />
             
-            <PhoneInput control={form.control} />
+            <PhoneInput control={form.control} isLoading={isLoadingLocation} />
             
             <FormField
               control={form.control}

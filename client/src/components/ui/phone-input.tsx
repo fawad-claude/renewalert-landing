@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Control } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 
 // Country code data
 const countryCodes = [
@@ -30,9 +31,10 @@ const countryCodes = [
 interface PhoneInputProps {
   control: Control<any>;
   className?: string;
+  isLoading?: boolean;
 }
 
-export function PhoneInput({ control, className }: PhoneInputProps) {
+export function PhoneInput({ control, className, isLoading = false }: PhoneInputProps) {
   const [selectedCountry, setSelectedCountry] = useState<{ code: string; flag: string; name: string } | null>(null);
 
   // Function to find country by code
@@ -56,16 +58,25 @@ export function PhoneInput({ control, className }: PhoneInputProps) {
 
             return (
               <FormItem>
-                <FormLabel>Country</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Country</FormLabel>
+                  {isLoading && (
+                    <span className="text-xs text-primary flex items-center">
+                      <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      Detecting location...
+                    </span>
+                  )}
+                </div>
                 <Select 
                   onValueChange={(value) => {
                     field.onChange(value);
                     setSelectedCountry(findCountryByCode(value));
                   }} 
                   defaultValue={field.value}
+                  disabled={isLoading}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className={isLoading ? "opacity-70" : ""}>
                       {selectedCountry ? (
                         <span className="flex items-center">
                           <span className="mr-2 text-lg">{selectedCountry.flag}</span>
