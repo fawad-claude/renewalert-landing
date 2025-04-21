@@ -5,6 +5,7 @@ import { phoneNumberValidationSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 import { logSignup, getSignups } from "./utils/signup-logger";
 import { validateApiKey } from "./utils/api-key";
+import rateLimit from "express-rate-limit";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API route to handle phone number submissions
@@ -77,8 +78,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // API route to get all phone numbers (for admin/testing purposes)
-  app.get("/api/phone-numbers", async (_req: Request, res: Response) => {
+  // API route to get all phone numbers (protected, for admin purposes only)
+  app.get("/api/phone-numbers", async (req: Request, res: Response) => {
+    // Check for API key in header
+    const apiKey = req.headers["x-api-key"] as string;
+    
+    if (!apiKey || !validateApiKey(apiKey)) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized. Valid API key required."
+      });
+    }
+    
     try {
       const phoneNumbers = await storage.getAllPhoneNumbers();
       return res.status(200).json({

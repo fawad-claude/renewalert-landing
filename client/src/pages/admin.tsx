@@ -99,6 +99,57 @@ export default function AdminPage() {
     enabled: isAuthenticated, // Only run query when authenticated
   });
 
+  // Display login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto py-10 px-4 flex items-center justify-center min-h-[80vh]">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <div className="flex items-center justify-center mb-6">
+            <ShieldAlert className="h-10 w-10 text-primary mr-2" />
+            <h1 className="text-2xl font-bold text-gray-800">Admin Authentication</h1>
+          </div>
+          
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <Lock className="h-5 w-5 text-blue-500" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-blue-700">
+                  This area is restricted to authorized personnel only. Please enter your admin API key to continue.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <form onSubmit={handleAdminLogin}>
+            <div className="mb-4">
+              <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-1">
+                Admin API Key
+              </label>
+              <input
+                id="apiKey"
+                type="password"
+                value={adminKey}
+                onChange={(e) => setAdminKey(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                placeholder="Enter your admin API key"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              Login to Dashboard
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state after authentication
   if (isLoading) {
     return (
       <div className="container mx-auto py-10 px-4">
@@ -110,9 +161,22 @@ export default function AdminPage() {
     );
   }
 
+  // Show error state
   if (isError) {
     return (
       <div className="container mx-auto py-10 px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+          <div className="flex space-x-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+            >
+              <Lock size={16} /> <span>Logout</span>
+            </button>
+          </div>
+        </div>
+        
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -146,16 +210,25 @@ export default function AdminPage() {
     );
   }
 
+  // Show dashboard when authenticated and data loaded
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        <button
-          onClick={() => refetch()}
-          className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
-        >
-          <RefreshCw size={16} /> <span>Refresh</span>
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => refetch()}
+            className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
+          >
+            <RefreshCw size={16} /> <span>Refresh</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-2 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+          >
+            <Lock size={16} /> <span>Logout</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
