@@ -28,7 +28,8 @@ import { getLocationBasedDialCode } from "@/lib/geolocation";
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
-  const [inputMethod, setInputMethod] = useState<'phone' | 'email' | 'none'>('none');
+  // Default to phone input method since it's shown first
+  const [inputMethod, setInputMethod] = useState<'phone' | 'email' | 'none'>('phone');
   const { toast } = useToast();
 
   const form = useForm({
@@ -132,7 +133,17 @@ export function SignupForm() {
     notes?: string;
     optIn?: boolean;
   }) {
-    mutation.mutate(data);
+    // Make sure we only send what's needed based on input method
+    const submissionData = {
+      ...data,
+      // If email is selected, clear phone data
+      ...(inputMethod === 'email' && { phoneNumber: undefined, countryCode: undefined }),
+      // If phone is selected, clear email data
+      ...(inputMethod === 'phone' && { email: undefined })
+    };
+    
+    console.log('Submitting form data:', submissionData);
+    mutation.mutate(submissionData);
   }
 
   if (isSuccess) {
