@@ -273,10 +273,10 @@ export function SignupForm() {
             <CheckCircle size={48} />
           </div>
           <h3 className="text-2xl font-bold text-gray-800 mb-3">
-            Thank You!
+            {t("success")}
           </h3>
           <p className="text-lg text-gray-700 mb-2">
-            Your signup was successful!
+            {t("success")}
           </p>
           <p className="text-gray-600">
             We'll notify you when we launch RenewAlert.
@@ -371,11 +371,11 @@ export function SignupForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("email")}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Your email address"
+                        placeholder={t("email")}
                         {...field}
                       />
                     </FormControl>
@@ -390,10 +390,10 @@ export function SignupForm() {
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Note to Developers</FormLabel>
+                  <FormLabel>{t("notes")}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Any suggestions/comments, please add here."
+                      placeholder={t("enter_notes")}
                       className="resize-none"
                       {...field}
                     />
@@ -417,7 +417,7 @@ export function SignupForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Opt-in for receiving Notifications{" "}
+                      {t("opt_in")}{" "}
                       <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
@@ -444,7 +444,7 @@ export function SignupForm() {
                   </FormControl>
                   <div className="grid gap-1.5 leading-none">
                     <FormLabel>
-                      I agree to the{" "}
+                      {t("privacy_policy")}{" "}
                       <Link href="/privacy-policy">
                         <span className="text-primary hover:underline cursor-pointer">
                           Privacy Policy
@@ -466,7 +466,7 @@ export function SignupForm() {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  Sign up for early access
+                  {t("submit")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </>
               )}
