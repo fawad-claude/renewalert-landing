@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 // Define languages we want to support
-export type SupportedLanguage = 'en' | 'ar' | 'hi' | 'ur' | 'tl';
+export type SupportedLanguage = 'en' | 'ar' | 'hi';
 
 // Translation dictionary type
 export type TranslationDictionary = {
@@ -17,6 +17,7 @@ export const translations: TranslationDictionary = {
     "hero_title": "Never miss an important renewal again",
     "hero_subtitle": "Get timely reminders for your passports, licenses, residency permits (Iqama), and visas before they expire",
     "hero_cta": "Get Early Access",
+    "expat_paragraph": "Expats, we get it — renewing documents is a headache. Passport, License, Residency permits (Iqama), Visa — renewals can be overwhelming and easy to miss. Our upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free. Be the first to experience the convenience of staying organized with ease.",
     
     // Form Labels
     "form_title": "Sign up for early access",
@@ -46,6 +47,7 @@ export const translations: TranslationDictionary = {
     "hero_title": "لن تفوت تجديد مهم مرة أخرى",
     "hero_subtitle": "احصل على تذكيرات في الوقت المناسب لجوازات السفر والتراخيص وتصاريح الإقامة (الإقامة) والتأشيرات قبل انتهاء صلاحيتها",
     "hero_cta": "احصل على وصول مبكر",
+    "expat_paragraph": "المغتربون، نحن نفهم - تجديد الوثائق أمر مزعج. جواز السفر، الرخصة، تصاريح الإقامة (الإقامة)، التأشيرة - التجديدات يمكن أن تكون ساحقة وسهلة النسيان. تم تصميم تطبيقنا المحمول القادم لإرسال تذكيرات في الوقت المناسب لجميع التجديدات المهمة الخاصة بك، مما يساعدك على البقاء في المقدمة وخالي من التوتر. كن أول من يختبر راحة البقاء منظمًا بسهولة.",
     
     // Form Labels
     "form_title": "اشترك للوصول المبكر",
@@ -75,6 +77,7 @@ export const translations: TranslationDictionary = {
     "hero_title": "फिर कभी महत्वपूर्ण नवीनीकरण न चूकें",
     "hero_subtitle": "अपने पासपोर्ट, लाइसेंस, निवास परमिट (इकामा), और वीज़ा के लिए समय पर रिमाइंडर प्राप्त करें उनके समाप्त होने से पहले",
     "hero_cta": "शीघ्र पहुंच प्राप्त करें",
+    "expat_paragraph": "प्रवासियों, हम समझते हैं - दस्तावेज़ों का नवीनीकरण एक सिरदर्द है। पासपोर्ट, लाइसेंस, निवास परमिट (इकामा), वीज़ा - नवीनीकरण अभिभूत करने वाला और आसानी से छूट सकता है। हमारा आगामी मोबाइल ऐप आपके सभी महत्वपूर्ण नवीनीकरणों के लिए समय पर रिमाइंडर भेजने के लिए डिज़ाइन किया गया है, जिससे आपको आगे रहने और तनावमुक्त रहने में मदद मिलती है। आसानी से व्यवस्थित रहने की सुविधा का अनुभव करने वाले पहले व्यक्ति बनें।",
     
     // Form Labels
     "form_title": "शीघ्र पहुंच के लिए साइन अप करें",
@@ -98,64 +101,6 @@ export const translations: TranslationDictionary = {
     "feature_simple_desc": "बस अपने दस्तावेज अपलोड करें और हम बाकी संभाल लेंगे",
     "feature_secure_title": "सुरक्षित स्टोरेज",
     "feature_secure_desc": "आपका डेटा एन्क्रिप्टेड और सुरक्षित रूप से संग्रहीत है"
-  },
-  ur: {
-    // Hero Section
-    "hero_title": "اہم تجدید کو دوبارہ کبھی نہ چھوڑیں",
-    "hero_subtitle": "اپنے پاسپورٹ، لائسنس، رہائشی اجازت نامے (اقامہ)، اور ویزا کے لیے بروقت یاد دہانیاں حاصل کریں، ان کی میعاد ختم ہونے سے پہلے",
-    "hero_cta": "جلد رسائی حاصل کریں",
-    
-    // Form Labels
-    "form_title": "جلد رسائی کے لیے سائن اپ کریں",
-    "full_name": "پورا نام",
-    "email": "ای میل",
-    "phone": "فون نمبر",
-    "notes": "نوٹس (اختیاری)",
-    "enter_notes": "کوئی مخصوص دستاویزات درج کریں جن کا آپ ٹریک رکھتے ہیں...",
-    "notification_preference": "اطلاع کی ترجیح",
-    "email_me": "مجھے ای میل کریں",
-    "text_me": "مجھے پیغام بھیجیں",
-    "opt_in": "میں اپنے دستاویزات کی تجدید کے بارے میں اطلاعات وصول کرنے پر رضامند ہوں",
-    "privacy_policy": "میں رازداری کی پالیسی سے متفق ہوں",
-    "submit": "سائن اپ کریں",
-    "success": "شکریہ! ہم جلد ہی آپ سے رابطہ کریں گے۔",
-    
-    // Features
-    "feature_timely_title": "بروقت یاد دہانیاں",
-    "feature_timely_desc": "اپنے دستاویزات کی میعاد ختم ہونے سے پہلے اطلاعات حاصل کریں",
-    "feature_simple_title": "سادہ عمل",
-    "feature_simple_desc": "صرف اپنے دستاویزات اپ لوڈ کریں اور ہم باقی سنبھال لیں گے",
-    "feature_secure_title": "محفوظ اسٹوریج",
-    "feature_secure_desc": "آپ کا ڈیٹا انکرپٹڈ اور محفوظ طریقے سے ذخیرہ کیا جاتا ہے"
-  },
-  tl: {
-    // Hero Section - Tagalog
-    "hero_title": "Hindi na makakaligtaan ang mahalagang renewal",
-    "hero_subtitle": "Kumuha ng napapanahong mga paalala para sa iyong mga pasaporte, lisensya, permit sa paninirahan (Iqama), at visa bago ang kanilang pagpaso",
-    "hero_cta": "Kumuha ng Maagang Access",
-    
-    // Form Labels
-    "form_title": "Mag-sign up para sa maagang access",
-    "full_name": "Buong Pangalan",
-    "email": "Email",
-    "phone": "Numero ng Telepono",
-    "notes": "Mga Tala (Opsyonal)",
-    "enter_notes": "Ilagay ang anumang partikular na dokumento na sinusubaybayan mo...",
-    "notification_preference": "Kagustuhan sa Notification",
-    "email_me": "I-email ako",
-    "text_me": "I-text ako",
-    "opt_in": "Sumasang-ayon ako na tumanggap ng mga notification tungkol sa aking mga renewal ng dokumento",
-    "privacy_policy": "Sumasang-ayon ako sa Patakaran sa Pagkapribado",
-    "submit": "Mag-sign Up",
-    "success": "Salamat! Kokontakin ka namin sa lalong madaling panahon.",
-    
-    // Features
-    "feature_timely_title": "Napapanahong Paalala",
-    "feature_timely_desc": "Kumuha ng mga notification bago mag-expire ang iyong mga dokumento",
-    "feature_simple_title": "Simpleng Proseso",
-    "feature_simple_desc": "I-upload lang ang iyong mga dokumento at kami na ang bahala sa iba",
-    "feature_secure_title": "Ligtas na Storage",
-    "feature_secure_desc": "Ang iyong data ay naka-encrypt at naka-store nang ligtas"
   }
 };
 
@@ -163,9 +108,7 @@ export const translations: TranslationDictionary = {
 export const languageMap: Record<SupportedLanguage, { name: string, nativeName: string, flag: string, dir: 'ltr' | 'rtl' }> = {
   en: { name: 'English', nativeName: 'English', flag: '🇺🇸', dir: 'ltr' },
   ar: { name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦', dir: 'rtl' },
-  hi: { name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', dir: 'ltr' },
-  ur: { name: 'Urdu', nativeName: 'اردو', flag: '🇵🇰', dir: 'rtl' },
-  tl: { name: 'Tagalog', nativeName: 'Tagalog', flag: '🇵🇭', dir: 'ltr' }
+  hi: { name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', dir: 'ltr' }
 };
 
 // Interface for the language context

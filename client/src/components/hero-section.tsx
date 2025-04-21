@@ -21,21 +21,14 @@ export function HeroSection() {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                 {t("hero_title")}
               </h1>
-              <h2 className="text-xl md:text-2xl text-gray-600 mb-2">
+              <h2 className="text-sm md:text-base text-gray-600 mb-2">
                 {t("hero_subtitle")}
               </h2>
             </div>
 
-            <div className="prose prose-lg max-w-none text-gray-600 mb-8 text-center lg:text-left">
-              <p>
-                <strong>Expats, we get it — renewing documents is a headache.</strong><br />
-                <strong>Passport, License, Residency permits (Iqama), Visa</strong> — <strong>renewals can be overwhelming and easy to miss.</strong>
-              </p>
-              <p>
-                <strong>Our upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.</strong>
-              </p>
-              <p>
-                <strong>Be the first to experience the convenience of staying organized with ease.</strong>
+            <div className="prose prose-sm max-w-none text-gray-600 mb-8 text-center lg:text-left">
+              <p className="text-xs md:text-sm">
+                {t("expat_paragraph")}
               </p>
             </div>
 
