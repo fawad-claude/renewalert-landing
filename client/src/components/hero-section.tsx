@@ -25,7 +25,10 @@ export function HeroSection() {
 
             <div className="prose prose-lg max-w-none text-gray-600 mb-8 text-center lg:text-left">
               <p>
-                Living abroad? Don't let expired documents put your life on hold.{" "}
+                Living abroad? Don't let expired documents put your life on hold.
+                <br />or<br />
+                Are you tired of the last-minute scramble to renew your
+                passport, visa, or other important documents?{" "}
                 <span className="font-medium">
                   We have the perfect solution for you!
                 </span>
