@@ -125,7 +125,7 @@ export function SignupForm() {
     },
   });
 
-  function onSubmit(data: {
+  async function onSubmit(data: {
     fullName: string;
     countryCode?: string;
     phoneNumber?: string;
@@ -133,17 +133,52 @@ export function SignupForm() {
     notes?: string;
     optIn?: boolean;
   }) {
-    // Make sure we only send what's needed based on input method
-    const submissionData = {
-      ...data,
-      // If email is selected, clear phone data
-      ...(inputMethod === 'email' && { phoneNumber: undefined, countryCode: undefined }),
-      // If phone is selected, clear email data
-      ...(inputMethod === 'phone' && { email: undefined })
-    };
-    
-    console.log('Submitting form data:', submissionData);
-    mutation.mutate(submissionData);
+    try {
+      // Validate that at least one contact method is provided
+      if (inputMethod === 'phone' && (!data.phoneNumber || data.phoneNumber.trim() === '')) {
+        form.setError('phoneNumber', { 
+          type: 'manual', 
+          message: 'Please enter a phone number' 
+        });
+        return;
+      }
+      
+      if (inputMethod === 'email' && (!data.email || data.email.trim() === '')) {
+        form.setError('email', { 
+          type: 'manual', 
+          message: 'Please enter an email address' 
+        });
+        return;
+      }
+      
+      // Make sure the opt-in checkbox is checked
+      if (!data.optIn) {
+        form.setError('optIn', { 
+          type: 'manual', 
+          message: 'You must opt-in to receive notifications' 
+        });
+        return;
+      }
+      
+      // Make sure we only send what's needed based on input method
+      const submissionData = {
+        ...data,
+        // If email is selected, clear phone data
+        ...(inputMethod === 'email' && { phoneNumber: '', countryCode: '' }),
+        // If phone is selected, clear email data
+        ...(inputMethod === 'phone' && { email: '' })
+      };
+      
+      console.log('Submitting form data:', submissionData);
+      mutation.mutate(submissionData);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was a problem submitting the form. Please try again."
+      });
+    }
   }
 
   if (isSuccess) {
@@ -195,15 +230,18 @@ export function SignupForm() {
 
             {/* Contact method selection buttons */}
             <div className="flex flex-col space-y-2">
-              <div className="text-sm font-medium">Contact Method</div>
+              <div className="text-sm font-medium">Contact Method <span className="text-destructive">*</span></div>
               <div className="flex space-x-2">
                 <Button 
                   type="button"
-                  variant={inputMethod === 'phone' || inputMethod === 'none' ? "default" : "outline"}
+                  variant={inputMethod === 'phone' ? "default" : "outline"}
                   className="flex-1"
                   onClick={() => {
                     setInputMethod('phone');
                     form.setValue('email', '');
+                    // Clear any existing errors
+                    form.clearErrors('phoneNumber');
+                    form.clearErrors('email');
                   }}
                 >
                   Phone Number
@@ -215,6 +253,10 @@ export function SignupForm() {
                   onClick={() => {
                     setInputMethod('email');
                     form.setValue('phoneNumber', '');
+                    form.setValue('countryCode', '+965'); // Reset to default country code
+                    // Clear any existing errors
+                    form.clearErrors('phoneNumber');
+                    form.clearErrors('email');
                   }}
                 >
                   Email
@@ -222,9 +264,9 @@ export function SignupForm() {
               </div>
             </div>
 
-            {/* Phone input fields - shown only when phone is selected or no selection yet */}
-            {(inputMethod === 'phone' || inputMethod === 'none') && (
-              <div className={inputMethod === 'none' ? "opacity-70" : ""}>
+            {/* Phone input fields - shown only when phone is selected */}
+            {inputMethod === 'phone' && (
+              <div>
                 <PhoneInput control={form.control} isLoading={isLoadingLocation} />
               </div>
             )}

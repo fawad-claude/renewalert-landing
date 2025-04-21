@@ -33,15 +33,6 @@ export const insertPhoneNumberSchema = createInsertSchema(phoneNumbers).pick({
   optIn: true,
 });
 
-// Custom validation to require either phone or email
-const phoneOrEmailRefine = (data: { phoneNumber?: string; countryCode?: string; email?: string }) => {
-  // Check if either both phone fields are filled or email is filled
-  const hasPhone = data.phoneNumber && data.phoneNumber.length > 0 && data.countryCode && data.countryCode.length > 0;
-  const hasEmail = data.email && data.email.length > 0;
-  
-  return hasPhone || hasEmail;
-};
-
 // Extend the schema with validation rules
 export const phoneNumberValidationSchema = insertPhoneNumberSchema.extend({
   fullName: z.string().min(2, { message: "Please enter your full name" }),
@@ -56,9 +47,6 @@ export const phoneNumberValidationSchema = insertPhoneNumberSchema.extend({
   optIn: z.literal(true, {
     errorMap: () => ({ message: "You must opt-in to receive notifications to use our service" })
   }),
-}).refine(phoneOrEmailRefine, {
-  message: "Either a phone number or an email address is required",
-  path: ["phoneNumber"], // Show error on phone field
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
