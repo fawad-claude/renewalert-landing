@@ -3,8 +3,11 @@ import { SignupForm } from "./signup-form";
 import { FeatureItem } from "./feature-item";
 import { Bell, ShieldCheck, Smartphone } from "lucide-react";
 import logoPath from "@assets/Renewal Alert Logo - no BG.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HeroSection() {
+  const { t, dir } = useLanguage();
+  
   return (
     <div className="pt-32 flex-grow flex items-center justify-center bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm">
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
@@ -16,10 +19,10 @@ export function HeroSection() {
                 Coming Soon
               </span>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Never Miss an ID Renewal Again!
+                {t("hero_title")}
               </h1>
               <h2 className="text-xl md:text-2xl text-gray-600 mb-2">
-                Lost track of ID renewals? A smart solution is coming soon!
+                {t("hero_subtitle")}
               </h2>
             </div>
 
@@ -42,18 +45,18 @@ export function HeroSection() {
               </h3>
               <FeatureItem
                 icon={<ShieldCheck className="text-primary" />}
-                title="Secure & Flexible Storage"
-                description="Save data locally or in the cloud, based on your preference. Your data is encrypted and protected."
+                title={t("feature_secure_title")}
+                description={t("feature_secure_desc")}
               />
               <FeatureItem
                 icon={<Bell className="text-primary" />}
-                title="Timely Notifications"
-                description="Setup Multiple reminders and get alerts before your IDs expire."
+                title={t("feature_timely_title")}
+                description={t("feature_timely_desc")}
               />
               <FeatureItem
                 icon={<Smartphone className="text-primary" />}
-                title="Mobile Friendly"
-                description="Manage everything from your phone."
+                title={t("feature_simple_title")}
+                description={t("feature_simple_desc")}
               />
             </div>
           </div>
@@ -75,11 +78,10 @@ export function HeroSection() {
                 <ShieldCheck size={20} />
               </div>
               <h3 className="font-semibold text-gray-800">
-                Secure & Flexible Storage
+                {t("feature_secure_title")}
               </h3>
               <p className="text-gray-600 text-sm">
-                Your Data, Your Choice — on your phone or in the cloud.
-                Fully encrypted and protected.
+                {t("feature_secure_desc")}
               </p>
             </div>
 
@@ -88,10 +90,10 @@ export function HeroSection() {
                 <Bell size={20} />
               </div>
               <h3 className="font-semibold text-gray-800">
-                Timely Notifications
+                {t("feature_timely_title")}
               </h3>
               <p className="text-gray-600 text-sm">
-                Get alerts before your IDs expire
+                {t("feature_timely_desc")}
               </p>
             </div>
 
@@ -99,9 +101,9 @@ export function HeroSection() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
                 <Smartphone size={20} />
               </div>
-              <h3 className="font-semibold text-gray-800">Mobile Friendly</h3>
+              <h3 className="font-semibold text-gray-800">{t("feature_simple_title")}</h3>
               <p className="text-gray-600 text-sm">
-                Manage everything from your phone
+                {t("feature_simple_desc")}
               </p>
             </div>
           </div>

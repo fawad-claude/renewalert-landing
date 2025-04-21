@@ -24,6 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { getLocationBasedDialCode } from "@/lib/geolocation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -31,6 +32,7 @@ export function SignupForm() {
   // Default to phone input method since it's shown first
   const [inputMethod, setInputMethod] = useState<'phone' | 'email' | 'none'>('phone');
   const { toast } = useToast();
+  const { t, dir } = useLanguage();
 
   const form = useForm({
     resolver: zodResolver(phoneNumberValidationSchema),
@@ -294,10 +296,10 @@ export function SignupForm() {
     <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-100 transform transition-all hover:shadow-2xl">
       <CardContent className="px-0 py-0">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
-          Sign Up for Early Access
+          {t("form_title")}
         </h3>
         <p className="text-gray-600 mb-6">
-          Be among the first to try our solution when we launch!
+          {t("hero_cta")}
         </p>
 
         <Form {...form}>
@@ -310,9 +312,9 @@ export function SignupForm() {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{t("full_name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your full name" {...field} />
+                    <Input placeholder={t("full_name")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -321,7 +323,7 @@ export function SignupForm() {
 
             {/* Contact method selection buttons */}
             <div className="flex flex-col space-y-2">
-              <div className="text-sm font-medium">Contact Method <span className="text-destructive">*</span></div>
+              <div className="text-sm font-medium">{t("notification_preference")} <span className="text-destructive">*</span></div>
               <div className="flex space-x-2">
                 <Button 
                   type="button"
@@ -335,7 +337,7 @@ export function SignupForm() {
                     form.clearErrors('email');
                   }}
                 >
-                  Phone Number
+                  {t("text_me")}
                 </Button>
                 <Button 
                   type="button"
@@ -350,7 +352,7 @@ export function SignupForm() {
                     form.clearErrors('email');
                   }}
                 >
-                  Email
+                  {t("email_me")}
                 </Button>
               </div>
             </div>
