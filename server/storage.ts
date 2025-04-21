@@ -7,8 +7,9 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  savePhoneNumber(phoneNumber: InsertPhoneNumber & { createdAt: string }): Promise<PhoneNumber>;
+  savePhoneNumber(phoneNumber: InsertPhoneNumber & { createdAt: string, ipAddress: string }): Promise<PhoneNumber>;
   getAllPhoneNumbers(): Promise<PhoneNumber[]>;
+  getSubmissionsByIp(ipAddress: string): Promise<number>;
 }
 
 // Now implementing with DatabaseStorage
@@ -28,7 +29,17 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async savePhoneNumber(phoneNumberData: InsertPhoneNumber & { createdAt: string }): Promise<PhoneNumber> {
+  async savePhoneNumber(phoneNumberData: InsertPhoneNumber & { createdAt: string, ipAddress: string }): Promise<PhoneNumber> {
+    // First, check if this IP has submissions already
+    let submissionCount = 1;
+    try {
+      const count = await this.getSubmissionsByIp(phoneNumberData.ipAddress);
+      submissionCount = count + 1;
+    } catch (error) {
+      // If there was an error, default to 1
+      console.error("Error getting submission count:", error);
+    }
+    
     const [phoneNumber] = await db.insert(phoneNumbers).values({
       fullName: phoneNumberData.fullName || null,
       countryCode: phoneNumberData.countryCode || null,
@@ -37,6 +48,8 @@ export class DatabaseStorage implements IStorage {
       notes: phoneNumberData.notes || null,
       optIn: phoneNumberData.optIn || false,
       privacyPolicy: phoneNumberData.privacyPolicy || false,
+      ipAddress: phoneNumberData.ipAddress,
+      submissionCount: submissionCount,
       createdAt: phoneNumberData.createdAt
     }).returning();
     
@@ -45,6 +58,25 @@ export class DatabaseStorage implements IStorage {
 
   async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
     return await db.select().from(phoneNumbers);
+  }
+  
+  async getSubmissionsByIp(ipAddress: string): Promise<number> {
+    // Get the count of submissions from this IP
+    try {
+      // First, try to find the highest submission count for this IP
+      const [result] = await db
+        .select({ count: phoneNumbers.submissionCount })
+        .from(phoneNumbers)
+        .where(eq(phoneNumbers.ipAddress, ipAddress))
+        .orderBy(phoneNumbers.submissionCount, 'desc')
+        .limit(1);
+      
+      // If we found a result, return its count, otherwise return 0
+      return result ? result.count : 0;
+    } catch (error) {
+      console.error("Error counting submissions by IP:", error);
+      return 0;
+    }
   }
 }
 

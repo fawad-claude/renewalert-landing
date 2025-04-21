@@ -36,13 +36,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log("Received signup request:", req.body);
       
+      // Get client IP address
+      const clientIp = (req.headers['x-forwarded-for'] as string || req.socket.remoteAddress || '').split(',')[0].trim();
+      console.log("Client IP:", clientIp);
+      
+      // Check if IP has already submitted 3 times
+      const existingSubmissions = await storage.getSubmissionsByIp(clientIp);
+      if (existingSubmissions >= 3) {
+        return res.status(429).json({
+          success: false,
+          message: "Maximum submission limit reached. You have already submitted 3 forms."
+        });
+      }
+      
       // Validate the request body
       const validatedData = phoneNumberValidationSchema.parse(req.body);
       console.log("Validated data:", validatedData);
 
-      // Add timestamp to the data
-      const phoneNumberWithTimestamp = {
+      // Add timestamp and IP to the data
+      const phoneNumberWithMetadata = {
         ...validatedData,
+        ipAddress: clientIp,
         createdAt: new Date().toISOString()
       };
 
@@ -59,11 +73,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Store the phone number
-      const result = await storage.savePhoneNumber(phoneNumberWithTimestamp);
+      const result = await storage.savePhoneNumber(phoneNumberWithMetadata);
       console.log("Stored signup data:", result);
       
       // Log the signup
-      logSignup(phoneNumberWithTimestamp);
+      logSignup(phoneNumberWithMetadata);
 
       // Return success response
       return res.status(201).json({

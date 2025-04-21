@@ -17,6 +17,8 @@ export const phoneNumbers = pgTable("phone_numbers", {
   notes: text("notes"),
   optIn: boolean("opt_in").default(false),
   privacyPolicy: boolean("privacy_policy").default(false),
+  ipAddress: text("ip_address"),
+  submissionCount: integer("submission_count").default(1),
   createdAt: text("created_at").notNull(),
 });
 
