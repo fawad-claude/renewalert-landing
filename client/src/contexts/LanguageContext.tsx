@@ -14,7 +14,7 @@ export type TranslationDictionary = {
 export const translations: TranslationDictionary = {
   en: {
     // Hero Section
-    "hero_title": "Never miss an important renewal again",
+    "hero_title": "Never Miss your ID Renewal Again",
     "hero_subtitle": "Get timely reminders for your passports, licenses, residency permits (Iqama), and visas before they expire",
     "hero_cta": "Get Early Access",
     "expat_paragraph": "Expats, we get it — renewing documents is a headache. Passport, License, Residency permits (Iqama), Visa — renewals can be overwhelming and easy to miss.\n\nOur upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.\n\nBe the first to experience the convenience of staying organized with ease.",
@@ -44,7 +44,7 @@ export const translations: TranslationDictionary = {
   },
   ar: {
     // Hero Section
-    "hero_title": "لن تفوت تجديد مهم مرة أخرى",
+    "hero_title": "لن تفوت تجديد بطاقة الهوية مرة أخرى",
     "hero_subtitle": "احصل على تذكيرات في الوقت المناسب لجوازات السفر والتراخيص وتصاريح الإقامة (الإقامة) والتأشيرات قبل انتهاء صلاحيتها",
     "hero_cta": "احصل على وصول مبكر",
     "expat_paragraph": "المغتربون، نحن نفهم - تجديد الوثائق أمر مزعج. جواز السفر، الرخصة، تصاريح الإقامة (الإقامة)، التأشيرة - التجديدات يمكن أن تكون ساحقة وسهلة النسيان. تم تصميم تطبيقنا المحمول القادم لإرسال تذكيرات في الوقت المناسب لجميع التجديدات المهمة الخاصة بك، مما يساعدك على البقاء في المقدمة وخالي من التوتر. كن أول من يختبر راحة البقاء منظمًا بسهولة.",
@@ -74,7 +74,7 @@ export const translations: TranslationDictionary = {
   },
   hi: {
     // Hero Section
-    "hero_title": "फिर कभी महत्वपूर्ण नवीनीकरण न चूकें",
+    "hero_title": "फिर कभी अपना आईडी नवीनीकरण न चूकें",
     "hero_subtitle": "अपने पासपोर्ट, लाइसेंस, निवास परमिट (इकामा), और वीज़ा के लिए समय पर रिमाइंडर प्राप्त करें उनके समाप्त होने से पहले",
     "hero_cta": "शीघ्र पहुंच प्राप्त करें",
     "expat_paragraph": "प्रवासियों, हम समझते हैं - दस्तावेज़ों का नवीनीकरण एक सिरदर्द है। पासपोर्ट, लाइसेंस, निवास परमिट (इकामा), वीज़ा - नवीनीकरण अभिभूत करने वाला और आसानी से छूट सकता है। हमारा आगामी मोबाइल ऐप आपके सभी महत्वपूर्ण नवीनीकरणों के लिए समय पर रिमाइंडर भेजने के लिए डिज़ाइन किया गया है, जिससे आपको आगे रहने और तनावमुक्त रहने में मदद मिलती है। आसानी से व्यवस्थित रहने की सुविधा का अनुभव करने वाले पहले व्यक्ति बनें।",
