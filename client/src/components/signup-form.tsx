@@ -134,6 +134,19 @@ export function SignupForm() {
     optIn?: boolean;
   }) {
     try {
+      // Debug log before validation
+      console.log('Form data before validation:', { ...data, inputMethod });
+      console.log('Form errors:', form.formState.errors);
+      
+      // Validate name
+      if (!data.fullName || data.fullName.trim().length < 2) {
+        form.setError('fullName', { 
+          type: 'manual', 
+          message: 'Please enter your full name (at least 2 characters)' 
+        });
+        return;
+      }
+      
       // Validate that at least one contact method is provided
       if (inputMethod === 'phone' && (!data.phoneNumber || data.phoneNumber.trim() === '')) {
         form.setError('phoneNumber', { 
@@ -163,13 +176,64 @@ export function SignupForm() {
       // Make sure we only send what's needed based on input method
       const submissionData = {
         ...data,
-        // If email is selected, clear phone data
-        ...(inputMethod === 'email' && { phoneNumber: '', countryCode: '' }),
+        // If email is selected, clear phone data - use empty string to avoid nulls
+        ...(inputMethod === 'email' ? { 
+          phoneNumber: '', 
+          countryCode: '+965' // Use a valid country code even if we're not using it
+        } : {}),
         // If phone is selected, clear email data
-        ...(inputMethod === 'phone' && { email: '' })
+        ...(inputMethod === 'phone' ? { 
+          email: '' 
+        } : {})
       };
       
+      // Extra validation for phone number format
+      if (inputMethod === 'phone' && submissionData.phoneNumber) {
+        // Make sure it's only digits
+        if (!/^\d+$/.test(submissionData.phoneNumber)) {
+          form.setError('phoneNumber', { 
+            type: 'manual', 
+            message: 'Phone number must contain only digits' 
+          });
+          return;
+        }
+        
+        // Make sure it's a reasonable length
+        if (submissionData.phoneNumber.length < 6 || submissionData.phoneNumber.length > 15) {
+          form.setError('phoneNumber', { 
+            type: 'manual', 
+            message: 'Phone number must be between 6 and 15 digits' 
+          });
+          return;
+        }
+      }
+      
+      // Extra validation for email format
+      if (inputMethod === 'email' && submissionData.email) {
+        // Basic email validation
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submissionData.email)) {
+          form.setError('email', { 
+            type: 'manual', 
+            message: 'Please enter a valid email address' 
+          });
+          return;
+        }
+      }
+      
       console.log('Submitting form data:', submissionData);
+      
+      // Check for the privacy policy checkbox - it's a direct DOM element not tracked by the form
+      const privacyPolicyCheckbox = document.getElementById('privacy-policy') as HTMLInputElement;
+      if (!privacyPolicyCheckbox || !privacyPolicyCheckbox.checked) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "You must agree to the privacy policy to sign up"
+        });
+        return;
+      }
+      
+      // Submit the data
       mutation.mutate(submissionData);
     } catch (error) {
       console.error('Form submission error:', error);

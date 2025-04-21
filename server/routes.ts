@@ -10,8 +10,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API route to handle phone number submissions
   app.post("/api/signup", async (req: Request, res: Response) => {
     try {
+      console.log("Received signup request:", req.body);
+      
       // Validate the request body
       const validatedData = phoneNumberValidationSchema.parse(req.body);
+      console.log("Validated data:", validatedData);
 
       // Add timestamp to the data
       const phoneNumberWithTimestamp = {
@@ -19,8 +22,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdAt: new Date().toISOString()
       };
 
+      // Manual check: Either phone or email is required
+      const hasPhone = req.body.phoneNumber && req.body.phoneNumber.trim().length > 0;
+      const hasEmail = req.body.email && req.body.email.trim().length > 0;
+      
+      if (!hasPhone && !hasEmail) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation Error",
+          errors: "Either a phone number or an email address is required"
+        });
+      }
+
       // Store the phone number
       const result = await storage.savePhoneNumber(phoneNumberWithTimestamp);
+      console.log("Stored signup data:", result);
       
       // Log the signup
       logSignup(phoneNumberWithTimestamp);
@@ -28,14 +44,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Return success response
       return res.status(201).json({
         success: true,
-        message: "Phone number registered successfully",
+        message: "Signup registered successfully",
         data: result
       });
     } catch (error) {
+      console.error("Signup error:", error);
+      
       if (error instanceof Error) {
         // Handle validation errors
         if (error.name === "ZodError") {
           const validationError = fromZodError(error as any);
+          console.error("Validation error:", validationError);
           return res.status(400).json({
             success: false,
             message: "Validation Error",
