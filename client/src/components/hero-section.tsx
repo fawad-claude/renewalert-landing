@@ -25,8 +25,7 @@ export function HeroSection() {
 
             <div className="prose prose-lg max-w-none text-gray-600 mb-8 text-center lg:text-left">
               <p>
-                Are you tired of the last-minute scramble to renew your
-                passport, visa, or other important documents?{" "}
+                Living abroad? Don't let expired documents put your life on hold.{" "}
                 <span className="font-medium">
                   We have the perfect solution for you!
                 </span>
