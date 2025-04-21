@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,17 +8,17 @@ import { Control } from "react-hook-form";
 
 // Country code data
 const countryCodes = [
-  // US and UK
-  { code: "+1", flag: "🇺🇸", name: "United States" },
-  { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
-  
-  // GCC countries
+  // GCC countries (primary focus)
+  { code: "+965", flag: "🇰🇼", name: "Kuwait" },
   { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
   { code: "+971", flag: "🇦🇪", name: "United Arab Emirates" },
   { code: "+974", flag: "🇶🇦", name: "Qatar" },
   { code: "+968", flag: "🇴🇲", name: "Oman" },
-  { code: "+965", flag: "🇰🇼", name: "Kuwait" },
   { code: "+973", flag: "🇧🇭", name: "Bahrain" },
+  
+  // US and UK
+  { code: "+1", flag: "🇺🇸", name: "United States" },
+  { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
   
   // South Asian countries
   { code: "+91", flag: "🇮🇳", name: "India" },
@@ -33,41 +33,67 @@ interface PhoneInputProps {
 }
 
 export function PhoneInput({ control, className }: PhoneInputProps) {
+  const [selectedCountry, setSelectedCountry] = useState<{ code: string; flag: string; name: string } | null>(null);
+
+  // Function to find country by code
+  const findCountryByCode = (code: string) => {
+    return countryCodes.find(country => country.code === code) || null;
+  };
+
   return (
     <div className={cn("space-y-4", className)}>
       <div className="grid gap-2">
         <FormField
           control={control}
           name="countryCode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Country Code</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select country code" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {countryCodes.map((country) => (
-                    <SelectItem key={country.code} value={country.code}>
-                      <span className="flex items-center">
-                        <span className="mr-2">{country.flag}</span>
-                        <span>{country.code}</span>
-                        <span className="ml-2 text-muted-foreground text-xs">
-                          {country.name}
+          render={({ field }) => {
+            // Update selected country when field value changes
+            useEffect(() => {
+              if (field.value) {
+                setSelectedCountry(findCountryByCode(field.value));
+              }
+            }, [field.value]);
+
+            return (
+              <FormItem>
+                <FormLabel>Country</FormLabel>
+                <Select 
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    setSelectedCountry(findCountryByCode(value));
+                  }} 
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      {selectedCountry ? (
+                        <span className="flex items-center">
+                          <span className="mr-2 text-lg">{selectedCountry.flag}</span>
+                          <span>{selectedCountry.code}</span>
                         </span>
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+                      ) : (
+                        <SelectValue placeholder="Select country" />
+                      )}
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {countryCodes.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        <span className="flex items-center">
+                          <span className="mr-2">{country.flag}</span>
+                          <span>{country.code}</span>
+                          <span className="ml-2 text-muted-foreground text-xs">
+                            {country.name}
+                          </span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
         
         <FormField

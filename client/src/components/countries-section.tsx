@@ -2,17 +2,17 @@ import React from "react";
 
 // Country code data from phone-input.tsx
 const countryCodes = [
-  // US and UK
-  { code: "+1", flag: "🇺🇸", name: "United States" },
-  { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
-  
-  // GCC countries
+  // GCC countries (primary focus)
+  { code: "+965", flag: "🇰🇼", name: "Kuwait" },
   { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
   { code: "+971", flag: "🇦🇪", name: "United Arab Emirates" },
   { code: "+974", flag: "🇶🇦", name: "Qatar" },
   { code: "+968", flag: "🇴🇲", name: "Oman" },
-  { code: "+965", flag: "🇰🇼", name: "Kuwait" },
   { code: "+973", flag: "🇧🇭", name: "Bahrain" },
+  
+  // US and UK
+  { code: "+1", flag: "🇺🇸", name: "United States" },
+  { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
   
   // South Asian countries
   { code: "+91", flag: "🇮🇳", name: "India" },

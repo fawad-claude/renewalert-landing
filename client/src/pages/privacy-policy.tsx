@@ -75,8 +75,7 @@ export default function PrivacyPolicy() {
             If you have any questions about this Privacy Policy, please contact us at:
           </p>
           <p className="mt-2">
-            <strong>Email:</strong> privacy@renewalert.com<br />
-            <strong>Address:</strong> 123 Renewal Street, Suite 101, San Francisco, CA 94105
+            <strong>Email:</strong> info@renewalert.app
           </p>
         </div>
       </div>
