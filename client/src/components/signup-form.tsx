@@ -189,6 +189,16 @@ export function SignupForm() {
         return;
       }
       
+      // Make sure the privacy policy checkbox is checked
+      if (!data.privacyPolicy) {
+        form.setError('privacyPolicy', { 
+          type: 'manual', 
+          message: 'You must agree to the privacy policy' 
+        });
+        console.log('Privacy policy not checked:', data.privacyPolicy);
+        return;
+      }
+      
       // Make sure we only send what's needed based on input method
       const submissionData = {
         ...data,
@@ -238,9 +248,8 @@ export function SignupForm() {
       
       console.log('Submitting form data:', submissionData);
       
-      // We won't check for the privacy policy checkbox in code since it's required in the HTML
-      // and browsers will enforce this validation automatically
-      console.log('Proceeding with submission, all validation passed');
+      // All validation checks passed
+      console.log('All validation checks passed, proceeding to submit data');
       
       // Submit the data
       mutation.mutate(submissionData);
