@@ -53,7 +53,9 @@ export const phoneNumberValidationSchema = insertPhoneNumberSchema.extend({
   countryCode: z.string().min(2, { message: "Country code is required if phone number is provided" }).optional(),
   email: z.string().email({ message: "Please enter a valid email address" }).optional(),
   notes: z.string().optional(),
-  optIn: z.boolean().optional().default(false),
+  optIn: z.literal(true, {
+    errorMap: () => ({ message: "You must opt-in to receive notifications to use our service" })
+  }),
 }).refine(phoneOrEmailRefine, {
   message: "Either a phone number or an email address is required",
   path: ["phoneNumber"], // Show error on phone field

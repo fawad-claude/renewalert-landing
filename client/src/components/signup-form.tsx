@@ -94,6 +94,9 @@ export function SignupForm() {
             <div className="p-3 bg-amber-50 border border-amber-100 rounded-md mb-2 text-sm text-amber-800">
               Please provide either a phone number or an email address. Both fields are not required, but at least one must be filled in.
             </div>
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-md mb-2 text-sm text-blue-800">
+              <strong>Note:</strong> Opt-in for notifications is required. We only send essential renewal reminders - no spam.
+            </div>
             
             <FormField
               control={form.control}
@@ -159,14 +162,15 @@ export function SignupForm() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      required
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Opt-in for receiving Notifications
+                      Opt-in for receiving Notifications <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
-                      I agree to receive product launch notifications via Email, SMS or WhatsApp.
+                      I agree to receive renewal reminders via Email, SMS or WhatsApp. (Required to use RenewAlert's services - we promise no spam, only important notifications).
                     </FormDescription>
                   </div>
                 </FormItem>

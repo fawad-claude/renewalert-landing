@@ -12,7 +12,6 @@ export function HeroSection() {
           {/* Left content section */}
           <div className="flex-1 max-w-2xl">
             <div className="text-center lg:text-left mb-8">
-
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Coming Soon
               </span>
@@ -82,8 +81,8 @@ export function HeroSection() {
                 Secure & Flexible Storage
               </h3>
               <p className="text-gray-600 text-sm">
-                Save data locally or in the cloud, based on your preference.
-                Your data is encrypted and protected.
+                Your Data, Your Choice — on your phone or in the cloud.
+                Encrypted and protected.
               </p>
             </div>
 
