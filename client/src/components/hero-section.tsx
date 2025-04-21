@@ -82,7 +82,7 @@ export function HeroSection() {
               </h3>
               <p className="text-gray-600 text-sm">
                 Your Data, Your Choice — on your phone or in the cloud.
-                Encrypted and protected.
+                Fully encrypted and protected.
               </p>
             </div>
 
