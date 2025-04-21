@@ -1,6 +1,6 @@
 import { type InsertPhoneNumber, type PhoneNumber, type InsertUser, type User, users, phoneNumbers } from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 // Interface remains the same
 export interface IStorage {
@@ -63,16 +63,23 @@ export class DatabaseStorage implements IStorage {
   async getSubmissionsByIp(ipAddress: string): Promise<number> {
     // Get the count of submissions from this IP
     try {
-      // First, try to find the highest submission count for this IP
-      const [result] = await db
+      // Count submissions with this IP
+      const results = await db
         .select({ count: phoneNumbers.submissionCount })
         .from(phoneNumbers)
-        .where(eq(phoneNumbers.ipAddress, ipAddress))
-        .orderBy(phoneNumbers.submissionCount, 'desc')
-        .limit(1);
+        .where(eq(phoneNumbers.ipAddress, ipAddress));
       
-      // If we found a result, return its count, otherwise return 0
-      return result ? result.count : 0;
+      // If we found any results, return the highest count
+      if (results && results.length > 0) {
+        let highestCount = 0;
+        for (const result of results) {
+          if (result.count !== null && result.count > highestCount) {
+            highestCount = result.count;
+          }
+        }
+        return highestCount;
+      }
+      return 0;
     } catch (error) {
       console.error("Error counting submissions by IP:", error);
       return 0;
