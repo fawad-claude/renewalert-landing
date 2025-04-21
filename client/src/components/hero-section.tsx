@@ -27,9 +27,9 @@ export function HeroSection() {
             </div>
 
             <div className="prose prose-sm max-w-none text-gray-600 mb-8 text-center lg:text-left">
-              <p className="text-xs md:text-sm">
+              <div className="text-sm md:text-base whitespace-pre-line">
                 {t("expat_paragraph")}
-              </p>
+              </div>
             </div>
 
             <div className="space-y-6 hidden lg:block">

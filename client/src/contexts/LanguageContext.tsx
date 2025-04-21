@@ -17,7 +17,7 @@ export const translations: TranslationDictionary = {
     "hero_title": "Never miss an important renewal again",
     "hero_subtitle": "Get timely reminders for your passports, licenses, residency permits (Iqama), and visas before they expire",
     "hero_cta": "Get Early Access",
-    "expat_paragraph": "Expats, we get it — renewing documents is a headache. Passport, License, Residency permits (Iqama), Visa — renewals can be overwhelming and easy to miss. Our upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free. Be the first to experience the convenience of staying organized with ease.",
+    "expat_paragraph": "Expats, we get it — renewing documents is a headache. Passport, License, Residency permits (Iqama), Visa — renewals can be overwhelming and easy to miss.\n\nOur upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.\n\nBe the first to experience the convenience of staying organized with ease.",
     
     // Form Labels
     "form_title": "Sign up for early access",
