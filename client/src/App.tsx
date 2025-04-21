@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import AdminPage from "@/pages/admin";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 function Router() {
   return (
@@ -21,8 +22,10 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <LanguageProvider>
+        <Router />
+        <Toaster />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
