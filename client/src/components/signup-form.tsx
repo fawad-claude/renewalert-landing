@@ -105,8 +105,20 @@ export function SignupForm() {
       email?: string;
       notes?: string;
       optIn?: boolean;
-    }) => apiRequest("POST", "/api/signup", data),
-    onSuccess: () => {
+    }) => {
+      console.log('Making API request with data:', data);
+      return apiRequest("POST", "/api/signup", data)
+        .then(response => {
+          console.log('API response:', response);
+          return response;
+        })
+        .catch(error => {
+          console.error('API error:', error);
+          throw error;
+        });
+    },
+    onSuccess: (data) => {
+      console.log('Mutation success:', data);
       setIsSuccess(true);
       toast({
         title: "Success!",
@@ -114,6 +126,7 @@ export function SignupForm() {
       });
     },
     onError: (error) => {
+      console.error('Mutation error:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -247,17 +260,26 @@ export function SignupForm() {
 
   if (isSuccess) {
     return (
-      <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-100 transform transition-all hover:shadow-2xl">
+      <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border-2 border-green-500 transform transition-all hover:shadow-2xl animate-bounce-once">
         <CardContent className="px-0 py-0 text-center animate-fade-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success/10 text-success mb-4">
-            <CheckCircle size={36} />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-600 mb-6">
+            <CheckCircle size={48} />
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">
             Thank You!
           </h3>
-          <p className="text-gray-600">
-            You're all set! We'll notify you when we launch.
+          <p className="text-lg text-gray-700 mb-2">
+            Your signup was successful!
           </p>
+          <p className="text-gray-600">
+            We'll notify you when we launch RenewAlert.
+          </p>
+          
+          <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
+            <p className="text-green-800 font-medium">
+              Your contact details have been recorded. You're now on our early access list.
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
