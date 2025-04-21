@@ -7,7 +7,15 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { phoneNumberValidationSchema } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +28,7 @@ import { getLocationBasedDialCode } from "@/lib/geolocation";
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+  const [inputMethod, setInputMethod] = useState<'phone' | 'email' | 'none'>('none');
   const { toast } = useToast();
 
   const form = useForm({
@@ -32,33 +41,66 @@ export function SignupForm() {
       notes: "",
       optIn: false,
     },
-    mode: "onChange"
+    mode: "onChange",
   });
-  
+
   // Load user's country based on location
   useEffect(() => {
     async function loadUserCountry() {
       try {
         setIsLoadingLocation(true);
         const dialCode = await getLocationBasedDialCode();
-        form.setValue('countryCode', dialCode);
+        form.setValue("countryCode", dialCode);
       } catch (error) {
-        console.error('Error setting location-based country:', error);
+        console.error("Error setting location-based country:", error);
         // Default to Kuwait if there's an error
-        form.setValue('countryCode', '+965');
+        form.setValue("countryCode", "+965");
       } finally {
         setIsLoadingLocation(false);
       }
     }
-    
+
     loadUserCountry();
+  }, [form]);
+  
+  // Listen for changes in phone number and email fields to update input method
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      // When phone number changes
+      if (name === 'phoneNumber' && value.phoneNumber) {
+        if (value.phoneNumber.length > 0) {
+          setInputMethod('phone');
+          // Clear email field when user starts typing phone number
+          if (form.getValues('email')) {
+            form.setValue('email', '');
+          }
+        } else if (!value.email || value.email.length === 0) {
+          setInputMethod('none');
+        }
+      }
+      
+      // When email changes
+      if (name === 'email' && value.email) {
+        if (value.email.length > 0) {
+          setInputMethod('email');
+          // Clear phone fields when user starts typing email
+          if (form.getValues('phoneNumber')) {
+            form.setValue('phoneNumber', '');
+          }
+        } else if (!value.phoneNumber || value.phoneNumber.length === 0) {
+          setInputMethod('none');
+        }
+      }
+    });
+    
+    return () => subscription.unsubscribe();
   }, [form]);
 
   const mutation = useMutation({
-    mutationFn: (data: { 
+    mutationFn: (data: {
       fullName: string;
-      countryCode?: string; 
-      phoneNumber?: string; 
+      countryCode?: string;
+      phoneNumber?: string;
       email?: string;
       notes?: string;
       optIn?: boolean;
@@ -74,15 +116,18 @@ export function SignupForm() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An error occurred. Please try again.",
       });
     },
   });
 
-  function onSubmit(data: { 
+  function onSubmit(data: {
     fullName: string;
-    countryCode?: string; 
-    phoneNumber?: string; 
+    countryCode?: string;
+    phoneNumber?: string;
     email?: string;
     notes?: string;
     optIn?: boolean;
@@ -97,8 +142,12 @@ export function SignupForm() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success/10 text-success mb-4">
             <CheckCircle size={36} />
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Thank You!</h3>
-          <p className="text-gray-600">You're all set! We'll notify you when we launch.</p>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            Thank You!
+          </h3>
+          <p className="text-gray-600">
+            You're all set! We'll notify you when we launch.
+          </p>
         </CardContent>
       </Card>
     );
@@ -107,18 +156,18 @@ export function SignupForm() {
   return (
     <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-100 transform transition-all hover:shadow-2xl">
       <CardContent className="px-0 py-0">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Sign Up for Early Access</h3>
-        <p className="text-gray-600 mb-6">Be among the first to try our solution when we launch!</p>
-        
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+          Sign Up for Early Access
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Be among the first to try our solution when we launch!
+        </p>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="p-3 bg-amber-50 border border-amber-100 rounded-md mb-2 text-sm text-amber-800">
-              Please provide either a phone number or an email address. Both fields are not required, but at least one must be filled in.
+              Please provide either a phone number or an email address.
             </div>
-            <div className="p-3 bg-blue-50 border border-blue-100 rounded-md mb-2 text-sm text-blue-800">
-              <strong>Note:</strong> Opt-in for notifications is required. We only send essential renewal reminders - no spam.
-            </div>
-            
             <FormField
               control={form.control}
               name="fullName"
@@ -126,36 +175,70 @@ export function SignupForm() {
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Your full name" 
-                      {...field} 
-                    />
+                    <Input placeholder="Your full name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
-            <PhoneInput control={form.control} isLoading={isLoadingLocation} />
-            
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="email" 
-                      placeholder="Your email address" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
+
+            {/* Contact method selection buttons */}
+            <div className="flex flex-col space-y-2">
+              <div className="text-sm font-medium">Contact Method</div>
+              <div className="flex space-x-2">
+                <Button 
+                  type="button"
+                  variant={inputMethod === 'phone' || inputMethod === 'none' ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => {
+                    setInputMethod('phone');
+                    form.setValue('email', '');
+                  }}
+                >
+                  Phone Number
+                </Button>
+                <Button 
+                  type="button"
+                  variant={inputMethod === 'email' ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => {
+                    setInputMethod('email');
+                    form.setValue('phoneNumber', '');
+                  }}
+                >
+                  Email
+                </Button>
+              </div>
+            </div>
+
+            {/* Phone input fields - shown only when phone is selected or no selection yet */}
+            {(inputMethod === 'phone' || inputMethod === 'none') && (
+              <div className={inputMethod === 'none' ? "opacity-70" : ""}>
+                <PhoneInput control={form.control} isLoading={isLoadingLocation} />
+              </div>
+            )}
+
+            {/* Email input field - shown only when email is selected */}
+            {inputMethod === 'email' && (
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Your email address"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="notes"
@@ -163,17 +246,17 @@ export function SignupForm() {
                 <FormItem>
                   <FormLabel>Note to Developers</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Any suggestions/comments, please add here." 
-                      className="resize-none" 
-                      {...field} 
+                    <Textarea
+                      placeholder="Any suggestions/comments, please add here."
+                      className="resize-none"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="optIn"
@@ -188,33 +271,38 @@ export function SignupForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Opt-in for receiving Notifications <span className="text-destructive">*</span>
+                      Opt-in for receiving Notifications{" "}
+                      <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
-                      I agree to receive renewal reminders via Email, SMS or WhatsApp. (Required to use RenewAlert's services - we promise no spam, only important notifications).
+                      I agree to receive renewal reminders via Email, SMS or
+                      WhatsApp. (Required to use RenewAlert's services - we
+                      promise no spam, only important notifications).
                     </FormDescription>
                   </div>
                 </FormItem>
               )}
             />
-            
+
             <div className="flex items-start space-x-2">
-              <Checkbox 
-                id="privacy-policy" 
-                required
-              />
+              <Checkbox id="privacy-policy" required />
               <div className="grid gap-1.5 leading-none">
-                <Label 
-                  htmlFor="privacy-policy" 
+                <Label
+                  htmlFor="privacy-policy"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  I agree to the <Link href="/privacy-policy"><span className="text-primary hover:underline cursor-pointer">Privacy Policy</span></Link>
+                  I agree to the{" "}
+                  <Link href="/privacy-policy">
+                    <span className="text-primary hover:underline cursor-pointer">
+                      Privacy Policy
+                    </span>
+                  </Link>
                 </Label>
               </div>
             </div>
-            
-            <Button 
-              type="submit" 
+
+            <Button
+              type="submit"
               className="w-full pulse-animation"
               disabled={mutation.isPending}
             >
@@ -227,7 +315,7 @@ export function SignupForm() {
                 </>
               )}
             </Button>
-            
+
             <p className="text-xs text-gray-500 text-center mt-4">
               We'll only send you product updates. No spam, we promise!
             </p>
