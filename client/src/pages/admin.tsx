@@ -1,13 +1,63 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar } from "lucide-react";
+import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
-// Admin API key
-const ADMIN_API_KEY = "renewal-alert-admin-2024";
+// We'll request the admin API key from the server to avoid hardcoding it on the client
+const ADMIN_KEY_HEADER = "X-API-KEY";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<"signups">("signups");
+  const [adminKey, setAdminKey] = useState<string>("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  
+  // Handle the admin login
+  const handleAdminLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      // Test the provided API key
+      const response = await fetch("/api/admin/signups", {
+        method: "GET",
+        headers: {
+          [ADMIN_KEY_HEADER]: adminKey,
+        },
+        credentials: "include",
+      });
+      
+      if (response.ok) {
+        // If successful, store in session storage and set authenticated
+        sessionStorage.setItem("adminAuth", "true");
+        sessionStorage.setItem("adminKey", adminKey);
+        setIsAuthenticated(true);
+        // Trigger data fetch
+        refetch();
+      } else {
+        alert("Invalid API key. Please try again.");
+      }
+    } catch (err) {
+      console.error("Authentication error:", err);
+      alert("Authentication failed. Please try again.");
+    }
+  };
+  
+  // Check for existing authentication on mount
+  useEffect(() => {
+    const savedAuth = sessionStorage.getItem("adminAuth");
+    const savedKey = sessionStorage.getItem("adminKey");
+    
+    if (savedAuth === "true" && savedKey) {
+      setAdminKey(savedKey);
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  // Handle logout
+  const handleLogout = () => {
+    sessionStorage.removeItem("adminAuth");
+    sessionStorage.removeItem("adminKey");
+    setIsAuthenticated(false);
+    setAdminKey("");
+  };
 
   const {
     data: signups,
@@ -19,15 +69,24 @@ export default function AdminPage() {
     queryKey: ["/api/admin/signups"],
     queryFn: async () => {
       try {
+        // Use the stored admin key for the request
+        const storedKey = sessionStorage.getItem("adminKey") || adminKey;
+        
         const response = await fetch("/api/admin/signups", {
           method: "GET",
           headers: {
-            "X-API-KEY": ADMIN_API_KEY,
+            [ADMIN_KEY_HEADER]: storedKey,
           },
           credentials: "include",
         });
         
         if (!response.ok) {
+          // If unauthorized, clear authentication state
+          if (response.status === 401 || response.status === 403) {
+            sessionStorage.removeItem("adminAuth");
+            sessionStorage.removeItem("adminKey");
+            setIsAuthenticated(false);
+          }
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         
@@ -37,6 +96,7 @@ export default function AdminPage() {
         throw err;
       }
     },
+    enabled: isAuthenticated, // Only run query when authenticated
   });
 
   if (isLoading) {
