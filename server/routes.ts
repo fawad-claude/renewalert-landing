@@ -95,7 +95,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin endpoint to get all signups with API key protection
-  app.get("/api/admin/signups", (req: Request, res: Response) => {
+  app.get("/api/admin/signups", async (req: Request, res: Response) => {
     // Check for API key in header
     const apiKey = req.headers["x-api-key"] as string;
     
@@ -107,7 +107,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      const signups = getSignups();
+      // Retrieve from database instead of in-memory storage
+      const signups = await storage.getAllPhoneNumbers();
       return res.status(200).json({
         success: true,
         count: signups.length,
