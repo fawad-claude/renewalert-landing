@@ -24,7 +24,7 @@ export function SignupForm() {
     resolver: zodResolver(phoneNumberValidationSchema),
     defaultValues: {
       fullName: "",
-      countryCode: "+1",
+      countryCode: "+965", // Kuwait country code as default
       phoneNumber: "",
       email: "",
       notes: "",
@@ -183,7 +183,7 @@ export function SignupForm() {
                   htmlFor="privacy-policy" 
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  I agree to the <a href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</a>
+                  I agree to the <Link href="/privacy-policy"><span className="text-primary hover:underline cursor-pointer">Privacy Policy</span></Link>
                 </Label>
               </div>
             </div>
