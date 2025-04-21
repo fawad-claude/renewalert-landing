@@ -8,8 +8,31 @@ import { validateApiKey } from "./utils/api-key";
 import rateLimit from "express-rate-limit";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Rate limiter for admin endpoints to prevent brute force attacks
+  const adminLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // Limit each IP to 20 requests per windowMs
+    message: {
+      success: false,
+      message: "Too many requests from this IP, please try again after 15 minutes"
+    },
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  });
+  
+  // Rate limiter for signup endpoint to prevent abuse
+  const signupLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 50, // Limit each IP to 50 requests per windowMs
+    message: {
+      success: false,
+      message: "Too many signup requests from this IP, please try again after an hour"
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
   // API route to handle phone number submissions
-  app.post("/api/signup", async (req: Request, res: Response) => {
+  app.post("/api/signup", signupLimiter, async (req: Request, res: Response) => {
     try {
       console.log("Received signup request:", req.body);
       
@@ -79,7 +102,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API route to get all phone numbers (protected, for admin purposes only)
-  app.get("/api/phone-numbers", async (req: Request, res: Response) => {
+  app.get("/api/phone-numbers", adminLimiter, async (req: Request, res: Response) => {
     // Check for API key in header
     const apiKey = req.headers["x-api-key"] as string;
     
@@ -106,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin endpoint to get all signups with API key protection
-  app.get("/api/admin/signups", async (req: Request, res: Response) => {
+  app.get("/api/admin/signups", adminLimiter, async (req: Request, res: Response) => {
     // Check for API key in header
     const apiKey = req.headers["x-api-key"] as string;
     
