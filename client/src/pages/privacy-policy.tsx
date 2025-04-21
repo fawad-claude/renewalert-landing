@@ -6,10 +6,12 @@ import { ChevronLeft } from "lucide-react";
 export default function PrivacyPolicy() {
   return (
     <div className="container max-w-4xl mx-auto px-4 py-12">
-      <a href="/" className="inline-flex items-center text-primary hover:underline mb-8">
-        <ChevronLeft className="mr-1 h-4 w-4" />
-        Back to Home
-      </a>
+      <Link href="/">
+        <div className="inline-flex items-center text-primary hover:underline mb-8 cursor-pointer">
+          <ChevronLeft className="mr-1 h-4 w-4" />
+          Back to Home
+        </div>
+      </Link>
       
       <div className="bg-white rounded-xl shadow-md p-8 border border-gray-100">
         <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>

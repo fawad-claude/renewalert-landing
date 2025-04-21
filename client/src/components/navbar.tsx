@@ -9,14 +9,14 @@ export function Navbar() {
         <div className="flex justify-center h-24">
           <div className="flex items-center">
             <Link href="/">
-              <a className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 <img 
                   src={logoPath} 
                   alt="RenewAlert Logo" 
                   className="w-40 h-auto" 
                   style={{ width: "10rem" }}
                 />
-              </a>
+              </div>
             </Link>
           </div>
         </div>
