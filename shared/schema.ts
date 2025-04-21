@@ -16,6 +16,7 @@ export const phoneNumbers = pgTable("phone_numbers", {
   email: text("email"),
   notes: text("notes"),
   optIn: boolean("opt_in").default(false),
+  privacyPolicy: boolean("privacy_policy").default(false),
   createdAt: text("created_at").notNull(),
 });
 
@@ -31,6 +32,7 @@ export const insertPhoneNumberSchema = createInsertSchema(phoneNumbers).pick({
   email: true,
   notes: true,
   optIn: true,
+  privacyPolicy: true,
 });
 
 // Extend the schema with validation rules
@@ -65,6 +67,10 @@ export const phoneNumberValidationSchema = insertPhoneNumberSchema.extend({
   
   optIn: z.literal(true, {
     errorMap: () => ({ message: "You must opt-in to receive notifications to use our service" })
+  }),
+  
+  privacyPolicy: z.literal(true, {
+    errorMap: () => ({ message: "You must agree to the privacy policy" })
   }),
 })
 // Add custom validation to ensure either phone or email is provided

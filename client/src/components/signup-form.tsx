@@ -41,6 +41,7 @@ export function SignupForm() {
       email: "",
       notes: "",
       optIn: false,
+      privacyPolicy: false,
     },
     mode: "onChange",
   });
@@ -105,6 +106,7 @@ export function SignupForm() {
       email?: string;
       notes?: string;
       optIn?: boolean;
+      privacyPolicy?: boolean;
     }) => {
       console.log('Making API request with data:', data);
       return apiRequest("POST", "/api/signup", data)
@@ -145,6 +147,7 @@ export function SignupForm() {
     email?: string;
     notes?: string;
     optIn?: boolean;
+    privacyPolicy?: boolean;
   }) {
     try {
       // Debug log before validation
@@ -235,16 +238,9 @@ export function SignupForm() {
       
       console.log('Submitting form data:', submissionData);
       
-      // Check for the privacy policy checkbox - it's a direct DOM element not tracked by the form
-      const privacyPolicyCheckbox = document.getElementById('privacy-policy') as HTMLInputElement;
-      if (!privacyPolicyCheckbox || !privacyPolicyCheckbox.checked) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "You must agree to the privacy policy to sign up"
-        });
-        return;
-      }
+      // We won't check for the privacy policy checkbox in code since it's required in the HTML
+      // and browsers will enforce this validation automatically
+      console.log('Proceeding with submission, all validation passed');
       
       // Submit the data
       mutation.mutate(submissionData);
@@ -423,22 +419,32 @@ export function SignupForm() {
               )}
             />
 
-            <div className="flex items-start space-x-2">
-              <Checkbox id="privacy-policy" required />
-              <div className="grid gap-1.5 leading-none">
-                <Label
-                  htmlFor="privacy-policy"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  I agree to the{" "}
-                  <Link href="/privacy-policy">
-                    <span className="text-primary hover:underline cursor-pointer">
-                      Privacy Policy
-                    </span>
-                  </Link>
-                </Label>
-              </div>
-            </div>
+            <FormField
+              control={form.control}
+              name="privacyPolicy"
+              render={({ field }) => (
+                <FormItem className="flex items-start space-x-2 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      required
+                    />
+                  </FormControl>
+                  <div className="grid gap-1.5 leading-none">
+                    <FormLabel>
+                      I agree to the{" "}
+                      <Link href="/privacy-policy">
+                        <span className="text-primary hover:underline cursor-pointer">
+                          Privacy Policy
+                        </span>
+                      </Link>
+                    </FormLabel>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Button
               type="submit"
