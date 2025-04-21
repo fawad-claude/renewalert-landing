@@ -25,19 +25,14 @@ export function HeroSection() {
 
             <div className="prose prose-lg max-w-none text-gray-600 mb-8 text-center lg:text-left">
               <p>
-                Living abroad? Don't let expired documents put your life on hold.
-                <br />or<br />
-                Are you tired of the last-minute scramble to renew your
-                passport, visa, or other important documents?{" "}
-                <span className="font-medium">
-                  We have the perfect solution for you!
-                </span>
+                <strong>Expats, we get it — renewing documents is a headache.</strong><br />
+                <strong>Passport, License, Residency permits (Iqama), Visa</strong> — <strong>renewals can be overwhelming and easy to miss.</strong>
               </p>
               <p>
-                Our upcoming mobile app is designed to send you timely reminders
-                for all your important renewals, helping you stay ahead and
-                stress-free. Be the first to experience the convenience of
-                staying organized with ease.
+                <strong>Our upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.</strong>
+              </p>
+              <p>
+                <strong>Be the first to experience the convenience of staying organized with ease.</strong>
               </p>
             </div>
 
