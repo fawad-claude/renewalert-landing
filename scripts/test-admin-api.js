@@ -1,8 +1,9 @@
 // Simple script to test the admin API endpoint with the correct ADMIN_API_KEY
-const http = require('http');
+import { get } from 'node:https';
+import { env } from 'node:process';
 
 // Get the ADMIN_API_KEY from environment
-const apiKey = process.env.ADMIN_API_KEY;
+const apiKey = env.ADMIN_API_KEY;
 
 if (!apiKey) {
   console.error('Error: ADMIN_API_KEY environment variable is not set');
@@ -11,39 +12,27 @@ if (!apiKey) {
 
 console.log('Using ADMIN_API_KEY with length:', apiKey.length);
 
-// Make a GET request to the API
-const options = {
-  hostname: 'localhost',
-  port: 5000,
-  path: '/api/admin/signups',
-  method: 'GET',
-  headers: {
-    'X-API-KEY': apiKey
+// Use curl command for testing instead
+import { exec } from 'node:child_process';
+
+// Run curl request with the API key
+exec(`curl -s -H "X-API-KEY: ${apiKey}" http://localhost:5000/api/admin/signups`, (error, stdout, stderr) => {
+  if (error) {
+    console.error('Error executing curl:', error);
+    return;
   }
-};
-
-const req = http.request(options, (res) => {
-  console.log('Response status code:', res.statusCode);
   
-  let data = '';
+  if (stderr) {
+    console.error('Curl stderr:', stderr);
+    return;
+  }
   
-  res.on('data', (chunk) => {
-    data += chunk;
-  });
-  
-  res.on('end', () => {
-    try {
-      const jsonResponse = JSON.parse(data);
-      console.log('Response:', JSON.stringify(jsonResponse, null, 2));
-    } catch (error) {
-      console.error('Error parsing response:', error);
-      console.log('Raw response:', data);
-    }
-  });
+  try {
+    const response = JSON.parse(stdout);
+    console.log('Response status:', response.success ? 'Success' : 'Failed');
+    console.log('Response data:', JSON.stringify(response, null, 2));
+  } catch (e) {
+    console.error('Error parsing response:', e);
+    console.log('Raw response:', stdout);
+  }
 });
-
-req.on('error', (error) => {
-  console.error('Request error:', error);
-});
-
-req.end();
