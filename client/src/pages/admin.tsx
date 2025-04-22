@@ -283,9 +283,19 @@ export default function AdminPage() {
         <div className="flex space-x-2">
           <button
             onClick={toggleDbMode}
-            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            className="flex items-center space-x-2 border-2 px-6 py-3 rounded-md font-bold text-lg shadow-lg"
+            style={{
+              backgroundColor: dbSourceMode === "auto" ? "#ff9800" : "#4CAF50",
+              color: "white",
+              borderColor: dbSourceMode === "auto" ? "#e65100" : "#1b5e20",
+              transition: "all 0.3s ease"
+            }}
           >
-            <span>{dbSourceMode === "auto" ? "Use Log Files" : "Use Database"}</span>
+            <span>
+              {dbSourceMode === "auto" 
+                ? "🔄 SWITCH TO LOG FILES MODE" 
+                : "🔄 SWITCH TO DATABASE MODE"}
+            </span>
           </button>
           <button
             onClick={() => refetch()}
@@ -301,13 +311,14 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
-      {signups?.source && (
-        <div className={`mb-4 p-2 rounded-md text-sm ${
-          signups.source === 'database' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
-        }`}>
-          Data source: <span className="font-semibold">{signups.source === 'database' ? 'Database' : 'Log Files (Fallback)'}</span>
-        </div>
-      )}
+      {/* Always show the data source, with a bold banner on top */}
+      <div className={`mb-4 p-4 border-2 rounded-md text-base font-medium ${
+        signups?.source === 'database' 
+        ? 'bg-green-100 text-green-800 border-green-500' 
+        : 'bg-yellow-100 text-yellow-800 border-yellow-500'
+      }`}>
+        <span className="text-lg">DATA SOURCE:</span> <span className="font-bold">{signups?.source === 'database' ? 'DATABASE' : 'LOG FILES (FALLBACK)'}</span>
+      </div>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
         <div className="border-b border-gray-200">
