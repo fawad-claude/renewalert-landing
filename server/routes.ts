@@ -144,10 +144,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Admin endpoint to get all signups with API key protection
   app.get("/api/admin/signups", adminLimiter, async (req: Request, res: Response) => {
+    console.log("Admin signups endpoint called");
+    console.log("Headers received:", Object.keys(req.headers));
+    
     // Check for API key in header
     const apiKey = req.headers["x-api-key"] as string;
+    console.log("API key received (length):", apiKey?.length);
     
-    if (!apiKey || !validateApiKey(apiKey)) {
+    if (!apiKey) {
+      console.log("No API key provided in request");
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized. API key is required."
+      });
+    }
+    
+    const isValidKey = validateApiKey(apiKey);
+    console.log("API key validation result:", isValidKey);
+    
+    if (!isValidKey) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized. Valid API key required."

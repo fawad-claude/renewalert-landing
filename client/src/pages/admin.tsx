@@ -15,6 +15,9 @@ export default function AdminPage() {
   const handleAdminLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      // Add debug logs
+      console.log("Attempting login with admin key (length):", adminKey.length);
+      
       // Test the provided API key
       const response = await fetch("/api/admin/signups", {
         method: "GET",
@@ -24,6 +27,16 @@ export default function AdminPage() {
         credentials: "include",
       });
       
+      // More debug info
+      console.log("API response status:", response.status);
+      
+      // Get the response data for debugging
+      const responseText = await response.text();
+      console.log("API response:", responseText);
+      
+      // Parse the response again since we consumed it with text()
+      const responseData = JSON.parse(responseText);
+      
       if (response.ok) {
         // If successful, store in session storage and set authenticated
         sessionStorage.setItem("adminAuth", "true");
@@ -32,6 +45,7 @@ export default function AdminPage() {
         // Trigger data fetch
         refetch();
       } else {
+        console.error("Auth failed response:", responseData);
         alert("Invalid API key. Please try again.");
       }
     } catch (err) {

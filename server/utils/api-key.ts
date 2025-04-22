@@ -12,13 +12,19 @@ if (!ADMIN_API_KEY) {
  * Implements a secure comparison to prevent timing attacks
  */
 export function validateApiKey(providedKey: string): boolean {
+  console.log("Validating API key, provided key length:", providedKey?.length);
+  
   // If the API key is not set, always return false
   if (!ADMIN_API_KEY) {
+    console.warn("ADMIN_API_KEY is not set in environment variables");
     return false;
   }
   
+  console.log("Environment ADMIN_API_KEY length:", ADMIN_API_KEY.length);
+  
   // If the lengths don't match, the keys are different
   if (providedKey.length !== ADMIN_API_KEY.length) {
+    console.log("API key length mismatch");
     return false;
   }
   
@@ -28,5 +34,7 @@ export function validateApiKey(providedKey: string): boolean {
     result |= providedKey.charCodeAt(i) ^ ADMIN_API_KEY.charCodeAt(i);
   }
   
-  return result === 0;
+  const isValid = result === 0;
+  console.log("API key validation result:", isValid);
+  return isValid;
 }
