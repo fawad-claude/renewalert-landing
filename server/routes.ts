@@ -155,13 +155,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      // Retrieve from database instead of in-memory storage
-      const signups = await storage.getAllPhoneNumbers();
-      return res.status(200).json({
-        success: true,
-        count: signups.length,
-        data: signups
-      });
+      // Try to retrieve from database first
+      try {
+        const signups = await storage.getAllPhoneNumbers();
+        return res.status(200).json({
+          success: true,
+          count: signups.length,
+          data: signups
+        });
+      } catch (dbError) {
+        console.warn("Database error, falling back to log files:", dbError);
+        
+        // Fall back to in-memory logs if database fails
+        const logSignups = getSignups();
+        
+        // Map log entries to match the expected format for the frontend
+        const formattedSignups = logSignups.map((entry, index) => ({
+          id: index + 1,
+          fullName: entry.fullName || "Unknown",
+          countryCode: entry.countryCode || "",
+          phoneNumber: entry.phoneNumber || "",
+          email: entry.email || "",
+          notes: entry.notes || "",
+          optIn: entry.optIn || false,
+          privacyPolicy: entry.privacyPolicy || false,
+          ipAddress: entry.ipAddress || "Unknown",
+          submissionCount: 1,
+          createdAt: entry.timestamp || new Date().toISOString()
+        }));
+        
+        return res.status(200).json({
+          success: true,
+          count: formattedSignups.length,
+          data: formattedSignups,
+          source: "log_files" // Indicate this is from logs, not database
+        });
+      }
     } catch (error) {
       return res.status(500).json({
         success: false,
