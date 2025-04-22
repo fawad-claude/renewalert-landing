@@ -256,12 +256,37 @@ export default function AdminPage() {
     );
   }
 
+  // Function to toggle database mode (for testing fallback mechanism)
+  const [dbSourceMode, setDbSourceMode] = useState<"auto" | "logs">("auto");
+  
+  const toggleDbMode = async () => {
+    try {
+      const newMode = dbSourceMode === "auto" ? "logs" : "auto";
+      await fetch(`/api/admin/db-mode?mode=${newMode}`, {
+        method: "GET",
+        headers: {
+          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
+        },
+      });
+      setDbSourceMode(newMode);
+      refetch();
+    } catch (err) {
+      console.error("Error toggling DB mode:", err);
+    }
+  };
+
   // Show dashboard when authenticated and data loaded
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
         <div className="flex space-x-2">
+          <button
+            onClick={toggleDbMode}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            <span>{dbSourceMode === "auto" ? "Use Log Files" : "Use Database"}</span>
+          </button>
           <button
             onClick={() => refetch()}
             className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
@@ -276,6 +301,13 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
+      {signups?.source && (
+        <div className={`mb-4 p-2 rounded-md text-sm ${
+          signups.source === 'database' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
+        }`}>
+          Data source: <span className="font-semibold">{signups.source === 'database' ? 'Database' : 'Log Files (Fallback)'}</span>
+        </div>
+      )}
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
         <div className="border-b border-gray-200">

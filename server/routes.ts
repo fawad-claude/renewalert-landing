@@ -7,6 +7,9 @@ import { logSignup, getSignups } from "./utils/signup-logger";
 import { validateApiKey } from "./utils/api-key";
 import rateLimit from "express-rate-limit";
 
+// For testing the fallback mechanism
+let forceLogFileMode = false;
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Rate limiter for admin endpoints to prevent brute force attacks
   const adminLimiter = rateLimit({
@@ -142,6 +145,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Endpoint to toggle between database and log files (for testing fallback)
+  app.get("/api/admin/db-mode", adminLimiter, async (req: Request, res: Response) => {
+    // Check for API key in header
+    const apiKey = req.headers["x-api-key"] as string;
+    
+    if (!apiKey || !validateApiKey(apiKey)) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized. Valid API key required."
+      });
+    }
+    
+    const mode = req.query.mode as string;
+    if (mode === 'logs') {
+      forceLogFileMode = true;
+      console.log("Database mode set to: Log Files (forced)");
+    } else {
+      forceLogFileMode = false;
+      console.log("Database mode set to: Auto (use database if available)");
+    }
+    
+    return res.status(200).json({
+      success: true,
+      mode: forceLogFileMode ? 'logs' : 'auto'
+    });
+  });
+
   // Admin endpoint to get all signups with API key protection
   app.get("/api/admin/signups", adminLimiter, async (req: Request, res: Response) => {
     console.log("Admin signups endpoint called");
@@ -170,13 +200,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      // Try to retrieve from database first
+      // If we're forcing log files mode, skip database
+      if (forceLogFileMode) {
+        console.log("Using log files (forced mode)");
+        const logSignups = getSignups();
+        
+        // Map log entries to match the expected format for the frontend
+        const formattedSignups = logSignups.map((entry, index) => ({
+          id: index + 1,
+          fullName: entry.fullName || "Unknown",
+          countryCode: entry.countryCode || "",
+          phoneNumber: entry.phoneNumber || "",
+          email: entry.email || "",
+          notes: entry.notes || "",
+          optIn: entry.optIn || false,
+          privacyPolicy: entry.privacyPolicy || false,
+          ipAddress: entry.ipAddress || "Unknown",
+          submissionCount: 1,
+          createdAt: entry.timestamp || new Date().toISOString()
+        }));
+        
+        return res.status(200).json({
+          success: true,
+          count: formattedSignups.length,
+          data: formattedSignups,
+          source: "log_files" // Indicate this is from logs, not database
+        });
+      }
+      
+      // Try to retrieve from database first if not in forced log mode
       try {
         const signups = await storage.getAllPhoneNumbers();
         return res.status(200).json({
           success: true,
           count: signups.length,
-          data: signups
+          data: signups,
+          source: "database" // Indicate this is from database
         });
       } catch (dbError) {
         console.warn("Database error, falling back to log files:", dbError);
