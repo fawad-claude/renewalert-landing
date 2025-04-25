@@ -511,8 +511,7 @@ export function SignupForm() {
                       <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
-                      I agree to receive notifications about the app launch via Email, SMS, or WhatsApp.
-                      (You must check this box to receive notifications.)
+                      <span className="text-gray-700">via Email, SMS, or WhatsApp.</span> <span className="text-gray-500">(You must check this box to receive notifications.)</span>
                     </FormDescription>
                   </div>
                 </FormItem>
