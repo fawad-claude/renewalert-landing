@@ -23,4 +23,67 @@
   .pulse-animation {
     animation: pulse-light 2s infinite;
   }
+  
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-in-out;
+  }
+  
+  @keyframes bounce-once {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .animate-bounce-once {
+    animation: bounce-once 1s ease-in-out;
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 2s infinite;
+  }
+  
+  /* Social Share Styles */
+  .social-icon {
+    @apply transition-transform hover:scale-105 text-center; 
+  }
+  
+  .social-icon-animation {
+    animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    animation-delay: calc(var(--animation-order) * 100ms);
+  }
+  
+  @keyframes pop-in {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    80% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 }

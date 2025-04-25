@@ -25,7 +25,7 @@ import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { getLocationBasedDialCode } from "@/lib/geolocation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SocialShare } from "@/components/social-share";
+import { FaWhatsapp, FaFacebookF, FaTwitter, FaEnvelope } from 'react-icons/fa';
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -124,11 +124,20 @@ export function SignupForm() {
     },
     onSuccess: (data) => {
       console.log('Mutation success:', data);
+      
+      // Set success state and show toast
       setIsSuccess(true);
+      console.log('Setting isSuccess to true');
+      
       toast({
         title: "Success!",
         description: "Thank you for signing up for early access!",
       });
+      
+      // Force a re-render after a short delay
+      setTimeout(() => {
+        console.log('Forced re-render check - isSuccess should be:', true);
+      }, 500);
     },
     onError: (error) => {
       console.error('Mutation error:', error);
@@ -266,7 +275,10 @@ export function SignupForm() {
     }
   }
 
+  console.log('isSuccess state:', isSuccess); // Debug log
+  
   if (isSuccess) {
+    console.log('Rendering success card with social share'); // Debug log
     return (
       <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border-2 border-green-500 transform transition-all hover:shadow-2xl animate-bounce-once">
         <CardContent className="px-0 py-0 text-center animate-fade-in">
@@ -295,8 +307,71 @@ export function SignupForm() {
               <div className="mb-4 mx-auto w-20 h-1 bg-primary rounded-full"></div>
             </div>
             
-            {/* Import the social share component */}
-            <SocialShare className="mt-4" />
+            {/* Direct social share implementation for debugging */}
+            <div className="social-share-direct mt-4">
+              <h3 className="text-lg font-medium mb-3">{t("share_heading") || "Help friends and family stay updated too!"}</h3>
+              <p className="text-sm text-gray-600 mb-4">{t("share_subheading") || "Share RenewAlert with your network"}</p>
+              
+              <div className="flex justify-center space-x-4">
+                {/* WhatsApp */}
+                <a 
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here: ${window.location.origin}`)}`}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="social-icon group social-icon-animation"
+                  style={{"--animation-order": "1"} as React.CSSProperties}
+                  aria-label="Share on WhatsApp"
+                >
+                  <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
+                    <FaWhatsapp size={24} />
+                  </div>
+                  <span className="text-xs mt-1 block">WhatsApp</span>
+                </a>
+                
+                {/* Facebook */}
+                <a 
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}`}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="social-icon group social-icon-animation"
+                  style={{"--animation-order": "2"} as React.CSSProperties}
+                  aria-label="Share on Facebook"
+                >
+                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
+                    <FaFacebookF size={24} />
+                  </div>
+                  <span className="text-xs mt-1 block">Facebook</span>
+                </a>
+                
+                {/* Twitter/X */}
+                <a 
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here: ${window.location.origin}`)}`}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="social-icon group social-icon-animation"
+                  style={{"--animation-order": "3"} as React.CSSProperties}
+                  aria-label="Share on X (Twitter)"
+                >
+                  <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
+                    <FaTwitter size={24} />
+                  </div>
+                  <span className="text-xs mt-1 block">X</span>
+                </a>
+                
+                {/* Email */}
+                <a 
+                  href={`mailto:?subject=${encodeURIComponent("RenewAlert - Never miss important document renewals again!")}&body=${encodeURIComponent(`I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here: ${window.location.origin}`)}`}
+                  className="social-icon group social-icon-animation"
+                  style={{"--animation-order": "4"} as React.CSSProperties}
+                  aria-label="Share via Email"
+                >
+                  <div className="w-12 h-12 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
+                    <FaEnvelope size={20} />
+                  </div>
+                  <span className="text-xs mt-1 block">Email</span>
+                </a>
+              </div>
+            </div>
             
             <p className="text-sm text-gray-500 mt-6">
               Help your friends and family save time and avoid stress by sharing RenewAlert with them.
