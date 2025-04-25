@@ -17,7 +17,7 @@ export const translations: TranslationDictionary = {
     "hero_title": "Never Miss your ID Renewal Again",
     "hero_subtitle": "Get timely reminders for your passports, licenses, residency permits (Iqama), and visas before they expire",
     "hero_cta": "Get Early Access",
-    "expat_paragraph": "Expats, we get it — renewing documents is a headache. Passport, License, Residency permits (Iqama), Visa — renewals can be overwhelming and easy to miss.\n\nOur upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.\n\nBe the first to experience the convenience of staying organized with ease.",
+    "expat_paragraph": "Whether you're an Expat, Resident, or Citizen, we get it — renewing documents is a headache. Passports, licenses, residency permits (Iqama), visas — it's overwhelming and easy to miss.\n\nOur upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.\n\nBe the first to experience the convenience of staying organized with ease.",
     
     // Form Labels
     "form_title": "Sign up for early access",
@@ -39,8 +39,8 @@ export const translations: TranslationDictionary = {
     "feature_timely_desc": "Get notifications well before your documents expire",
     "feature_simple_title": "Simple Process",
     "feature_simple_desc": "Just upload your documents and we handle the rest",
-    "feature_secure_title": "Secure Storage",
-    "feature_secure_desc": "Your data is encrypted and securely stored",
+    "feature_secure_title": "Secure and Flexible Storage",
+    "feature_secure_desc": "Your Data, Your Choice — on your phone or in the cloud. Encrypted and protected",
     
     // Social Sharing
     "share_heading": "Help friends and family stay updated too!",
