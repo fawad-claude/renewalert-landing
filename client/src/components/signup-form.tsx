@@ -507,13 +507,12 @@ export function SignupForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      {t("opt_in")}{" "}
+                      I agree to receive notifications about the app launch{" "}
                       <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
-                      I agree to receive renewal reminders via Email, SMS or
-                      WhatsApp. (Required to use RenewAlert's services - we
-                      promise no spam, only important notifications).
+                      I agree to receive notifications about the app launch via Email, SMS, or WhatsApp.
+                      (You must check this box to receive notifications.)
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -534,7 +533,7 @@ export function SignupForm() {
                   </FormControl>
                   <div className="grid gap-1.5 leading-none">
                     <FormLabel>
-                      {t("privacy_policy")}{" "}
+                      I agree to the{" "}
                       <Link href="/privacy-policy">
                         <span className="text-primary hover:underline cursor-pointer">
                           Privacy Policy
