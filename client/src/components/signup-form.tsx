@@ -25,13 +25,15 @@ import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { getLocationBasedDialCode } from "@/lib/geolocation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FaWhatsapp, FaFacebookF, FaTwitter, FaEnvelope } from 'react-icons/fa';
+import { FaWhatsapp, FaFacebookF, FaTwitter, FaEnvelope } from "react-icons/fa";
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
   // Default to phone input method since it's shown first
-  const [inputMethod, setInputMethod] = useState<'phone' | 'email' | 'none'>('phone');
+  const [inputMethod, setInputMethod] = useState<"phone" | "email" | "none">(
+    "phone",
+  );
   const { toast } = useToast();
   const { t, dir } = useLanguage();
 
@@ -67,37 +69,37 @@ export function SignupForm() {
 
     loadUserCountry();
   }, [form]);
-  
+
   // Listen for changes in phone number and email fields to update input method
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       // When phone number changes
-      if (name === 'phoneNumber' && value.phoneNumber) {
+      if (name === "phoneNumber" && value.phoneNumber) {
         if (value.phoneNumber.length > 0) {
-          setInputMethod('phone');
+          setInputMethod("phone");
           // Clear email field when user starts typing phone number
-          if (form.getValues('email')) {
-            form.setValue('email', '');
+          if (form.getValues("email")) {
+            form.setValue("email", "");
           }
         } else if (!value.email || value.email.length === 0) {
-          setInputMethod('none');
+          setInputMethod("none");
         }
       }
-      
+
       // When email changes
-      if (name === 'email' && value.email) {
+      if (name === "email" && value.email) {
         if (value.email.length > 0) {
-          setInputMethod('email');
+          setInputMethod("email");
           // Clear phone fields when user starts typing email
-          if (form.getValues('phoneNumber')) {
-            form.setValue('phoneNumber', '');
+          if (form.getValues("phoneNumber")) {
+            form.setValue("phoneNumber", "");
           }
         } else if (!value.phoneNumber || value.phoneNumber.length === 0) {
-          setInputMethod('none');
+          setInputMethod("none");
         }
       }
     });
-    
+
     return () => subscription.unsubscribe();
   }, [form]);
 
@@ -111,36 +113,36 @@ export function SignupForm() {
       optIn?: boolean;
       privacyPolicy?: boolean;
     }) => {
-      console.log('Making API request with data:', data);
+      console.log("Making API request with data:", data);
       return apiRequest("POST", "/api/signup", data)
-        .then(response => {
-          console.log('API response:', response);
+        .then((response) => {
+          console.log("API response:", response);
           return response;
         })
-        .catch(error => {
-          console.error('API error:', error);
+        .catch((error) => {
+          console.error("API error:", error);
           throw error;
         });
     },
     onSuccess: (data) => {
-      console.log('Mutation success:', data);
-      
+      console.log("Mutation success:", data);
+
       // Set success state and show toast
       setIsSuccess(true);
-      console.log('Setting isSuccess to true');
-      
+      console.log("Setting isSuccess to true");
+
       toast({
         title: "Success!",
         description: "Thank you for signing up for early access!",
       });
-      
+
       // Force a re-render after a short delay
       setTimeout(() => {
-        console.log('Forced re-render check - isSuccess should be:', true);
+        console.log("Forced re-render check - isSuccess should be:", true);
       }, 500);
     },
     onError: (error) => {
-      console.error('Mutation error:', error);
+      console.error("Mutation error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -163,122 +165,136 @@ export function SignupForm() {
   }) {
     try {
       // Debug log before validation
-      console.log('Form data before validation:', { ...data, inputMethod });
-      console.log('Form errors:', form.formState.errors);
-      
+      console.log("Form data before validation:", { ...data, inputMethod });
+      console.log("Form errors:", form.formState.errors);
+
       // Validate name
       if (!data.fullName || data.fullName.trim().length < 2) {
-        form.setError('fullName', { 
-          type: 'manual', 
-          message: 'Please enter your full name (at least 2 characters)' 
+        form.setError("fullName", {
+          type: "manual",
+          message: "Please enter your full name (at least 2 characters)",
         });
         return;
       }
-      
+
       // Validate that at least one contact method is provided
-      if (inputMethod === 'phone' && (!data.phoneNumber || data.phoneNumber.trim() === '')) {
-        form.setError('phoneNumber', { 
-          type: 'manual', 
-          message: 'Please enter a phone number' 
+      if (
+        inputMethod === "phone" &&
+        (!data.phoneNumber || data.phoneNumber.trim() === "")
+      ) {
+        form.setError("phoneNumber", {
+          type: "manual",
+          message: "Please enter a phone number",
         });
         return;
       }
-      
-      if (inputMethod === 'email' && (!data.email || data.email.trim() === '')) {
-        form.setError('email', { 
-          type: 'manual', 
-          message: 'Please enter an email address' 
+
+      if (
+        inputMethod === "email" &&
+        (!data.email || data.email.trim() === "")
+      ) {
+        form.setError("email", {
+          type: "manual",
+          message: "Please enter an email address",
         });
         return;
       }
-      
+
       // Make sure the opt-in checkbox is checked
       if (!data.optIn) {
-        form.setError('optIn', { 
-          type: 'manual', 
-          message: 'You must opt-in to receive notifications' 
+        form.setError("optIn", {
+          type: "manual",
+          message: "You must opt-in to receive notifications",
         });
         return;
       }
-      
+
       // Make sure the privacy policy checkbox is checked
       if (!data.privacyPolicy) {
-        form.setError('privacyPolicy', { 
-          type: 'manual', 
-          message: 'You must agree to the privacy policy' 
+        form.setError("privacyPolicy", {
+          type: "manual",
+          message: "You must agree to the privacy policy",
         });
-        console.log('Privacy policy not checked:', data.privacyPolicy);
+        console.log("Privacy policy not checked:", data.privacyPolicy);
         return;
       }
-      
+
       // Make sure we only send what's needed based on input method
       const submissionData = {
         ...data,
         // If email is selected, clear phone data - use empty string to avoid nulls
-        ...(inputMethod === 'email' ? { 
-          phoneNumber: '', 
-          countryCode: '+965' // Use a valid country code even if we're not using it
-        } : {}),
+        ...(inputMethod === "email"
+          ? {
+              phoneNumber: "",
+              countryCode: "+965", // Use a valid country code even if we're not using it
+            }
+          : {}),
         // If phone is selected, clear email data
-        ...(inputMethod === 'phone' ? { 
-          email: '' 
-        } : {})
+        ...(inputMethod === "phone"
+          ? {
+              email: "",
+            }
+          : {}),
       };
-      
+
       // Extra validation for phone number format
-      if (inputMethod === 'phone' && submissionData.phoneNumber) {
+      if (inputMethod === "phone" && submissionData.phoneNumber) {
         // Make sure it's only digits
         if (!/^\d+$/.test(submissionData.phoneNumber)) {
-          form.setError('phoneNumber', { 
-            type: 'manual', 
-            message: 'Phone number must contain only digits' 
+          form.setError("phoneNumber", {
+            type: "manual",
+            message: "Phone number must contain only digits",
           });
           return;
         }
-        
+
         // Make sure it's a reasonable length
-        if (submissionData.phoneNumber.length < 6 || submissionData.phoneNumber.length > 15) {
-          form.setError('phoneNumber', { 
-            type: 'manual', 
-            message: 'Phone number must be between 6 and 15 digits' 
+        if (
+          submissionData.phoneNumber.length < 6 ||
+          submissionData.phoneNumber.length > 15
+        ) {
+          form.setError("phoneNumber", {
+            type: "manual",
+            message: "Phone number must be between 6 and 15 digits",
           });
           return;
         }
       }
-      
+
       // Extra validation for email format
-      if (inputMethod === 'email' && submissionData.email) {
+      if (inputMethod === "email" && submissionData.email) {
         // Basic email validation
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submissionData.email)) {
-          form.setError('email', { 
-            type: 'manual', 
-            message: 'Please enter a valid email address' 
+          form.setError("email", {
+            type: "manual",
+            message: "Please enter a valid email address",
           });
           return;
         }
       }
-      
-      console.log('Submitting form data:', submissionData);
-      
+
+      console.log("Submitting form data:", submissionData);
+
       // All validation checks passed
-      console.log('All validation checks passed, proceeding to submit data');
-      
+      console.log("All validation checks passed, proceeding to submit data");
+
       // Submit the data
       mutation.mutate(submissionData);
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was a problem submitting the form. Please try again."
+        description:
+          "There was a problem submitting the form. Please try again.",
       });
     }
   }
 
-  console.log('isSuccess state:', isSuccess); // Debug log
-  
+  console.log("isSuccess state:", isSuccess); // Debug log
+
   if (isSuccess) {
-    console.log('Rendering success card with social share'); // Debug log
+    console.log("Rendering success card with social share"); // Debug log
     return (
       <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border-2 border-green-500 transform transition-all hover:shadow-2xl animate-bounce-once">
         <CardContent className="px-0 py-0 text-center animate-fade-in">
@@ -288,38 +304,42 @@ export function SignupForm() {
           <h3 className="text-2xl font-bold text-gray-800 mb-3">
             {t("success")}
           </h3>
-          <p className="text-lg text-gray-700 mb-2">
-            {t("success")}
-          </p>
+          <p className="text-lg text-gray-700 mb-2">{t("success")}</p>
           <p className="text-gray-600">
             We'll notify you when we launch RenewAlert.
           </p>
-          
+
           <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
             <p className="text-green-800 font-medium">
-              Your contact details have been recorded. You're now on our early access list.
+              Your contact details have been recorded. You're now on our early
+              access list.
             </p>
           </div>
-          
+
           {/* Social Sharing Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="animate-pulse-slow">
               <div className="mb-4 mx-auto w-20 h-1 bg-primary rounded-full"></div>
             </div>
-            
+
             {/* Direct social share implementation for debugging */}
             <div className="social-share-direct mt-4">
-              <h3 className="text-lg font-medium mb-3">{t("share_heading") || "Help friends and family stay updated too!"}</h3>
-              <p className="text-sm text-gray-600 mb-4">{t("share_subheading") || "Share RenewAlert with your network"}</p>
-              
+              <h3 className="text-lg font-medium mb-3">
+                {t("share_heading") ||
+                  "Help friends and family stay updated too!"}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                {t("share_subheading") || "Share RenewAlert with your network"}
+              </p>
+
               <div className="flex justify-center space-x-4">
                 {/* WhatsApp */}
-                <a 
+                <a
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here: ${window.location.origin}`)}`}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="social-icon group social-icon-animation"
-                  style={{"--animation-order": "1"} as React.CSSProperties}
+                  style={{ "--animation-order": "1" } as React.CSSProperties}
                   aria-label="Share on WhatsApp"
                 >
                   <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
@@ -327,14 +347,14 @@ export function SignupForm() {
                   </div>
                   <span className="text-xs mt-1 block">WhatsApp</span>
                 </a>
-                
+
                 {/* Facebook */}
-                <a 
+                <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}`}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="social-icon group social-icon-animation"
-                  style={{"--animation-order": "2"} as React.CSSProperties}
+                  style={{ "--animation-order": "2" } as React.CSSProperties}
                   aria-label="Share on Facebook"
                 >
                   <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
@@ -342,14 +362,14 @@ export function SignupForm() {
                   </div>
                   <span className="text-xs mt-1 block">Facebook</span>
                 </a>
-                
+
                 {/* Twitter/X */}
-                <a 
+                <a
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here: ${window.location.origin}`)}`}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="social-icon group social-icon-animation"
-                  style={{"--animation-order": "3"} as React.CSSProperties}
+                  style={{ "--animation-order": "3" } as React.CSSProperties}
                   aria-label="Share on X (Twitter)"
                 >
                   <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
@@ -357,12 +377,12 @@ export function SignupForm() {
                   </div>
                   <span className="text-xs mt-1 block">X</span>
                 </a>
-                
+
                 {/* Email */}
-                <a 
+                <a
                   href={`mailto:?subject=${encodeURIComponent("RenewAlert - Never miss important document renewals again!")}&body=${encodeURIComponent(`I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here: ${window.location.origin}`)}`}
                   className="social-icon group social-icon-animation"
-                  style={{"--animation-order": "4"} as React.CSSProperties}
+                  style={{ "--animation-order": "4" } as React.CSSProperties}
                   aria-label="Share via Email"
                 >
                   <div className="w-12 h-12 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
@@ -372,9 +392,10 @@ export function SignupForm() {
                 </a>
               </div>
             </div>
-            
+
             <p className="text-sm text-gray-500 mt-6">
-              Help your friends and family save time and avoid stress by sharing RenewAlert with them.
+              Help your friends and family save time and avoid stress by sharing
+              RenewAlert with them.
             </p>
           </div>
         </CardContent>
@@ -388,9 +409,7 @@ export function SignupForm() {
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
           {t("form_title")}
         </h3>
-        <p className="text-gray-600 mb-6">
-          {t("hero_cta")}
-        </p>
+        <p className="text-gray-600 mb-6">{t("hero_cta")}</p>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -413,33 +432,36 @@ export function SignupForm() {
 
             {/* Contact method selection buttons */}
             <div className="flex flex-col space-y-2">
-              <div className="text-sm font-medium">{t("notification_preference")} <span className="text-destructive">*</span></div>
+              <div className="text-sm font-medium">
+                {t("notification_preference")}{" "}
+                <span className="text-destructive">*</span>
+              </div>
               <div className="flex space-x-2">
-                <Button 
+                <Button
                   type="button"
-                  variant={inputMethod === 'phone' ? "default" : "outline"}
+                  variant={inputMethod === "phone" ? "default" : "outline"}
                   className="flex-1"
                   onClick={() => {
-                    setInputMethod('phone');
-                    form.setValue('email', '');
+                    setInputMethod("phone");
+                    form.setValue("email", "");
                     // Clear any existing errors
-                    form.clearErrors('phoneNumber');
-                    form.clearErrors('email');
+                    form.clearErrors("phoneNumber");
+                    form.clearErrors("email");
                   }}
                 >
                   {t("text_me")}
                 </Button>
-                <Button 
+                <Button
                   type="button"
-                  variant={inputMethod === 'email' ? "default" : "outline"}
+                  variant={inputMethod === "email" ? "default" : "outline"}
                   className="flex-1"
                   onClick={() => {
-                    setInputMethod('email');
-                    form.setValue('phoneNumber', '');
-                    form.setValue('countryCode', '+965'); // Reset to default country code
+                    setInputMethod("email");
+                    form.setValue("phoneNumber", "");
+                    form.setValue("countryCode", "+965"); // Reset to default country code
                     // Clear any existing errors
-                    form.clearErrors('phoneNumber');
-                    form.clearErrors('email');
+                    form.clearErrors("phoneNumber");
+                    form.clearErrors("email");
                   }}
                 >
                   {t("email_me")}
@@ -448,14 +470,17 @@ export function SignupForm() {
             </div>
 
             {/* Phone input fields - shown only when phone is selected */}
-            {inputMethod === 'phone' && (
+            {inputMethod === "phone" && (
               <div>
-                <PhoneInput control={form.control} isLoading={isLoadingLocation} />
+                <PhoneInput
+                  control={form.control}
+                  isLoading={isLoadingLocation}
+                />
               </div>
             )}
 
             {/* Email input field - shown only when email is selected */}
-            {inputMethod === 'email' && (
+            {inputMethod === "email" && (
               <FormField
                 control={form.control}
                 name="email"
@@ -463,11 +488,7 @@ export function SignupForm() {
                   <FormItem>
                     <FormLabel>{t("email")}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder={t("email")}
-                        {...field}
-                      />
+                      <Input type="email" placeholder={t("email")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -507,11 +528,15 @@ export function SignupForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      I agree to receive notifications about the app launch{" "}
+                      I agree to receive notifications about the app launch via
+                      Email, SMS, or WhatsApp.{" "}
                       <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
-                      <span className="text-gray-700">via Email, SMS, or WhatsApp.</span> <span className="text-gray-500">(You must check this box to receive notifications.)</span>
+                      <span className="text-gray-700"></span>{" "}
+                      <span className="text-gray-500">
+                        (You must check this box to receive notifications.)
+                      </span>
                     </FormDescription>
                   </div>
                 </FormItem>
