@@ -25,6 +25,7 @@ import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { getLocationBasedDialCode } from "@/lib/geolocation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { SocialShare } from "@/components/social-share";
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -285,6 +286,20 @@ export function SignupForm() {
           <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
             <p className="text-green-800 font-medium">
               Your contact details have been recorded. You're now on our early access list.
+            </p>
+          </div>
+          
+          {/* Social Sharing Section */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="animate-pulse-slow">
+              <div className="mb-4 mx-auto w-20 h-1 bg-primary rounded-full"></div>
+            </div>
+            
+            {/* Import the social share component */}
+            <SocialShare className="mt-4" />
+            
+            <p className="text-sm text-gray-500 mt-6">
+              Help your friends and family save time and avoid stress by sharing RenewAlert with them.
             </p>
           </div>
         </CardContent>

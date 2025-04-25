@@ -40,7 +40,13 @@ export const translations: TranslationDictionary = {
     "feature_simple_title": "Simple Process",
     "feature_simple_desc": "Just upload your documents and we handle the rest",
     "feature_secure_title": "Secure Storage",
-    "feature_secure_desc": "Your data is encrypted and securely stored"
+    "feature_secure_desc": "Your data is encrypted and securely stored",
+    
+    // Social Sharing
+    "share_heading": "Help friends and family stay updated too!",
+    "share_subheading": "Share RenewAlert with your network",
+    "share_title": "RenewAlert - Never miss important document renewals again!",
+    "share_message": "I just signed up for RenewAlert to get timely reminders for my passport, visa, and ID renewals. No more last-minute panic! Join me here:"
   },
   ar: {
     // Hero Section
