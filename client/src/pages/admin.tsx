@@ -134,42 +134,7 @@ export default function AdminPage() {
     enabled: isAuthenticated, // Only run query when authenticated
   });
 
-  // Direct login using environment variable key (requested from server)
-  const handleDirectLogin = async () => {
-    try {
-      // Instead of hardcoding, ask the server for the key (admin-only endpoint)
-      // Note: In production, you should avoid this pattern and require manual key entry
-      const formElement = document.querySelector('form');
-      
-      // Show loading state in button
-      const button = document.querySelector('[data-direct-login]');
-      if (button) {
-        button.textContent = "Loading key...";
-        button.setAttribute('disabled', 'true');
-      }
-      
-      // Prompt user for the key instead of using a hardcoded one
-      const userInput = prompt("Please enter your admin API key:");
-      
-      if (userInput) {
-        setAdminKey(userInput.trim());
-        
-        // Use setTimeout to allow the state to update before submitting
-        setTimeout(() => {
-          if (formElement) formElement.dispatchEvent(new Event('submit', { cancelable: true }));
-        }, 100);
-      } else {
-        // Reset button state
-        if (button) {
-          button.textContent = "Use Default Key";
-          button.removeAttribute('disabled');
-        }
-      }
-    } catch (err) {
-      console.error("Error with direct login:", err);
-      alert("Failed to load admin key. Please enter it manually.");
-    }
-  };
+
 
   // Display login form if not authenticated
   if (!isAuthenticated) {
@@ -219,19 +184,6 @@ export default function AdminPage() {
               Login to Dashboard
             </button>
           </form>
-          
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <button
-              onClick={handleDirectLogin}
-              data-direct-login
-              className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100"
-            >
-              Use Default Key
-            </button>
-            <p className="text-xs text-center text-gray-500 mt-1">
-              Uses the predefined key configured in the application
-            </p>
-          </div>
         </div>
       </div>
     );
