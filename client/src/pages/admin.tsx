@@ -136,8 +136,11 @@ export default function AdminPage() {
     queryKey: ["/api/admin/signups"],
     queryFn: async () => {
       try {
+        console.log("🔍 Fetching admin data...");
+        
         // Use the stored admin key for the request
         const storedKey = sessionStorage.getItem("adminKey") || adminKey;
+        console.log("🔑 Using admin key (length):", storedKey?.length || 0);
         
         const response = await fetch("/api/admin/signups", {
           method: "GET",
@@ -147,9 +150,12 @@ export default function AdminPage() {
           credentials: "include",
         });
         
+        console.log("📥 Response status:", response.status);
+        
         if (!response.ok) {
           // If unauthorized, clear authentication state
           if (response.status === 401 || response.status === 403) {
+            console.log("🚫 Unauthorized, clearing auth state");
             sessionStorage.removeItem("adminAuth");
             sessionStorage.removeItem("adminKey");
             setIsAuthenticated(false);
@@ -157,13 +163,39 @@ export default function AdminPage() {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         
-        return await response.json();
+        try {
+          // Get response as text first to debug
+          const text = await response.text();
+          console.log("📄 Raw response text:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
+          
+          // Try to parse JSON
+          const data = text ? JSON.parse(text) : null;
+          console.log("📊 Parsed data structure:", Object.keys(data || {}));
+          
+          return data;
+        } catch (parseErr) {
+          console.error("❌ JSON parsing error:", parseErr);
+          toast({
+            title: "Data Error",
+            description: "Could not parse response data. Check browser console for details.",
+            variant: "destructive",
+          });
+          
+          throw new Error(`Failed to parse response: ${parseErr.message}`);
+        }
       } catch (err) {
-        console.error("Error fetching signups:", err);
+        console.error("❌ Error fetching signups:", err);
+        toast({
+          title: "Network Error",
+          description: err instanceof Error ? err.message : "Failed to fetch data",
+          variant: "destructive",
+        });
         throw err;
       }
     },
     enabled: isAuthenticated, // Only run query when authenticated
+    retry: 1, // Only retry once to avoid infinite retries
+    refetchOnWindowFocus: false, // Disable auto refetch on window focus to reduce errors
   });
 
 
@@ -315,175 +347,160 @@ export default function AdminPage() {
   };
 
   // Show dashboard when authenticated and data loaded
+  // Create a simplified version with robust error handling
+  
+  // Make more robust by adding error handling around the data rendering
+  const renderUserList = () => {
+    try {
+      if (!signups || !signups.data || !Array.isArray(signups.data)) {
+        return (
+          <div className="text-center py-16 bg-gray-50 rounded-lg">
+            <AlertTriangle className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+            <p className="text-gray-700 font-medium">No data or invalid data structure received.</p>
+            <p className="text-sm text-gray-500 mt-2">
+              Check the server logs or try the debugging tool.
+            </p>
+          </div>
+        );
+      }
+      
+      if (signups.data.length === 0) {
+        return (
+          <div className="text-center py-16 bg-gray-50 rounded-lg">
+            <p className="text-gray-700">No signup data available yet.</p>
+            <p className="text-sm text-gray-500 mt-2">
+              Submissions will appear here when users sign up.
+            </p>
+          </div>
+        );
+      }
+      
+      return (
+        <div className="bg-white shadow overflow-hidden sm:rounded-md mt-4">
+          <ul className="divide-y divide-gray-200">
+            {signups.data.map((signup: any, index: number) => (
+              <li key={signup.id || index} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-900">{signup.fullName || "N/A"}</span>
+                  <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-4">
+                    {signup.email && (
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Mail size={14} className="mr-1" />
+                        {signup.email}
+                      </div>
+                    )}
+                    {signup.phoneNumber && (
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Phone size={14} className="mr-1" />
+                        {signup.countryCode} {signup.phoneNumber}
+                      </div>
+                    )}
+                  </div>
+                  {signup.notes && (
+                    <div className="mt-1 text-sm text-gray-500">
+                      <span className="font-medium">Notes:</span> {signup.notes}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="mt-2 sm:mt-0 flex flex-wrap gap-2">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    signup.optIn ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                  }`}>
+                    {signup.optIn ? "Opted-in" : "No opt-in"}
+                  </span>
+                  
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <Calendar size={12} className="mr-1" />
+                    {new Date(signup.createdAt).toLocaleDateString()}
+                  </span>
+                  
+                  {signup.ipAddress && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 font-mono">
+                      IP: {signup.ipAddress}
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    } catch (err) {
+      console.error("Error rendering user list:", err);
+      return (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Error rendering user data</h3>
+              <p className="mt-2 text-sm text-red-700">
+                There was an error rendering the user list: {err instanceof Error ? err.message : "Unknown error"}
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
+  
   return (
     <div className="container mx-auto py-10 px-4">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        <div className="flex space-x-2">
-          <button
-            onClick={toggleDbMode}
-            className="flex items-center space-x-2 border-2 px-6 py-3 rounded-md font-bold text-lg shadow-lg"
-            style={{
-              backgroundColor: dbSourceMode === "auto" ? "#ff9800" : "#4CAF50",
-              color: "white",
-              borderColor: dbSourceMode === "auto" ? "#e65100" : "#1b5e20",
-              transition: "all 0.3s ease"
-            }}
-          >
-            <span>
-              {dbSourceMode === "auto" 
-                ? "🔄 SWITCH TO LOG FILES MODE" 
-                : "🔄 SWITCH TO DATABASE MODE"}
-            </span>
-          </button>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => refetch()}
-            className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
+            className="flex items-center px-3 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
           >
-            <RefreshCw size={16} /> <span>Refresh</span>
+            <RefreshCw size={16} className="mr-2" /> Refresh Data
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-2 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+            className="flex items-center px-3 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
           >
-            <Lock size={16} /> <span>Logout</span>
+            <Lock size={16} className="mr-2" /> Logout
           </button>
         </div>
       </div>
-      {/* Always show the data source, with a bold banner on top */}
-      <div className={`mb-4 p-4 border-2 rounded-md text-base font-medium ${
-        signups?.source === 'database' 
-        ? 'bg-green-100 text-green-800 border-green-500' 
-        : 'bg-yellow-100 text-yellow-800 border-yellow-500'
-      }`}>
-        <span className="text-lg">DATA SOURCE:</span> <span className="font-bold">{signups?.source === 'database' ? 'DATABASE' : 'LOG FILES (FALLBACK)'}</span>
-      </div>
-
-      <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-        <div className="border-b border-gray-200">
-          <div className="flex">
-            <button
-              className={`px-6 py-3 text-sm font-medium ${
-                activeTab === "signups"
-                  ? "text-primary border-b-2 border-primary"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-              onClick={() => setActiveTab("signups")}
-            >
-              Signups ({signups?.count || 0})
-            </button>
+      
+      {signups?.source && (
+        <div className={`p-3 rounded-md text-sm font-medium mb-4 ${
+          signups.source === 'database' 
+            ? 'bg-green-100 text-green-800 border border-green-200' 
+            : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+        }`}>
+          <div className="flex items-center">
+            {signups.source === 'database' ? 
+              <Check className="h-4 w-4 mr-2" /> : 
+              <AlertTriangle className="h-4 w-4 mr-2" />
+            }
+            <span>Data Source: <strong>{signups.source === 'database' ? 'DATABASE' : 'LOG FILES (FALLBACK)'}</strong></span>
           </div>
         </div>
-
-        {activeTab === "signups" && (
-          <div className="overflow-x-auto">
-            {signups?.data?.length === 0 ? (
-              <div className="text-center py-16">
-                <p className="text-gray-500">No signup data available yet.</p>
-                <p className="text-sm text-gray-400 mt-2">
-                  Submissions will appear here when users sign up.
-                </p>
-              </div>
-            ) : (
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Contact
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Notes
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Opt-In
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      IP Address
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Submissions
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {signups?.data?.map((signup: any) => (
-                    <tr key={signup.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 text-primary">
-                            <User size={16} />
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {signup.fullName || "N/A"}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-col space-y-1">
-                          {signup.email && (
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Mail size={14} className="mr-1" /> {signup.email}
-                            </div>
-                          )}
-                          {signup.phoneNumber && (
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Phone size={14} className="mr-1" /> {signup.countryCode} {signup.phoneNumber}
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <FileText size={14} className="mr-1" />
-                          <span className="truncate max-w-xs">
-                            {signup.notes || "No notes provided"}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            signup.optIn
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {signup.optIn ? "Yes" : "No"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex items-center">
-                          <span className="font-mono">{signup.ipAddress || "Unknown"}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          (signup.submissionCount || 0) >= 3 ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"
-                        }`}>
-                          {signup.submissionCount || 1}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex items-center">
-                          <Calendar size={14} className="mr-1" />
-                          {new Date(signup.createdAt).toLocaleString()}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        )}
+      )}
+      
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+        <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            Signup Submissions {signups?.count && <span className="ml-2 py-1 px-2 bg-primary/10 text-primary text-sm rounded-full">{signups.count}</span>}
+          </h3>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            Contact information collected from the signup form.
+          </p>
+        </div>
+        <div className="px-4 py-5 sm:p-6">
+          {renderUserList()}
+        </div>
+      </div>
+      
+      <div className="mt-6 text-center">
+        <a href="/admin-debug" className="inline-flex items-center text-sm text-primary hover:underline">
+          <AlertTriangle className="h-4 w-4 mr-1" />
+          Need to test API endpoints? Use the admin debugging tool
+        </a>
       </div>
     </div>
   );
