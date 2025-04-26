@@ -4,7 +4,12 @@ import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert,
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import ErrorBoundary from "@/components/error-boundary";
-import { getCountryFromIP, specialIPMappings } from "@/lib/ip-country-map";
+import { 
+  getCountryFromIP, 
+  getCountryFromIPAsync, 
+  getFallbackCountry,
+  specialIPMappings 
+} from "@/lib/ip-country-map";
 
 // We'll request the admin API key from the server to avoid hardcoding it on the client
 const ADMIN_KEY_HEADER = "X-API-KEY";
@@ -18,6 +23,7 @@ export default function AdminPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [expandedNotes, setExpandedNotes] = useState<Set<number>>(new Set());
+  const [ipCountries, setIpCountries] = useState<Record<string, string>>({});
   
   // Handle the admin login
   const handleAdminLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,6 +132,7 @@ export default function AdminPage() {
     setIsAuthenticated(false);
     setAdminKey("");
   };
+
 
   const {
     data: signups,
@@ -244,6 +251,32 @@ export default function AdminPage() {
     setDeleteConfirmId(null);
   };
   
+  // Load country data from IPs when signups data changes
+  useEffect(() => {
+    if (signups?.data && Array.isArray(signups.data) && signups.data.length > 0) {
+      // Collect all unique IP addresses
+      const uniqueIPs = new Set<string>();
+      signups.data.forEach((signup: any) => {
+        if (signup.ipAddress && !ipCountries[signup.ipAddress]) {
+          uniqueIPs.add(signup.ipAddress);
+        }
+      });
+      
+      // Fetch country data for each IP
+      uniqueIPs.forEach(async (ip) => {
+        try {
+          const country = await getCountryFromIPAsync(ip);
+          setIpCountries(prev => ({
+            ...prev,
+            [ip]: country
+          }));
+        } catch (err) {
+          console.error(`Failed to fetch country for IP ${ip}:`, err);
+        }
+      });
+    }
+  }, [signups?.data, ipCountries]);
+  
   // Toggle note expansion
   const toggleNoteExpansion = (id: number) => {
     setExpandedNotes(prev => {
@@ -307,10 +340,17 @@ export default function AdminPage() {
         // Determine country for search
         let country = "unknown";
         if (signup.ipAddress) {
-          if (specialIPMappings[signup.ipAddress]) {
+          // First try to get it from our cached ipCountries object
+          if (ipCountries[signup.ipAddress]) {
+            country = ipCountries[signup.ipAddress].toLowerCase();
+          }
+          // Then check special mappings
+          else if (specialIPMappings[signup.ipAddress]) {
             country = specialIPMappings[signup.ipAddress].toLowerCase();
-          } else {
-            country = getCountryFromIP(signup.ipAddress).toLowerCase();
+          } 
+          // Finally use fallback
+          else {
+            country = getFallbackCountry(signup.ipAddress).toLowerCase();
           }
         }
         
