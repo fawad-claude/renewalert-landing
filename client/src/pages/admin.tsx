@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check, Search, X, Trash2 } from "lucide-react";
+import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check, Search, X, Trash2, Globe } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import ErrorBoundary from "@/components/error-boundary";
+import { getCountryFromIP, specialIPMappings } from "@/lib/ip-country-map";
 
 // We'll request the admin API key from the server to avoid hardcoding it on the client
 const ADMIN_KEY_HEADER = "X-API-KEY";
@@ -287,12 +288,25 @@ export default function AdminPage() {
         const email = (signup.email || "").toLowerCase();
         const phone = (signup.phoneNumber || "").toLowerCase();
         const notes = (signup.notes || "").toLowerCase();
+        const ip = (signup.ipAddress || "").toLowerCase();
+        
+        // Determine country for search
+        let country = "unknown";
+        if (signup.ipAddress) {
+          if (specialIPMappings[signup.ipAddress]) {
+            country = specialIPMappings[signup.ipAddress].toLowerCase();
+          } else {
+            country = getCountryFromIP(signup.ipAddress).toLowerCase();
+          }
+        }
         
         return (
           fullName.includes(searchLower) ||
           email.includes(searchLower) ||
           phone.includes(searchLower) ||
-          notes.includes(searchLower)
+          notes.includes(searchLower) ||
+          ip.includes(searchLower) ||
+          country.includes(searchLower)
         );
       });
       
@@ -320,85 +334,118 @@ export default function AdminPage() {
       
       return (
         <div className="bg-white shadow overflow-hidden sm:rounded-md mt-4">
-          <ul className="divide-y divide-gray-200">
-            {filteredData.map((signup: any, index: number) => (
-              <li key={signup.id || index} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-900">{signup.fullName || "N/A"}</span>
-                  <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-4">
-                    {signup.email && (
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Mail size={14} className="mr-1" />
-                        {signup.email}
-                      </div>
-                    )}
-                    {signup.phoneNumber && (
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Phone size={14} className="mr-1" />
-                        {signup.countryCode} {signup.phoneNumber}
-                      </div>
-                    )}
-                  </div>
-                  {signup.notes && (
-                    <div className="mt-1 text-sm text-gray-500">
-                      <span className="font-medium">Notes:</span> {signup.notes}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="mt-2 sm:mt-0 flex flex-wrap items-center gap-2">
-                  <div>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      signup.optIn ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                    }`}>
-                      {signup.optIn ? "Opted-in" : "No opt-in"}
-                    </span>
-                    
-                    <span className="inline-flex items-center ml-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      <Calendar size={12} className="mr-1" />
-                      {new Date(signup.createdAt).toLocaleDateString()}
-                    </span>
-                    
-                    {signup.ipAddress && (
-                      <span className="inline-flex items-center ml-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 font-mono">
-                        IP: {signup.ipAddress}
-                      </span>
-                    )}
-                  </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date of Submission
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Phone
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Notes
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Opt-In
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    IP
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Country
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredData.map((signup: any, index: number) => {
+                  // Determine country from IP using our utility function
+                  let country = "Unknown";
                   
-                  {/* Delete button with confirmation */}
-                  <div className="ml-2">
-                    {deleteConfirmId === signup.id ? (
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => handleDelete(signup.id)}
-                          disabled={isDeleting}
-                          className="text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-xs font-medium flex items-center"
-                        >
-                          {isDeleting ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Trash2 className="h-3 w-3 mr-1" />}
-                          Confirm
-                        </button>
-                        <button
-                          onClick={cancelDelete}
-                          disabled={isDeleting}
-                          className="text-gray-700 bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-xs font-medium"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleDelete(signup.id)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 p-1 rounded"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  if (signup.ipAddress) {
+                    // Check special mappings first
+                    if (specialIPMappings[signup.ipAddress]) {
+                      country = specialIPMappings[signup.ipAddress];
+                    } else {
+                      // Use our general mapping function
+                      country = getCountryFromIP(signup.ipAddress);
+                    }
+                  }
+                  
+                  return (
+                    <tr key={signup.id || index}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(signup.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{signup.fullName || "N/A"}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {signup.phoneNumber ? `${signup.countryCode} ${signup.phoneNumber}` : "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {signup.email || "N/A"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                        {signup.notes || "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          signup.optIn ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        }`}>
+                          {signup.optIn ? "Yes" : "No"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                        {signup.ipAddress || "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {country}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        {deleteConfirmId === signup.id ? (
+                          <div className="flex items-center justify-end space-x-2">
+                            <button
+                              onClick={() => handleDelete(signup.id)}
+                              disabled={isDeleting}
+                              className="text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-xs font-medium flex items-center"
+                            >
+                              {isDeleting ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Trash2 className="h-3 w-3 mr-1" />}
+                              Confirm
+                            </button>
+                            <button
+                              onClick={cancelDelete}
+                              disabled={isDeleting}
+                              className="text-gray-700 bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-xs font-medium"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleDelete(signup.id)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 p-1 rounded"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       );
     } catch (err) {
@@ -595,7 +642,7 @@ export default function AdminPage() {
               <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search name, email, or phone..."
+                placeholder="Search by name, email, phone, IP or country..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
