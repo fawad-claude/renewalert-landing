@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check, Search, X, Trash2, Globe } from "lucide-react";
+import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check, Search, X, Trash2, Globe, ChevronDown, ChevronUp } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import ErrorBoundary from "@/components/error-boundary";
@@ -17,6 +17,7 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [expandedNotes, setExpandedNotes] = useState<Set<number>>(new Set());
   
   // Handle the admin login
   const handleAdminLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -242,6 +243,19 @@ export default function AdminPage() {
   const cancelDelete = () => {
     setDeleteConfirmId(null);
   };
+  
+  // Toggle note expansion
+  const toggleNoteExpansion = (id: number) => {
+    setExpandedNotes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   // Helper function to check if admin API key is properly set up
   const checkApiKeyEnvironment = async () => {
@@ -396,8 +410,32 @@ export default function AdminPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {signup.email || "N/A"}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                        {signup.notes || "N/A"}
+                      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                        {signup.notes ? (
+                          <div>
+                            <div className={expandedNotes.has(signup.id) ? "" : "max-w-[200px] truncate"}>
+                              {signup.notes}
+                            </div>
+                            {signup.notes.length > 20 && (
+                              <button 
+                                onClick={() => toggleNoteExpansion(signup.id)}
+                                className="mt-1 text-xs text-blue-600 hover:text-blue-800 flex items-center"
+                              >
+                                {expandedNotes.has(signup.id) ? (
+                                  <>
+                                    <ChevronUp className="h-3 w-3 mr-1" /> Collapse
+                                  </>
+                                ) : (
+                                  <>
+                                    <ChevronDown className="h-3 w-3 mr-1" /> Expand
+                                  </>
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        ) : (
+                          "N/A"
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
