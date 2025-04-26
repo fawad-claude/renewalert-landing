@@ -427,12 +427,17 @@ export default function AdminPage() {
                   let country = "Unknown";
                   
                   if (signup.ipAddress) {
-                    // Check special mappings first
-                    if (specialIPMappings[signup.ipAddress]) {
+                    // First try to get it from our cached ipCountries object
+                    if (ipCountries[signup.ipAddress]) {
+                      country = ipCountries[signup.ipAddress];
+                    }
+                    // Then check special mappings
+                    else if (specialIPMappings[signup.ipAddress]) {
                       country = specialIPMappings[signup.ipAddress];
-                    } else {
-                      // Use our general mapping function
-                      country = getCountryFromIP(signup.ipAddress);
+                    } 
+                    // Finally use fallback
+                    else {
+                      country = getFallbackCountry(signup.ipAddress);
                     }
                   }
                   
@@ -488,7 +493,14 @@ export default function AdminPage() {
                         {signup.ipAddress || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {country}
+                        {country === "Loading..." ? (
+                          <div className="flex items-center">
+                            <Loader2 className="h-3 w-3 mr-1 animate-spin text-gray-400" />
+                            <span>Loading...</span>
+                          </div>
+                        ) : (
+                          country
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         {deleteConfirmId === signup.id ? (
