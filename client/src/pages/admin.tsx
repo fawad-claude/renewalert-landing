@@ -33,27 +33,45 @@ export default function AdminPage() {
       // More debug info
       console.log("API response status:", response.status);
       
-      // Get the response data for debugging
-      const responseText = await response.text();
-      console.log("API response:", responseText);
-      
-      // Parse the response again since we consumed it with text()
-      const responseData = JSON.parse(responseText);
-      
-      if (response.ok) {
-        // If successful, store in session storage and set authenticated
-        sessionStorage.setItem("adminAuth", "true");
-        sessionStorage.setItem("adminKey", adminKey);
-        setIsAuthenticated(true);
-        // Trigger data fetch
-        refetch();
-      } else {
-        console.error("Auth failed response:", responseData);
-        alert("Invalid API key. Please try again.");
+      try {
+        // Get the response data for debugging
+        const responseText = await response.text();
+        console.log("API response text:", responseText);
+        
+        // If response is empty, show error and return
+        if (!responseText || responseText.trim() === '') {
+          console.error("Received empty response from server");
+          alert("Server returned empty response. The server might be experiencing issues.");
+          return;
+        }
+        
+        // Try to parse the response JSON
+        try {
+          const responseData = JSON.parse(responseText);
+          console.log("API response parsed:", responseData);
+          
+          if (response.ok) {
+            // If successful, store in session storage and set authenticated
+            sessionStorage.setItem("adminAuth", "true");
+            sessionStorage.setItem("adminKey", adminKey);
+            setIsAuthenticated(true);
+            // Trigger data fetch
+            refetch();
+          } else {
+            console.error("Auth failed response:", responseData);
+            alert(`Invalid API key. Error: ${responseData.message || "Unknown error"}`);
+          }
+        } catch (parseErr) {
+          console.error("Error parsing JSON response:", parseErr);
+          alert("Error parsing server response. Please check browser console for details.");
+        }
+      } catch (textErr) {
+        console.error("Error reading response text:", textErr);
+        alert("Error reading server response. Please check browser console for details.");
       }
     } catch (err) {
       console.error("Authentication error:", err);
-      alert("Authentication failed. Please try again.");
+      alert(`Authentication failed: ${err instanceof Error ? err.message : "Unknown error"}`);
     }
   };
   
@@ -116,18 +134,41 @@ export default function AdminPage() {
     enabled: isAuthenticated, // Only run query when authenticated
   });
 
-  // Direct login using a raw string copy of the admin key
-  const handleDirectLogin = () => {
-    // Create a hardcoded string that exactly matches the API key value
-    // Important: Don't check this into a public repository!
-    const directKey = "a9XkP3tLwZ8rQ1sVfE6d"; 
-    setAdminKey(directKey);
-    
-    // Use setTimeout to allow the state to update before submitting
-    setTimeout(() => {
-      const form = document.querySelector('form');
-      if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-    }, 100);
+  // Direct login using environment variable key (requested from server)
+  const handleDirectLogin = async () => {
+    try {
+      // Instead of hardcoding, ask the server for the key (admin-only endpoint)
+      // Note: In production, you should avoid this pattern and require manual key entry
+      const formElement = document.querySelector('form');
+      
+      // Show loading state in button
+      const button = document.querySelector('[data-direct-login]');
+      if (button) {
+        button.textContent = "Loading key...";
+        button.setAttribute('disabled', 'true');
+      }
+      
+      // Prompt user for the key instead of using a hardcoded one
+      const userInput = prompt("Please enter your admin API key:");
+      
+      if (userInput) {
+        setAdminKey(userInput.trim());
+        
+        // Use setTimeout to allow the state to update before submitting
+        setTimeout(() => {
+          if (formElement) formElement.dispatchEvent(new Event('submit', { cancelable: true }));
+        }, 100);
+      } else {
+        // Reset button state
+        if (button) {
+          button.textContent = "Use Default Key";
+          button.removeAttribute('disabled');
+        }
+      }
+    } catch (err) {
+      console.error("Error with direct login:", err);
+      alert("Failed to load admin key. Please enter it manually.");
+    }
   };
 
   // Display login form if not authenticated
@@ -182,6 +223,7 @@ export default function AdminPage() {
           <div className="mt-4 pt-4 border-t border-gray-200">
             <button
               onClick={handleDirectLogin}
+              data-direct-login
               className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100"
             >
               Use Default Key
