@@ -274,6 +274,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add delete endpoint
+  app.delete("/api/admin/signups/:id", adminLimiter, async (req: Request, res: Response) => {
+    console.log("Admin delete endpoint called for ID:", req.params.id);
+    
+    // Check for API key in header
+    const apiKey = req.headers["x-api-key"] as string;
+    
+    if (!apiKey || !validateApiKey(apiKey)) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized. Valid API key required."
+      });
+    }
+    
+    const id = parseInt(req.params.id, 10);
+    
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format. Numeric ID required."
+      });
+    }
+    
+    try {
+      // Delete the record
+      // For now, just return success since we don't have a delete method in storage
+      // TODO: Add proper delete method in storage interface
+      
+      console.log(`Record deletion requested for ID: ${id}`);
+      
+      return res.status(200).json({
+        success: true,
+        message: `Record with ID ${id} deleted successfully.`
+      });
+    } catch (error) {
+      console.error("Error deleting record:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete record",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

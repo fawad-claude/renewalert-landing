@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check } from "lucide-react";
+import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check, Search, X, Trash2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import ErrorBoundary from "@/components/error-boundary";
@@ -304,7 +304,8 @@ export default function AdminPage() {
     );
   }
 
-  // Remove toggle database mode functionality for simplicity
+  // Add search functionality
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Show error state
   if (isError) {
@@ -358,6 +359,55 @@ export default function AdminPage() {
   // Show dashboard when authenticated and data loaded
   // Create a simplified version with robust error handling
   
+  // Add state for delete confirmation
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Handle delete with confirmation
+  const handleDelete = async (id: number) => {
+    if (deleteConfirmId !== id) {
+      // First click - show confirmation
+      setDeleteConfirmId(id);
+      return;
+    }
+    
+    // Second click - proceed with delete
+    try {
+      setIsDeleting(true);
+      
+      // Call API to delete record
+      await fetch(`/api/admin/signups/${id}`, {
+        method: 'DELETE',
+        headers: {
+          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
+        }
+      });
+      
+      // Success - refresh data
+      toast({
+        title: "Record deleted",
+        description: "The signup record has been deleted successfully.",
+        variant: "default",
+      });
+      
+      refetch();
+    } catch (error) {
+      toast({
+        title: "Delete failed",
+        description: error instanceof Error ? error.message : "Failed to delete record",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmId(null);
+    }
+  };
+  
+  // Cancel delete confirmation
+  const cancelDelete = () => {
+    setDeleteConfirmId(null);
+  };
+  
   // Make more robust by adding error handling around the data rendering
   const renderUserList = () => {
     try {
@@ -373,13 +423,42 @@ export default function AdminPage() {
         );
       }
       
-      if (signups.data.length === 0) {
+      // Filter data based on search term
+      const filteredData = signups.data.filter((signup: any) => {
+        if (!searchTerm) return true;
+        
+        const searchLower = searchTerm.toLowerCase();
+        const fullName = (signup.fullName || "").toLowerCase();
+        const email = (signup.email || "").toLowerCase();
+        const phone = (signup.phoneNumber || "").toLowerCase();
+        const notes = (signup.notes || "").toLowerCase();
+        
+        return (
+          fullName.includes(searchLower) ||
+          email.includes(searchLower) ||
+          phone.includes(searchLower) ||
+          notes.includes(searchLower)
+        );
+      });
+      
+      if (filteredData.length === 0) {
         return (
           <div className="text-center py-16 bg-gray-50 rounded-lg">
-            <p className="text-gray-700">No signup data available yet.</p>
-            <p className="text-sm text-gray-500 mt-2">
-              Submissions will appear here when users sign up.
-            </p>
+            {searchTerm ? (
+              <>
+                <p className="text-gray-700">No results match your search.</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Try a different search term or clear the search.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-700">No signup data available yet.</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Submissions will appear here when users sign up.
+                </p>
+              </>
+            )}
           </div>
         );
       }
@@ -387,7 +466,7 @@ export default function AdminPage() {
       return (
         <div className="bg-white shadow overflow-hidden sm:rounded-md mt-4">
           <ul className="divide-y divide-gray-200">
-            {signups.data.map((signup: any, index: number) => (
+            {filteredData.map((signup: any, index: number) => (
               <li key={signup.id || index} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between">
                 <div className="flex flex-col">
                   <span className="font-medium text-gray-900">{signup.fullName || "N/A"}</span>
@@ -412,23 +491,55 @@ export default function AdminPage() {
                   )}
                 </div>
                 
-                <div className="mt-2 sm:mt-0 flex flex-wrap gap-2">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    signup.optIn ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                  }`}>
-                    {signup.optIn ? "Opted-in" : "No opt-in"}
-                  </span>
-                  
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    <Calendar size={12} className="mr-1" />
-                    {new Date(signup.createdAt).toLocaleDateString()}
-                  </span>
-                  
-                  {signup.ipAddress && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 font-mono">
-                      IP: {signup.ipAddress}
+                <div className="mt-2 sm:mt-0 flex flex-wrap items-center gap-2">
+                  <div>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      signup.optIn ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                    }`}>
+                      {signup.optIn ? "Opted-in" : "No opt-in"}
                     </span>
-                  )}
+                    
+                    <span className="inline-flex items-center ml-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <Calendar size={12} className="mr-1" />
+                      {new Date(signup.createdAt).toLocaleDateString()}
+                    </span>
+                    
+                    {signup.ipAddress && (
+                      <span className="inline-flex items-center ml-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 font-mono">
+                        IP: {signup.ipAddress}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Delete button with confirmation */}
+                  <div className="ml-2">
+                    {deleteConfirmId === signup.id ? (
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleDelete(signup.id)}
+                          disabled={isDeleting}
+                          className="text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-xs font-medium flex items-center"
+                        >
+                          {isDeleting ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Trash2 className="h-3 w-3 mr-1" />}
+                          Confirm
+                        </button>
+                        <button
+                          onClick={cancelDelete}
+                          disabled={isDeleting}
+                          className="text-gray-700 bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-xs font-medium"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleDelete(signup.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 p-1 rounded"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </li>
             ))}
@@ -493,12 +604,36 @@ export default function AdminPage() {
       
       <div className="bg-white shadow-sm rounded-lg overflow-hidden">
         <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Signup Submissions {signups?.count && <span className="ml-2 py-1 px-2 bg-primary/10 text-primary text-sm rounded-full">{signups.count}</span>}
-          </h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Contact information collected from the signup form.
-          </p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Signup Submissions {signups?.count && <span className="ml-2 py-1 px-2 bg-primary/10 text-primary text-sm rounded-full">{signups.count}</span>}
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                Contact information collected from the signup form.
+              </p>
+            </div>
+            
+            {/* Search Bar */}
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search name, email, or phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+              />
+              {searchTerm && (
+                <button 
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
         </div>
         <div className="px-4 py-5 sm:p-6">
           {renderUserList()}
