@@ -7,8 +7,8 @@ import { logSignup, getSignups } from "./utils/signup-logger";
 import { validateApiKey } from "./utils/api-key";
 import rateLimit from "express-rate-limit";
 
-// For testing the fallback mechanism
-let forceLogFileMode = false;
+// Removed toggle functionality, use database by default
+const forceLogFileMode = false;
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Rate limiter for admin endpoints to prevent brute force attacks
@@ -145,32 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Endpoint to toggle between database and log files (for testing fallback)
-  app.get("/api/admin/db-mode", adminLimiter, async (req: Request, res: Response) => {
-    // Check for API key in header
-    const apiKey = req.headers["x-api-key"] as string;
-    
-    if (!apiKey || !validateApiKey(apiKey)) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized. Valid API key required."
-      });
-    }
-    
-    const mode = req.query.mode as string;
-    if (mode === 'logs') {
-      forceLogFileMode = true;
-      console.log("Database mode set to: Log Files (forced)");
-    } else {
-      forceLogFileMode = false;
-      console.log("Database mode set to: Auto (use database if available)");
-    }
-    
-    return res.status(200).json({
-      success: true,
-      mode: forceLogFileMode ? 'logs' : 'auto'
-    });
-  });
+  // Removed toggle endpoint for simplicity
 
   // Simple endpoint to check if admin environment is set up correctly
   app.get("/api/admin/check-env", adminLimiter, async (_req: Request, res: Response) => {

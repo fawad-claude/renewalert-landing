@@ -261,23 +261,16 @@ export default function AdminPage() {
               <p className="text-xs text-gray-500 mt-1 mb-2">
                 Make sure to copy the exact key without any leading or trailing spaces.
               </p>
-              <div className="flex flex-col space-y-2">
-                <div className="flex justify-end">
-                  <button 
-                    type="button"
-                    onClick={checkApiKeyEnvironment}
-                    className="text-xs text-blue-600 hover:underline flex items-center"
-                  >
-                    <Check className="h-3 w-3 mr-1" />
-                    Check API key environment
-                  </button>
-                </div>
-                <div className="flex justify-end">
-                  <a href="/admin-debug" className="text-xs text-primary hover:underline flex items-center">
-                    <AlertTriangle className="h-3 w-3 mr-1" />
-                    Having trouble? Try debugging tool
-                  </a>
-                </div>
+              {/* Keep essential functionality but remove debug link */}
+              <div className="flex justify-end">
+                <button 
+                  type="button"
+                  onClick={checkApiKeyEnvironment}
+                  className="text-xs text-blue-600 hover:underline flex items-center"
+                >
+                  <Check className="h-3 w-3 mr-1" />
+                  Check API key environment
+                </button>
               </div>
             </div>
             <button
@@ -311,25 +304,7 @@ export default function AdminPage() {
     );
   }
 
-  // Function to toggle database mode (for testing fallback mechanism)
-  // IMPORTANT: Define all hooks at the top level, not conditionally
-  const [dbSourceMode, setDbSourceMode] = useState<"auto" | "logs">("auto");
-  
-  const toggleDbMode = async () => {
-    try {
-      const newMode = dbSourceMode === "auto" ? "logs" : "auto";
-      await fetch(`/api/admin/db-mode?mode=${newMode}`, {
-        method: "GET",
-        headers: {
-          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
-        },
-      });
-      setDbSourceMode(newMode);
-      refetch();
-    } catch (err) {
-      console.error("Error toggling DB mode:", err);
-    }
-  };
+  // Remove toggle database mode functionality for simplicity
   
   // Show error state
   if (isError) {
@@ -530,12 +505,7 @@ export default function AdminPage() {
         </div>
       </div>
       
-      <div className="mt-6 text-center">
-        <a href="/admin-debug" className="inline-flex items-center text-sm text-primary hover:underline">
-          <AlertTriangle className="h-4 w-4 mr-1" />
-          Need to test API endpoints? Use the admin debugging tool
-        </a>
-      </div>
+      {/* Removed unnecessary links */}
     </div>
   );
 }
