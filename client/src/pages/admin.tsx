@@ -8,15 +8,14 @@ import ErrorBoundary from "@/components/error-boundary";
 // We'll request the admin API key from the server to avoid hardcoding it on the client
 const ADMIN_KEY_HEADER = "X-API-KEY";
 
-// For debugging purposes - uncomment to see values in console
-// const ADMIN_KEY_VALUE = "YOUR-API-KEY-HERE"; // Replace with actual key for testing
-
 export default function AdminPage() {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<"signups">("signups");
   const [adminKey, setAdminKey] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Handle the admin login
   const handleAdminLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -197,117 +196,6 @@ export default function AdminPage() {
     retry: 1, // Only retry once to avoid infinite retries
     refetchOnWindowFocus: false, // Disable auto refetch on window focus to reduce errors
   });
-
-
-
-  // Display login form if not authenticated
-  if (!isAuthenticated) {
-    // Helper function to check if admin API key is properly set up
-    const checkApiKeyEnvironment = async () => {
-      try {
-        const response = await fetch("/api/admin/check-env", {
-          method: "GET",
-        });
-        const data = await response.json();
-        toast({
-          title: data.success ? "Environment Check Passed" : "Environment Check Failed",
-          description: data.message,
-          variant: data.success ? "default" : "destructive",
-        });
-      } catch (err) {
-        toast({
-          title: "Environment Check Failed",
-          description: "Could not verify the admin environment setup.",
-          variant: "destructive",
-        });
-      }
-    };
-
-    return (
-      <div className="container mx-auto py-10 px-4 flex items-center justify-center min-h-[80vh]">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-          <div className="flex items-center justify-center mb-6">
-            <ShieldAlert className="h-10 w-10 text-primary mr-2" />
-            <h1 className="text-2xl font-bold text-gray-800">Admin Authentication</h1>
-          </div>
-          
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <Lock className="h-5 w-5 text-blue-500" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-blue-700">
-                  This area is restricted to authorized personnel only. Please enter your admin API key to continue.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <form onSubmit={handleAdminLogin}>
-            <div className="mb-4">
-              <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-1">
-                Admin API Key
-              </label>
-              <input
-                id="apiKey"
-                type="password"
-                value={adminKey}
-                onChange={(e) => setAdminKey(e.target.value.trim())} // Trim whitespace
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-                placeholder="Enter your admin API key"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1 mb-2">
-                Make sure to copy the exact key without any leading or trailing spaces.
-              </p>
-              {/* Keep essential functionality but remove debug link */}
-              <div className="flex justify-end">
-                <button 
-                  type="button"
-                  onClick={checkApiKeyEnvironment}
-                  className="text-xs text-blue-600 hover:underline flex items-center"
-                >
-                  <Check className="h-3 w-3 mr-1" />
-                  Check API key environment
-                </button>
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loginLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
-            >
-              {loginLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Authenticating...
-                </>
-              ) : (
-                "Login to Dashboard"
-              )}
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  // Show loading state after authentication
-  if (isLoading) {
-    return (
-      <div className="container mx-auto py-10 px-4">
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <span className="ml-2">Loading submissions...</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Add state for search and delete confirmation at the top level
-  const [searchTerm, setSearchTerm] = useState("");
-  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   
   // Handle delete with confirmation
   const handleDelete = async (id: number) => {
@@ -353,59 +241,28 @@ export default function AdminPage() {
   const cancelDelete = () => {
     setDeleteConfirmId(null);
   };
-  
-  // Show error state
-  if (isError) {
-    return (
-      <div className="container mx-auto py-10 px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-          <div className="flex space-x-2">
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-            >
-              <Lock size={16} /> <span>Logout</span>
-            </button>
-          </div>
-        </div>
-        
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-red-500"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-red-700">
-                Error loading submissions: {(error as Error)?.message || "An unknown error occurred."}
-              </p>
-            </div>
-          </div>
-        </div>
-        <button
-          onClick={() => refetch()}
-          className="flex items-center justify-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
-        >
-          <RefreshCw size={16} /> <span>Try Again</span>
-        </button>
-      </div>
-    );
-  }
 
-  // Show dashboard when authenticated and data loaded
-  // Create a simplified version with robust error handling
-  
+  // Helper function to check if admin API key is properly set up
+  const checkApiKeyEnvironment = async () => {
+    try {
+      const response = await fetch("/api/admin/check-env", {
+        method: "GET",
+      });
+      const data = await response.json();
+      toast({
+        title: data.success ? "Environment Check Passed" : "Environment Check Failed",
+        description: data.message,
+        variant: data.success ? "default" : "destructive",
+      });
+    } catch (err) {
+      toast({
+        title: "Environment Check Failed",
+        description: "Could not verify the admin environment setup.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Make more robust by adding error handling around the data rendering
   const renderUserList = () => {
     try {
@@ -563,7 +420,128 @@ export default function AdminPage() {
       );
     }
   };
+
+  // Display login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto py-10 px-4 flex items-center justify-center min-h-[80vh]">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <div className="flex items-center justify-center mb-6">
+            <ShieldAlert className="h-10 w-10 text-primary mr-2" />
+            <h1 className="text-2xl font-bold text-gray-800">Admin Authentication</h1>
+          </div>
+          
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <Lock className="h-5 w-5 text-blue-500" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-blue-700">
+                  This area is restricted to authorized personnel only. Please enter your admin API key to continue.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <form onSubmit={handleAdminLogin}>
+            <div className="mb-4">
+              <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-1">
+                Admin API Key
+              </label>
+              <input
+                id="apiKey"
+                type="password"
+                value={adminKey}
+                onChange={(e) => setAdminKey(e.target.value.trim())} // Trim whitespace
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                placeholder="Enter your admin API key"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1 mb-2">
+                Make sure to copy the exact key without any leading or trailing spaces.
+              </p>
+              <div className="flex justify-end">
+                <button 
+                  type="button"
+                  onClick={checkApiKeyEnvironment}
+                  className="text-xs text-blue-600 hover:underline flex items-center"
+                >
+                  <Check className="h-3 w-3 mr-1" />
+                  Check API key environment
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+            >
+              {loginLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Authenticating...
+                </>
+              ) : (
+                "Login to Dashboard"
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state after authentication
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-10 px-4">
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="ml-2">Loading submissions...</span>
+        </div>
+      </div>
+    );
+  }
   
+  // Show error state
+  if (isError) {
+    return (
+      <div className="container mx-auto py-10 px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+          <div className="flex space-x-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+            >
+              <Lock size={16} /> <span>Logout</span>
+            </button>
+          </div>
+        </div>
+        
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">
+                Error loading submissions: {(error as Error)?.message || "An unknown error occurred."}
+              </p>
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={() => refetch()}
+          className="flex items-center justify-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
+        >
+          <RefreshCw size={16} /> <span>Try Again</span>
+        </button>
+      </div>
+    );
+  }
+  
+  // Show dashboard when authenticated and data loaded
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -637,8 +615,6 @@ export default function AdminPage() {
           {renderUserList()}
         </div>
       </div>
-      
-      {/* Removed unnecessary links */}
     </div>
   );
 }
