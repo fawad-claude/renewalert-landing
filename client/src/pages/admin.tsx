@@ -311,6 +311,26 @@ export default function AdminPage() {
     );
   }
 
+  // Function to toggle database mode (for testing fallback mechanism)
+  // IMPORTANT: Define all hooks at the top level, not conditionally
+  const [dbSourceMode, setDbSourceMode] = useState<"auto" | "logs">("auto");
+  
+  const toggleDbMode = async () => {
+    try {
+      const newMode = dbSourceMode === "auto" ? "logs" : "auto";
+      await fetch(`/api/admin/db-mode?mode=${newMode}`, {
+        method: "GET",
+        headers: {
+          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
+        },
+      });
+      setDbSourceMode(newMode);
+      refetch();
+    } catch (err) {
+      console.error("Error toggling DB mode:", err);
+    }
+  };
+  
   // Show error state
   if (isError) {
     return (
@@ -359,25 +379,6 @@ export default function AdminPage() {
       </div>
     );
   }
-
-  // Function to toggle database mode (for testing fallback mechanism)
-  const [dbSourceMode, setDbSourceMode] = useState<"auto" | "logs">("auto");
-  
-  const toggleDbMode = async () => {
-    try {
-      const newMode = dbSourceMode === "auto" ? "logs" : "auto";
-      await fetch(`/api/admin/db-mode?mode=${newMode}`, {
-        method: "GET",
-        headers: {
-          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
-        },
-      });
-      setDbSourceMode(newMode);
-      refetch();
-    } catch (err) {
-      console.error("Error toggling DB mode:", err);
-    }
-  };
 
   // Show dashboard when authenticated and data loaded
   // Create a simplified version with robust error handling
