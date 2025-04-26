@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock } from "lucide-react";
+import { Loader2, RefreshCw, User, Mail, Phone, FileText, Calendar, ShieldAlert, Lock, AlertTriangle, Check } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import ErrorBoundary from "@/components/error-boundary";
 
 // We'll request the admin API key from the server to avoid hardcoding it on the client
 const ADMIN_KEY_HEADER = "X-API-KEY";
@@ -10,15 +12,18 @@ const ADMIN_KEY_HEADER = "X-API-KEY";
 // const ADMIN_KEY_VALUE = "YOUR-API-KEY-HERE"; // Replace with actual key for testing
 
 export default function AdminPage() {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"signups">("signups");
   const [adminKey, setAdminKey] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loginLoading, setLoginLoading] = useState<boolean>(false);
   
   // Handle the admin login
   const handleAdminLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoginLoading(true);
+    
     try {
-      // Add debug logs
       console.log("Attempting login with admin key (length):", adminKey.length);
       
       // Test the provided API key
@@ -30,48 +35,75 @@ export default function AdminPage() {
         credentials: "include",
       });
       
-      // More debug info
       console.log("API response status:", response.status);
       
+      // Get the response text
+      const responseText = await response.text();
+      console.log("API response text:", responseText);
+      
+      // Handle empty response
+      if (!responseText || responseText.trim() === '') {
+        console.error("Received empty response from server");
+        toast({
+          title: "Server Error",
+          description: "Server returned empty response. The server might be experiencing issues.",
+          variant: "destructive",
+        });
+        setLoginLoading(false);
+        return;
+      }
+      
       try {
-        // Get the response data for debugging
-        const responseText = await response.text();
-        console.log("API response text:", responseText);
+        // Parse the response as JSON
+        const responseData = JSON.parse(responseText);
+        console.log("API response parsed:", responseData);
         
-        // If response is empty, show error and return
-        if (!responseText || responseText.trim() === '') {
-          console.error("Received empty response from server");
-          alert("Server returned empty response. The server might be experiencing issues.");
-          return;
-        }
-        
-        // Try to parse the response JSON
-        try {
-          const responseData = JSON.parse(responseText);
-          console.log("API response parsed:", responseData);
+        if (response.ok) {
+          // Success! Store in session storage and set authenticated
+          sessionStorage.setItem("adminAuth", "true");
+          sessionStorage.setItem("adminKey", adminKey);
+          setIsAuthenticated(true);
           
-          if (response.ok) {
-            // If successful, store in session storage and set authenticated
-            sessionStorage.setItem("adminAuth", "true");
-            sessionStorage.setItem("adminKey", adminKey);
-            setIsAuthenticated(true);
-            // Trigger data fetch
+          toast({
+            title: "Authentication Successful",
+            description: "Welcome to the admin dashboard",
+            variant: "default",
+          });
+          
+          // Trigger data fetch with a slight delay to ensure auth state is set
+          setTimeout(() => {
             refetch();
-          } else {
-            console.error("Auth failed response:", responseData);
-            alert(`Invalid API key. Error: ${responseData.message || "Unknown error"}`);
-          }
-        } catch (parseErr) {
-          console.error("Error parsing JSON response:", parseErr);
-          alert("Error parsing server response. Please check browser console for details.");
+            setLoginLoading(false);
+          }, 500);
+        } else {
+          // Authentication failed
+          console.error("Auth failed response:", responseData);
+          toast({
+            title: "Authentication Failed",
+            description: `Invalid API key. Error: ${responseData.message || "Unknown error"}`,
+            variant: "destructive",
+          });
+          setLoginLoading(false);
         }
-      } catch (textErr) {
-        console.error("Error reading response text:", textErr);
-        alert("Error reading server response. Please check browser console for details.");
+      } catch (parseErr) {
+        // JSON parse error
+        console.error("Error parsing JSON response:", parseErr);
+        toast({
+          title: "Response Error",
+          description: "Error parsing server response. Please check browser console for details.",
+          variant: "destructive",
+        });
+        setLoginLoading(false);
       }
     } catch (err) {
+      // Network or other error
       console.error("Authentication error:", err);
-      alert(`Authentication failed: ${err instanceof Error ? err.message : "Unknown error"}`);
+      toast({
+        title: "Connection Error",
+        description: `Authentication failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+        variant: "destructive",
+      });
+      setLoginLoading(false);
     }
   };
   
@@ -173,15 +205,28 @@ export default function AdminPage() {
                 placeholder="Enter your admin API key"
                 required
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 mb-2">
                 Make sure to copy the exact key without any leading or trailing spaces.
               </p>
+              <div className="flex justify-end">
+                <a href="/admin-debug" className="text-xs text-primary hover:underline flex items-center">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  Having trouble? Try debugging tool
+                </a>
+              </div>
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              disabled={loginLoading}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
             >
-              Login to Dashboard
+              {loginLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Authenticating...
+                </>
+              ) : (
+                "Login to Dashboard"
+              )}
             </button>
           </form>
         </div>

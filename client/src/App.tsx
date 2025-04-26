@@ -20,6 +20,11 @@ function Router() {
           <AdminPage />
         </ErrorBoundary>
       </Route>
+      <Route path="/admin-debug">
+        <ErrorBoundary>
+          <AdminDebugPage />
+        </ErrorBoundary>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
