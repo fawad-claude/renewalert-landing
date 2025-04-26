@@ -172,6 +172,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Simple endpoint to check if admin environment is set up correctly
+  app.get("/api/admin/check-env", adminLimiter, async (_req: Request, res: Response) => {
+    try {
+      const adminKeyExists = !!process.env.ADMIN_API_KEY;
+      
+      if (adminKeyExists) {
+        res.status(200).json({
+          success: true,
+          message: "Admin API key environment variable is configured.",
+        });
+      } else {
+        res.status(200).json({
+          success: false,
+          message: "Admin API key environment variable is NOT configured. Please set ADMIN_API_KEY to use admin features.",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error checking environment variables.",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+  
   // Admin endpoint to get all signups with API key protection
   app.get("/api/admin/signups", adminLimiter, async (req: Request, res: Response) => {
     console.log("Admin signups endpoint called");

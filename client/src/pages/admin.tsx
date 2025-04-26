@@ -181,7 +181,7 @@ export default function AdminPage() {
             variant: "destructive",
           });
           
-          throw new Error(`Failed to parse response: ${parseErr.message}`);
+          throw new Error(`Failed to parse response: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}`);
         }
       } catch (err) {
         console.error("❌ Error fetching signups:", err);
@@ -202,6 +202,27 @@ export default function AdminPage() {
 
   // Display login form if not authenticated
   if (!isAuthenticated) {
+    // Helper function to check if admin API key is properly set up
+    const checkApiKeyEnvironment = async () => {
+      try {
+        const response = await fetch("/api/admin/check-env", {
+          method: "GET",
+        });
+        const data = await response.json();
+        toast({
+          title: data.success ? "Environment Check Passed" : "Environment Check Failed",
+          description: data.message,
+          variant: data.success ? "default" : "destructive",
+        });
+      } catch (err) {
+        toast({
+          title: "Environment Check Failed",
+          description: "Could not verify the admin environment setup.",
+          variant: "destructive",
+        });
+      }
+    };
+
     return (
       <div className="container mx-auto py-10 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -240,11 +261,23 @@ export default function AdminPage() {
               <p className="text-xs text-gray-500 mt-1 mb-2">
                 Make sure to copy the exact key without any leading or trailing spaces.
               </p>
-              <div className="flex justify-end">
-                <a href="/admin-debug" className="text-xs text-primary hover:underline flex items-center">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  Having trouble? Try debugging tool
-                </a>
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-end">
+                  <button 
+                    type="button"
+                    onClick={checkApiKeyEnvironment}
+                    className="text-xs text-blue-600 hover:underline flex items-center"
+                  >
+                    <Check className="h-3 w-3 mr-1" />
+                    Check API key environment
+                  </button>
+                </div>
+                <div className="flex justify-end">
+                  <a href="/admin-debug" className="text-xs text-primary hover:underline flex items-center">
+                    <AlertTriangle className="h-3 w-3 mr-1" />
+                    Having trouble? Try debugging tool
+                  </a>
+                </div>
               </div>
             </div>
             <button
