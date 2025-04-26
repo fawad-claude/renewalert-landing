@@ -304,8 +304,55 @@ export default function AdminPage() {
     );
   }
 
-  // Add search functionality
+  // Add state for search and delete confirmation at the top level
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Handle delete with confirmation
+  const handleDelete = async (id: number) => {
+    if (deleteConfirmId !== id) {
+      // First click - show confirmation
+      setDeleteConfirmId(id);
+      return;
+    }
+    
+    // Second click - proceed with delete
+    try {
+      setIsDeleting(true);
+      
+      // Call API to delete record
+      await fetch(`/api/admin/signups/${id}`, {
+        method: 'DELETE',
+        headers: {
+          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
+        }
+      });
+      
+      // Success - refresh data
+      toast({
+        title: "Record deleted",
+        description: "The signup record has been deleted successfully.",
+        variant: "default",
+      });
+      
+      refetch();
+    } catch (error) {
+      toast({
+        title: "Delete failed",
+        description: error instanceof Error ? error.message : "Failed to delete record",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmId(null);
+    }
+  };
+  
+  // Cancel delete confirmation
+  const cancelDelete = () => {
+    setDeleteConfirmId(null);
+  };
   
   // Show error state
   if (isError) {
@@ -358,55 +405,6 @@ export default function AdminPage() {
 
   // Show dashboard when authenticated and data loaded
   // Create a simplified version with robust error handling
-  
-  // Add state for delete confirmation
-  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  
-  // Handle delete with confirmation
-  const handleDelete = async (id: number) => {
-    if (deleteConfirmId !== id) {
-      // First click - show confirmation
-      setDeleteConfirmId(id);
-      return;
-    }
-    
-    // Second click - proceed with delete
-    try {
-      setIsDeleting(true);
-      
-      // Call API to delete record
-      await fetch(`/api/admin/signups/${id}`, {
-        method: 'DELETE',
-        headers: {
-          [ADMIN_KEY_HEADER]: sessionStorage.getItem("adminKey") || adminKey,
-        }
-      });
-      
-      // Success - refresh data
-      toast({
-        title: "Record deleted",
-        description: "The signup record has been deleted successfully.",
-        variant: "default",
-      });
-      
-      refetch();
-    } catch (error) {
-      toast({
-        title: "Delete failed",
-        description: error instanceof Error ? error.message : "Failed to delete record",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDeleting(false);
-      setDeleteConfirmId(null);
-    }
-  };
-  
-  // Cancel delete confirmation
-  const cancelDelete = () => {
-    setDeleteConfirmId(null);
-  };
   
   // Make more robust by adding error handling around the data rendering
   const renderUserList = () => {
