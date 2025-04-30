@@ -10,6 +10,7 @@ export interface IStorage {
   savePhoneNumber(phoneNumber: InsertPhoneNumber & { createdAt: string, ipAddress: string }): Promise<PhoneNumber>;
   getAllPhoneNumbers(): Promise<PhoneNumber[]>;
   getSubmissionsByIp(ipAddress: string): Promise<number>;
+  deletePhoneNumber(id: number): Promise<boolean>;
 }
 
 // Now implementing with DatabaseStorage
@@ -83,6 +84,25 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error("Error counting submissions by IP:", error);
       return 0;
+    }
+  }
+  
+  async deletePhoneNumber(id: number): Promise<boolean> {
+    try {
+      console.log(`Attempting to delete phone number with ID: ${id}`);
+      
+      // Delete the record from the database
+      const result = await db.delete(phoneNumbers)
+        .where(eq(phoneNumbers.id, id))
+        .returning({ deletedId: phoneNumbers.id });
+      
+      console.log(`Delete operation result:`, result);
+      
+      // Check if any rows were affected
+      return result.length > 0;
+    } catch (error) {
+      console.error(`Error deleting phone number with ID ${id}:`, error);
+      return false;
     }
   }
 }

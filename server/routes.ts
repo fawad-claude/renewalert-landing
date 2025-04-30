@@ -298,16 +298,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      // Delete the record
-      // For now, just return success since we don't have a delete method in storage
-      // TODO: Add proper delete method in storage interface
-      
+      // Delete the record from the database
       console.log(`Record deletion requested for ID: ${id}`);
       
-      return res.status(200).json({
-        success: true,
-        message: `Record with ID ${id} deleted successfully.`
-      });
+      const deleted = await storage.deletePhoneNumber(id);
+      
+      if (deleted) {
+        return res.status(200).json({
+          success: true,
+          message: `Record with ID ${id} deleted successfully.`
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: `Record with ID ${id} not found or could not be deleted.`
+        });
+      }
     } catch (error) {
       console.error("Error deleting record:", error);
       return res.status(500).json({
