@@ -143,13 +143,46 @@ export function SignupForm() {
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      
+      // Parse API error response if available
+      let errorMessage = "An error occurred. Please try again.";
+      let errorTitle = "Error";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        
+        // Check for duplicate submission errors from our API
+        if (error.message.includes('400')) {
+          try {
+            const errorObj = JSON.parse(error.message.split('400 ')[1]);
+            
+            if (errorObj.message === "Duplicate Email") {
+              errorTitle = "Email Already Registered";
+              errorMessage = errorObj.errors || "This email address is already registered. Please use a different email.";
+              // Set form error to highlight the field
+              form.setError("email", { type: "manual", message: errorMessage });
+            } 
+            else if (errorObj.message === "Duplicate Phone Number") {
+              errorTitle = "Phone Already Registered";
+              errorMessage = errorObj.errors || "This phone number is already registered. Please use a different phone number.";
+              // Set form error to highlight the field
+              form.setError("phoneNumber", { type: "manual", message: errorMessage });
+            }
+            else {
+              // Other API validation errors
+              errorMessage = errorObj.errors || errorObj.message || errorMessage;
+            }
+          } catch (e) {
+            // If we can't parse the error, just use the original message
+            console.error("Error parsing API error:", e);
+          }
+        }
+      }
+      
       toast({
         variant: "destructive",
-        title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "An error occurred. Please try again.",
+        title: errorTitle,
+        description: errorMessage,
       });
     },
   });

@@ -31,7 +31,13 @@ export async function apiRequest(
         const errorData = await res.json();
         console.error('Error response data:', errorData);
         
-        // Try to extract meaningful error messages
+        // For duplicate email/phone errors, preserve the original response structure
+        // to be handled specially in the UI
+        if (errorData.message === "Duplicate Email" || errorData.message === "Duplicate Phone Number") {
+          throw new Error(`${res.status} ${JSON.stringify(errorData)}`);
+        }
+        
+        // Try to extract meaningful error messages for other cases
         const errorMessage = 
           errorData.message || 
           errorData.error || 
@@ -40,10 +46,15 @@ export async function apiRequest(
           
         throw new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
       } catch (jsonError) {
-        // If we can't parse JSON, fall back to text
-        const text = await res.text();
-        console.error('Error response text:', text);
-        throw new Error(`${res.status}: ${text || res.statusText}`);
+        // If error in parsing JSON or other error, fall back to text
+        if (!(jsonError instanceof Error && jsonError.message.includes('Duplicate'))) {
+          const text = await res.text();
+          console.error('Error response text:', text);
+          throw new Error(`${res.status}: ${text || res.statusText}`);
+        } else {
+          // Re-throw the duplicate error that we've already formatted
+          throw jsonError;
+        }
       }
     }
     
