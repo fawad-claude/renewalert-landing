@@ -74,6 +74,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: "Either a phone number or an email address is required"
         });
       }
+      
+      // Check for duplicate email
+      if (hasEmail) {
+        const existingEmail = await storage.findPhoneNumberByEmail(req.body.email);
+        if (existingEmail) {
+          return res.status(400).json({
+            success: false,
+            message: "Duplicate Email",
+            errors: "This email address is already registered. Please use a different email."
+          });
+        }
+      }
+      
+      // Check for duplicate phone
+      if (hasPhone) {
+        const existingPhone = await storage.findPhoneNumberByPhone(
+          req.body.countryCode || "", 
+          req.body.phoneNumber
+        );
+        if (existingPhone) {
+          return res.status(400).json({
+            success: false,
+            message: "Duplicate Phone Number",
+            errors: "This phone number is already registered. Please use a different phone number."
+          });
+        }
+      }
 
       // Store the phone number
       const result = await storage.savePhoneNumber(phoneNumberWithMetadata);

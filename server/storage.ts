@@ -11,6 +11,8 @@ export interface IStorage {
   getAllPhoneNumbers(): Promise<PhoneNumber[]>;
   getSubmissionsByIp(ipAddress: string): Promise<number>;
   deletePhoneNumber(id: number): Promise<boolean>;
+  findPhoneNumberByEmail(email: string): Promise<PhoneNumber | undefined>;
+  findPhoneNumberByPhone(countryCode: string, phoneNumber: string): Promise<PhoneNumber | undefined>;
 }
 
 // Now implementing with DatabaseStorage
@@ -103,6 +105,42 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error(`Error deleting phone number with ID ${id}:`, error);
       return false;
+    }
+  }
+
+  async findPhoneNumberByEmail(email: string): Promise<PhoneNumber | undefined> {
+    if (!email) return undefined;
+    
+    try {
+      // Find records with this email
+      const [record] = await db
+        .select()
+        .from(phoneNumbers)
+        .where(eq(phoneNumbers.email, email));
+      
+      return record;
+    } catch (error) {
+      console.error(`Error finding phone number by email ${email}:`, error);
+      return undefined;
+    }
+  }
+
+  async findPhoneNumberByPhone(countryCode: string, phoneNumber: string): Promise<PhoneNumber | undefined> {
+    if (!phoneNumber) return undefined;
+    
+    try {
+      // Find records with this phone number and country code
+      const records = await db
+        .select()
+        .from(phoneNumbers)
+        .where(eq(phoneNumbers.phoneNumber, phoneNumber));
+      
+      // Filter for country code match
+      const matchingRecord = records.find(r => r.countryCode === countryCode);
+      return matchingRecord;
+    } catch (error) {
+      console.error(`Error finding phone number ${countryCode} ${phoneNumber}:`, error);
+      return undefined;
     }
   }
 }
