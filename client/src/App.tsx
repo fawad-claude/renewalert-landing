@@ -10,7 +10,15 @@ import AdminDebugPage from "@/pages/admin-debug";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import ErrorBoundary from "@/components/error-boundary";
 import { useEffect } from "react";
-import { initGA, trackPageView } from "@/lib/analytics";
+import { trackPageView } from "@/lib/analytics";
+
+// Declare global gtag function
+declare global {
+  interface Window {
+    gtag: (command: string, action: string, params?: any) => void;
+    dataLayer: any[];
+  }
+}
 
 function Router() {
   const [location] = useLocation();
@@ -40,14 +48,8 @@ function Router() {
 }
 
 function App() {
-  // Initialize Google Analytics with your Measurement ID
-  useEffect(() => {
-    // Initialize Google Analytics with the provided Measurement ID
-    // For development, we can conditionally initialize to avoid tracking in dev mode
-    if (window.location.hostname !== 'localhost') {
-      initGA('G-8MG9K676V5');
-    }
-  }, []);
+  // Note: Google Analytics is now initialized via the gtag.js script in index.html
+  // This avoids duplicate initialization
 
   return (
     <QueryClientProvider client={queryClient}>
