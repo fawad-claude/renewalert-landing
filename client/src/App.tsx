@@ -42,10 +42,10 @@ function Router() {
 function App() {
   // Initialize Google Analytics with your Measurement ID
   useEffect(() => {
-    // Replace 'G-XXXXXXXXXX' with your actual Google Analytics Measurement ID
+    // Initialize Google Analytics with the provided Measurement ID
     // For development, we can conditionally initialize to avoid tracking in dev mode
     if (window.location.hostname !== 'localhost') {
-      initGA('G-XXXXXXXXXX');
+      initGA('G-8MG9K676V5');
     }
   }, []);
 

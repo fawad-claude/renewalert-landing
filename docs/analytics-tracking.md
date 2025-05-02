@@ -38,10 +38,10 @@ To start tracking real visitors:
 
 2. **Update Your Code**
    - Open `client/src/App.tsx`
-   - Replace the placeholder Measurement ID:
+   - The Measurement ID has been updated:
    ```jsx
    if (window.location.hostname !== 'localhost') {
-     initGA('G-XXXXXXXXXX'); // ← Replace this with your Measurement ID
+     initGA('G-8MG9K676V5'); // Current Measurement ID
    }
    ```
 

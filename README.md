@@ -48,9 +48,9 @@ To track visitor statistics on your deployed site:
 ```jsx
 // In App.tsx
 useEffect(() => {
-  // Replace 'G-XXXXXXXXXX' with your actual Google Analytics Measurement ID
+  // Google Analytics is configured with the correct Measurement ID
   if (window.location.hostname !== 'localhost') {
-    initGA('G-XXXXXXXXXX'); // ← Replace with your ID here
+    initGA('G-8MG9K676V5'); // Current Measurement ID
   }
 }, []);
 ```
