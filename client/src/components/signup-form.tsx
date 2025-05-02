@@ -398,6 +398,7 @@ export function SignupForm() {
                   className="social-icon group social-icon-animation"
                   style={{ "--animation-order": "2" } as React.CSSProperties}
                   aria-label="Share on Facebook"
+                  onClick={() => trackEvent('Social', 'Share', 'Facebook')}
                 >
                   <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
                     <FaFacebookF size={24} />
@@ -413,6 +414,7 @@ export function SignupForm() {
                   className="social-icon group social-icon-animation"
                   style={{ "--animation-order": "3" } as React.CSSProperties}
                   aria-label="Share on X (Twitter)"
+                  onClick={() => trackEvent('Social', 'Share', 'Twitter')}
                 >
                   <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
                     <FaTwitter size={24} />
@@ -426,6 +428,7 @@ export function SignupForm() {
                   className="social-icon group social-icon-animation"
                   style={{ "--animation-order": "4" } as React.CSSProperties}
                   aria-label="Share via Email"
+                  onClick={() => trackEvent('Social', 'Share', 'Email')}
                 >
                   <div className="w-12 h-12 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
                     <FaEnvelope size={20} />
