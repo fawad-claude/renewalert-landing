@@ -26,6 +26,7 @@ import { Link } from "wouter";
 import { getLocationBasedDialCode } from "@/lib/geolocation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FaWhatsapp, FaFacebookF, FaTwitter, FaEnvelope } from "react-icons/fa";
+import { trackEvent } from "@/lib/analytics";
 
 export function SignupForm() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -126,6 +127,13 @@ export function SignupForm() {
     },
     onSuccess: (data) => {
       console.log("Mutation success:", data);
+
+      // Track successful signup event
+      trackEvent(
+        'Signup', 
+        'FormSubmitted', 
+        inputMethod === 'phone' ? 'Phone' : 'Email'
+      );
 
       // Set success state and show toast
       setIsSuccess(true);
@@ -374,6 +382,7 @@ export function SignupForm() {
                   className="social-icon group social-icon-animation"
                   style={{ "--animation-order": "1" } as React.CSSProperties}
                   aria-label="Share on WhatsApp"
+                  onClick={() => trackEvent('Social', 'Share', 'WhatsApp')}
                 >
                   <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-all group-hover:scale-110 shadow-md">
                     <FaWhatsapp size={24} />

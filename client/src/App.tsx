@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,8 +9,17 @@ import AdminPage from "@/pages/admin";
 import AdminDebugPage from "@/pages/admin-debug";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import ErrorBoundary from "@/components/error-boundary";
+import { useEffect } from "react";
+import { initGA, trackPageView } from "@/lib/analytics";
 
 function Router() {
+  const [location] = useLocation();
+  
+  // Track page views when location changes
+  useEffect(() => {
+    trackPageView(location);
+  }, [location]);
+  
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -31,6 +40,15 @@ function Router() {
 }
 
 function App() {
+  // Initialize Google Analytics with your Measurement ID
+  useEffect(() => {
+    // Replace 'G-XXXXXXXXXX' with your actual Google Analytics Measurement ID
+    // For development, we can conditionally initialize to avoid tracking in dev mode
+    if (window.location.hostname !== 'localhost') {
+      initGA('G-XXXXXXXXXX');
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
