@@ -6,11 +6,12 @@ This document explains how visitor tracking is implemented in RenewAlert using G
 
 ## Implementation Details
 
-The tracking functionality is implemented using the `react-ga4` package, which provides a React-friendly wrapper for Google Analytics 4.
+The tracking functionality is implemented using the standard Google Analytics 4 gtag.js script directly inserted in the HTML.
 
 The core tracking functionality is in:
-- `client/src/lib/analytics.ts`: Main tracking utility
-- `client/src/App.tsx`: GA initialization and page view tracking
+- `client/index.html`: Contains the Google Analytics script in the <head> section
+- `client/src/lib/analytics.ts`: Provides wrapper functions for tracking
+- `client/src/App.tsx`: Route-based page view tracking
 - `client/src/components/signup-form.tsx`: Event tracking for forms and social sharing
 
 ## What's Being Tracked
@@ -37,12 +38,17 @@ To start tracking real visitors:
    - Get your Measurement ID (format: G-XXXXXXXXXX)
 
 2. **Update Your Code**
-   - Open `client/src/App.tsx`
-   - The Measurement ID has been updated:
-   ```jsx
-   if (window.location.hostname !== 'localhost') {
-     initGA('G-8MG9K676V5'); // Current Measurement ID
-   }
+   - Open `client/index.html`
+   - The Google Analytics script has been added with your Measurement ID:
+   ```html
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8MG9K676V5"></script>
+   <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+     gtag('config', 'G-8MG9K676V5');
+   </script>
    ```
 
 3. **Verify Tracking**

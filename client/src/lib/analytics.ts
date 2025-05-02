@@ -1,33 +1,32 @@
-import ReactGA from 'react-ga4';
-
-let initialized = false;
-
-// Initialize Google Analytics
-export const initGA = (measurementId: string) => {
-  if (!initialized && measurementId) {
-    ReactGA.initialize(measurementId);
-    initialized = true;
-    console.log('Google Analytics initialized with ID:', measurementId);
-  }
-};
+// This file provides utility functions for Google Analytics tracking
+// Using the global gtag.js script loaded in index.html
 
 // Track page views
 export const trackPageView = (path: string) => {
-  if (initialized) {
-    ReactGA.send({ hitType: 'pageview', page: path });
-    console.log('Page view tracked:', path);
+  try {
+    if (window.gtag && typeof window.gtag === 'function') {
+      window.gtag('config', 'G-8MG9K676V5', {
+        page_path: path
+      });
+      console.log('Page view tracked:', path);
+    }
+  } catch (error) {
+    console.error('Error tracking page view:', error);
   }
 };
 
 // Track custom events
 export const trackEvent = (category: string, action: string, label?: string, value?: number) => {
-  if (initialized) {
-    ReactGA.event({
-      category,
-      action,
-      label,
-      value
-    });
-    console.log('Event tracked:', { category, action, label, value });
+  try {
+    if (window.gtag && typeof window.gtag === 'function') {
+      window.gtag('event', action, {
+        event_category: category,
+        event_label: label,
+        value: value
+      });
+      console.log('Event tracked:', { category, action, label, value });
+    }
+  } catch (error) {
+    console.error('Error tracking event:', error);
   }
 };

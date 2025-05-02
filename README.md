@@ -39,20 +39,18 @@ The following environment variables need to be set:
 
 ## Google Analytics Setup
 
-To track visitor statistics on your deployed site:
+Google Analytics 4 is properly configured to track visitor statistics on your deployed site. The current implementation uses the standard Google Analytics script directly in the HTML head:
 
-1. Create a Google Analytics 4 property at [analytics.google.com](https://analytics.google.com)
-2. Get your Measurement ID (starts with "G-")
-3. Replace the placeholder in `App.tsx`:
-
-```jsx
-// In App.tsx
-useEffect(() => {
-  // Google Analytics is configured with the correct Measurement ID
-  if (window.location.hostname !== 'localhost') {
-    initGA('G-8MG9K676V5'); // Current Measurement ID
-  }
-}, []);
+```html
+<!-- In index.html -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8MG9K676V5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8MG9K676V5');
+</script>
 ```
 
 The analytics integration will track:
