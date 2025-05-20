@@ -30,14 +30,43 @@ export const countryCodeMapping: CountryMapping = {
 // Function to get user's country based on their IP address
 export async function getUserCountry(): Promise<string> {
   try {
-    // Using a free, no-API-key-required geolocation service
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    
-    if (data && data.country) {
-      return data.country; // Return ISO country code (e.g., 'US', 'GB', 'KW')
+    // First try with ipapi.co
+    try {
+      // Using a free, no-API-key-required geolocation service
+      const response = await fetch('https://ipapi.co/json/', { 
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        mode: 'cors'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.country) {
+          console.log('Country detected from ipapi.co:', data.country);
+          return data.country; // Return ISO country code (e.g., 'US', 'GB', 'KW')
+        }
+      } else {
+        console.warn('ipapi.co response not OK:', response.status);
+      }
+    } catch (ipApiError) {
+      console.warn('ipapi.co fetch failed:', ipApiError);
     }
     
+    // Fallback to another API if ipapi.co fails
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      if (response.ok) {
+        const data = await response.json();
+        // We have the user's IP, but since we can't reliably determine country from IP without extra services,
+        // return a default country code
+        console.log('Using fallback IP detection with ipify');
+        return 'DEFAULT';
+      }
+    } catch (ipifyError) {
+      console.warn('ipify fallback failed:', ipifyError);
+    }
+    
+    // Final fallback
     return 'DEFAULT';
   } catch (error) {
     console.error('Error detecting user country:', error);
