@@ -29,47 +29,43 @@ export const countryCodeMapping: CountryMapping = {
 
 // Function to get user's country based on their IP address
 export async function getUserCountry(): Promise<string> {
+  // Skip API calls and return DEFAULT to avoid errors in preview/development
+  if (window.location.hostname === 'localhost' || window.location.hostname.includes('.replit.dev')) {
+    console.log('Development environment detected, using default country');
+    return 'DEFAULT';
+  }
+  
   try {
-    // First try with ipapi.co
+    // Only try the API call in production to avoid rate limiting
     try {
-      // Using a free, no-API-key-required geolocation service
+      // Set a timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      
       const response = await fetch('https://ipapi.co/json/', { 
         method: 'GET',
         headers: { 'Accept': 'application/json' },
-        mode: 'cors'
+        signal: controller.signal
       });
+      
+      // Clear the timeout
+      clearTimeout(timeoutId);
       
       if (response.ok) {
         const data = await response.json();
         if (data && data.country) {
-          console.log('Country detected from ipapi.co:', data.country);
-          return data.country; // Return ISO country code (e.g., 'US', 'GB', 'KW')
+          console.log('Country detected:', data.country);
+          return data.country;
         }
-      } else {
-        console.warn('ipapi.co response not OK:', response.status);
       }
-    } catch (ipApiError) {
-      console.warn('ipapi.co fetch failed:', ipApiError);
+    } catch (err) {
+      console.log('Using default country due to geolocation error');
     }
     
-    // Fallback to another API if ipapi.co fails
-    try {
-      const response = await fetch('https://api.ipify.org?format=json');
-      if (response.ok) {
-        const data = await response.json();
-        // We have the user's IP, but since we can't reliably determine country from IP without extra services,
-        // return a default country code
-        console.log('Using fallback IP detection with ipify');
-        return 'DEFAULT';
-      }
-    } catch (ipifyError) {
-      console.warn('ipify fallback failed:', ipifyError);
-    }
-    
-    // Final fallback
+    // If we reach here, something went wrong, use default
     return 'DEFAULT';
   } catch (error) {
-    console.error('Error detecting user country:', error);
+    console.error('Error in geolocation:', error);
     return 'DEFAULT';
   }
 }
