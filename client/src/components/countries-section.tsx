@@ -1,4 +1,5 @@
 import React from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Country code data from phone-input.tsx
 const countryCodes = [
@@ -22,13 +23,15 @@ const countryCodes = [
 ];
 
 export function CountriesSection() {
+  const { t } = useLanguage();
+  
   return (
     <div className="py-16 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">Launching Soon In</h2>
+          <h2 className="text-3xl font-bold text-gray-900">{t("countries_title")}</h2>
           <p className="text-xl text-gray-600 mt-3 max-w-2xl mx-auto">
-            RenewAlert will be available in these countries to help you keep track of your important documents
+            {t("countries_subtitle")}
           </p>
         </div>
         
@@ -48,7 +51,7 @@ export function CountriesSection() {
         </div>
         
         <div className="text-center mt-10 text-gray-500 text-sm">
-          <p>More countries will be added soon! Stay tuned for updates.</p>
+          <p>{t("countries_footer")}</p>
         </div>
       </div>
     </div>
