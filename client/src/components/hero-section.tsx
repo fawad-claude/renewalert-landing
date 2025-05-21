@@ -9,25 +9,25 @@ export function HeroSection() {
   const { t, dir } = useLanguage();
   
   return (
-    <div className="pt-32 flex-grow flex items-center justify-center bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm">
+    <div className="pt-32 flex-grow flex items-center justify-center bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm" dir={dir}>
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16">
+        <div className={`flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
           {/* Left content section */}
           <div className="flex-1 max-w-2xl">
             <div className="text-center lg:text-left mb-8">
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Coming Soon
               </span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
                 {t("hero_title")}
               </h1>
-              <h2 className="text-base md:text-lg text-gray-600 mb-2">
+              <h2 className={`text-base md:text-lg text-gray-600 mb-2 ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
                 {t("hero_subtitle")}
               </h2>
             </div>
 
-            <div className="prose prose-sm max-w-none text-gray-600 mb-8 text-center lg:text-left">
-              <div className="text-sm md:text-base whitespace-pre-line">
+            <div className={`prose prose-sm max-w-none text-gray-600 mb-8 ${dir === 'rtl' ? 'text-right' : 'text-center lg:text-left'}`}>
+              <div className={`text-sm md:text-base whitespace-pre-line ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
                 {t("expat_paragraph")}
               </div>
             </div>
@@ -67,7 +67,7 @@ export function HeroSection() {
 
         {/* Features section for mobile only */}
         <div className="mt-12 lg:hidden">
-          <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">
+          <h3 className={`text-xl font-semibold text-gray-800 mb-4 ${dir === 'rtl' ? 'text-right' : 'text-center'}`}>
             {t("key_benefits")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
