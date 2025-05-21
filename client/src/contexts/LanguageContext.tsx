@@ -21,9 +21,9 @@ export const translations: TranslationDictionary = {
     "key_benefits": "Key Benefits",
     "coming_soon": "Coming Soon",
     "provide_either": "Please provide either a phone number or an email address",
-    "countries_title": "Supported Countries",
-    "countries_subtitle": "We cover GCC countries and many others",
-    "countries_footer": "We plan to add more countries soon! Stay tuned.",
+    "countries_title": "Launching Soon In",
+    "countries_subtitle": "RenewAlert will be available in these countries to help you keep track of your important documents",
+    "countries_footer": "More countries will be added soon! Stay tuned for updates.",
     "promise_message": "We only send product updates. No spam, we promise.",
     
     // Form Labels
