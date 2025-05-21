@@ -1,7 +1,7 @@
 import React from "react";
 import { SignupForm } from "./signup-form";
 import { FeatureItem } from "./feature-item";
-import { Bell, ShieldCheck, Smartphone } from "lucide-react";
+import { Bell, ShieldCheck, Smartphone, Users } from "lucide-react";
 import logoPath from "@assets/Renewal Alert Logo - no BG.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 

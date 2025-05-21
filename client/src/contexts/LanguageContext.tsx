@@ -14,10 +14,10 @@ export type TranslationDictionary = {
 export const translations: TranslationDictionary = {
   en: {
     // Hero Section
-    "hero_title": "Never Miss your ID Renewal Again",
-    "hero_subtitle": "Get timely reminders for your passports, licenses, residency permits (Iqama), and visas before they expire",
+    "hero_title": "Never Miss an ID Renewal for You or Your Family",
+    "hero_subtitle": "Get timely reminders for everyone's passports, licenses, residency permits (Iqama), and visas before they expire",
     "hero_cta": "Get Early Access",
-    "expat_paragraph": "Whether you're an Expat, Resident, or Citizen, we get it — renewing documents is a headache. Passports, licenses, residency permits (Iqama), visas — it's overwhelming and easy to miss.\n\nOur upcoming mobile app is designed to send you timely reminders for all your important renewals, helping you stay ahead and stress-free.\n\nBe the first to experience the convenience of staying organized with ease.",
+    "expat_paragraph": "Whether you're an Expat, Resident, or Citizen managing documents for yourself or your entire family, we get it — keeping track of renewals is a headache. Passports, licenses, residency permits (Iqama), visas for multiple family members — it's overwhelming and easy to miss important dates.\n\nOur upcoming mobile app is designed to send you timely reminders for all your family's important renewals, helping everyone stay ahead and stress-free. Track documents for your spouse, children, and elderly parents all in one place.\n\nBe the first to experience the convenience of staying organized with ease.",
     
     // Form Labels
     "form_title": "Sign up for early access",
@@ -25,7 +25,7 @@ export const translations: TranslationDictionary = {
     "email": "Email",
     "phone": "Phone Number",
     "notes": "Notes (Optional)",
-    "enter_notes": "Enter any specific documents you track...",
+    "enter_notes": "What you would like to see in the app?",
     "notification_preference": "Notification Preference",
     "email_me": "Email me",
     "text_me": "Text me",
@@ -41,6 +41,8 @@ export const translations: TranslationDictionary = {
     "feature_simple_desc": "Just upload your documents and we handle the rest",
     "feature_secure_title": "Secure and Flexible Storage",
     "feature_secure_desc": "Your Data, Your Choice — on your phone or in the cloud. Encrypted and protected",
+    "feature_family_title": "Family Document Management",
+    "feature_family_desc": "Track everyone's documents in one place - from children's passports to elderly parents' IDs",
     
     // Social Sharing
     "share_heading": "Help friends and family stay updated too!",
