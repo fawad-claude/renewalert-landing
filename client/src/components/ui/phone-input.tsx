@@ -6,6 +6,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { cn } from "@/lib/utils";
 import { Control } from "react-hook-form";
 import { Loader2 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Country code data
 const countryCodes = [
@@ -36,6 +37,7 @@ interface PhoneInputProps {
 
 export function PhoneInput({ control, className, isLoading = false }: PhoneInputProps) {
   const [selectedCountry, setSelectedCountry] = useState<{ code: string; flag: string; name: string } | null>(null);
+  const { t, dir } = useLanguage();
 
   // Function to find country by code
   const findCountryByCode = (code: string) => {
@@ -58,12 +60,12 @@ export function PhoneInput({ control, className, isLoading = false }: PhoneInput
 
             return (
               <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>Country</FormLabel>
+                <div className={`flex items-center justify-between ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
+                  <FormLabel className={dir === 'rtl' ? 'text-right w-full' : ''}>{t("country")}</FormLabel>
                   {isLoading && (
                     <span className="text-xs text-primary flex items-center">
                       <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                      Detecting location...
+                      {dir === 'rtl' ? 'جارٍ تحديد الموقع...' : 'Detecting location...'}
                     </span>
                   )}
                 </div>
@@ -83,7 +85,7 @@ export function PhoneInput({ control, className, isLoading = false }: PhoneInput
                           <span>{selectedCountry.code}</span>
                         </span>
                       ) : (
-                        <SelectValue placeholder="Select country" />
+                        <SelectValue placeholder={dir === 'rtl' ? "اختر الدولة" : "Select country"} />
                       )}
                     </SelectTrigger>
                   </FormControl>
@@ -112,16 +114,17 @@ export function PhoneInput({ control, className, isLoading = false }: PhoneInput
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone Number</FormLabel>
+              <FormLabel className={dir === 'rtl' ? 'text-right w-full' : ''}>{t("phone_number")}</FormLabel>
               <FormControl>
                 <Input
                   type="tel"
-                  placeholder="Your mobile number"
+                  placeholder={t("mobile_placeholder")}
+                  className={dir === 'rtl' ? 'text-right' : 'text-left'}
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                Enter your mobile number without country code
+              <FormDescription className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                {t("mobile_instruction")}
               </FormDescription>
               <FormMessage />
             </FormItem>
