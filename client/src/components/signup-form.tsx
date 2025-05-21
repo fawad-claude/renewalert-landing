@@ -573,14 +573,15 @@ export function SignupForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      I agree to receive notifications about the app launch via
-                      Email, SMS, or WhatsApp.{" "}
+                      {t("opt_in")}{" "}
                       <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormDescription>
                       <span className="text-gray-700"></span>{" "}
                       <span className="text-gray-500">
-                        (You must check this box to receive notifications.)
+                        {dir === 'rtl' 
+                          ? '(يجب عليك تحديد هذا المربع لتلقي الإشعارات.)' 
+                          : '(You must check this box to receive notifications.)'}
                       </span>
                     </FormDescription>
                   </div>

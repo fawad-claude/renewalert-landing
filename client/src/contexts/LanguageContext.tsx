@@ -79,10 +79,17 @@ export const translations: TranslationDictionary = {
     "feature_simple_desc": "ما عليك سوى تحميل مستنداتك ونحن نتولى الباقي",
     "feature_secure_title": "تخزين آمن",
     "feature_secure_desc": "يتم تشفير بياناتك وتخزينها بشكل آمن",
+    "feature_family_title": "إدارة وثائق العائلة",
+    "feature_family_desc": "تتبع وثائق الجميع في مكان واحد - من جوازات سفر الأطفال إلى بطاقات هوية الوالدين",
     
     // Social Sharing
     "share_heading": "ساعد أصدقائك وعائلتك على البقاء على اطلاع أيضاً!",
     "share_subheading": "شارك رينيو ألرت مع شبكتك",
+    
+    // Countries Section
+    "countries_title": "سيتم الإطلاق قريباً في",
+    "countries_subtitle": "سيكون رينيو ألرت متاحاً في هذه البلدان لمساعدتك على تتبع مستنداتك المهمة",
+    "countries_footer": "سيتم إضافة المزيد من البلدان قريباً! ترقبوا التحديثات.",
     "share_title": "رينيو ألرت - لا تفوت تجديدات الوثائق المهمة مرة أخرى!",
     "share_message": "لقد اشتركت للتو في رينيو ألرت للحصول على تذكيرات في الوقت المناسب لجواز سفري وتأشيرتي وتجديدات الهوية. لا مزيد من الذعر في اللحظة الأخيرة! انضم إلي هنا:"
   },
@@ -115,6 +122,8 @@ export const translations: TranslationDictionary = {
     "feature_simple_desc": "बस अपने दस्तावेज अपलोड करें और हम बाकी संभाल लेंगे",
     "feature_secure_title": "सुरक्षित स्टोरेज",
     "feature_secure_desc": "आपका डेटा एन्क्रिप्टेड और सुरक्षित रूप से संग्रहीत है",
+    "feature_family_title": "परिवार दस्तावेज़ प्रबंधन",
+    "feature_family_desc": "सभी के दस्तावेज़ एक ही स्थान पर रखें - बच्चों के पासपोर्ट से लेकर बुजुर्ग माता-पिता के पहचान पत्र तक",
     
     // Social Sharing
     "share_heading": "दोस्तों और परिवार को भी अपडेट रहने में मदद करें!",
