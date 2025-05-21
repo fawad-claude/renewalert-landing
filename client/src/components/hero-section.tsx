@@ -68,7 +68,7 @@ export function HeroSection() {
         {/* Features section for mobile only */}
         <div className="mt-12 lg:hidden">
           <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">
-            Key Benefits
+            {t("key_benefits")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white shadow-sm rounded-lg p-4 text-center">

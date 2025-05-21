@@ -600,15 +600,29 @@ export function SignupForm() {
                       required
                     />
                   </FormControl>
-                  <div className="grid gap-1.5 leading-none">
+                  <div className={`grid gap-1.5 leading-none ${dir === 'rtl' ? 'text-right mr-2' : ''}`}>
                     <FormLabel>
-                      I agree to the{" "}
-                      <Link href="/privacy-policy">
-                        <span className="text-primary hover:underline cursor-pointer">
-                          Privacy Policy
-                        </span>
-                      </Link>{" "}
-                      <span className="text-destructive">*</span>
+                      {dir === 'rtl' ? (
+                        <>
+                          أوافق على{" "}
+                          <Link href="/privacy-policy">
+                            <span className="text-primary hover:underline cursor-pointer">
+                              سياسة الخصوصية
+                            </span>
+                          </Link>{" "}
+                          <span className="text-destructive">*</span>
+                        </>
+                      ) : (
+                        <>
+                          I agree to the{" "}
+                          <Link href="/privacy-policy">
+                            <span className="text-primary hover:underline cursor-pointer">
+                              Privacy Policy
+                            </span>
+                          </Link>{" "}
+                          <span className="text-destructive">*</span>
+                        </>
+                      )}
                     </FormLabel>
                   </div>
                   <FormMessage />
@@ -632,7 +646,7 @@ export function SignupForm() {
             </Button>
 
             <p className="text-xs text-gray-500 text-center mt-4">
-              We'll only send you product updates. No spam, we promise!
+              {t("promise_message")}
             </p>
           </form>
         </Form>
