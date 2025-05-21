@@ -18,6 +18,13 @@ export const translations: TranslationDictionary = {
     "hero_subtitle": "Get timely reminders for everyone's passports, licenses, residency permits (Iqama), and visas before they expire",
     "hero_cta": "Get Early Access",
     "expat_paragraph": "Whether you're an Expat, Resident, or Citizen managing documents for yourself or your entire family, we get it — keeping track of renewals is a headache. Passports, licenses, residency permits (Iqama), visas for multiple family members — it's overwhelming and easy to miss important dates.\n\nOur upcoming mobile app is designed to send you timely reminders for all your family's important renewals, helping everyone stay ahead and stress-free. Track documents for your spouse, children, and elderly parents all in one place.\n\nBe the first to experience the convenience of staying organized with ease.",
+    "key_benefits": "Key Benefits",
+    "coming_soon": "Coming Soon",
+    "provide_either": "Please provide either a phone number or an email address",
+    "countries_title": "Supported Countries",
+    "countries_subtitle": "We cover GCC countries and many others",
+    "countries_footer": "We plan to add more countries soon! Stay tuned.",
+    "promise_message": "We only send product updates. No spam, we promise.",
     
     // Form Labels
     "form_title": "Sign up for early access",
