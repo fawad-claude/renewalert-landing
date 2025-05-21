@@ -607,7 +607,8 @@ export function SignupForm() {
                         <span className="text-primary hover:underline cursor-pointer">
                           Privacy Policy
                         </span>
-                      </Link>
+                      </Link>{" "}
+                      <span className="text-destructive">*</span>
                     </FormLabel>
                   </div>
                   <FormMessage />
