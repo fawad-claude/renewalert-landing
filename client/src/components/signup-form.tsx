@@ -347,13 +347,12 @@ export function SignupForm() {
           </h3>
           <p className="text-lg text-gray-700 mb-2">{t("success")}</p>
           <p className="text-gray-600">
-            We'll notify you when we launch RenewAlert.
+            {t("success_message")}
           </p>
 
           <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
             <p className="text-green-800 font-medium">
-              Your contact details have been recorded. You're now on our early
-              access list.
+              {t("contact_recorded")}
             </p>
           </div>
 
