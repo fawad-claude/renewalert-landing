@@ -34,7 +34,7 @@ export function HeroSection() {
 
             <div className="space-y-6 hidden lg:block">
               <h3 className="text-lg font-medium text-gray-700 mb-2">
-                Key Benefits
+                {t("key_benefits")}
               </h3>
               <FeatureItem
                 icon={<Smartphone className="text-primary" />}
