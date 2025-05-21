@@ -11,22 +11,22 @@ import { useLanguage } from "@/contexts/LanguageContext";
 // Country code data
 const countryCodes = [
   // GCC countries (primary focus)
-  { code: "+965", flag: "🇰🇼", name: "Kuwait" },
-  { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
-  { code: "+971", flag: "🇦🇪", name: "United Arab Emirates" },
-  { code: "+974", flag: "🇶🇦", name: "Qatar" },
-  { code: "+968", flag: "🇴🇲", name: "Oman" },
-  { code: "+973", flag: "🇧🇭", name: "Bahrain" },
+  { code: "+965", flag: "🇰🇼", name: "Kuwait", nameAr: "الكويت" },
+  { code: "+966", flag: "🇸🇦", name: "Saudi Arabia", nameAr: "المملكة العربية السعودية" },
+  { code: "+971", flag: "🇦🇪", name: "United Arab Emirates", nameAr: "الإمارات العربية المتحدة" },
+  { code: "+974", flag: "🇶🇦", name: "Qatar", nameAr: "قطر" },
+  { code: "+968", flag: "🇴🇲", name: "Oman", nameAr: "عمان" },
+  { code: "+973", flag: "🇧🇭", name: "Bahrain", nameAr: "البحرين" },
   
   // US and UK
-  { code: "+1", flag: "🇺🇸", name: "United States" },
-  { code: "+44", flag: "🇬🇧", name: "United Kingdom" },
+  { code: "+1", flag: "🇺🇸", name: "United States", nameAr: "الولايات المتحدة الأمريكية" },
+  { code: "+44", flag: "🇬🇧", name: "United Kingdom", nameAr: "المملكة المتحدة" },
   
   // South Asian countries
-  { code: "+91", flag: "🇮🇳", name: "India" },
-  { code: "+92", flag: "🇵🇰", name: "Pakistan" },
-  { code: "+880", flag: "🇧🇩", name: "Bangladesh" },
-  { code: "+94", flag: "🇱🇰", name: "Sri Lanka" }
+  { code: "+91", flag: "🇮🇳", name: "India", nameAr: "الهند" },
+  { code: "+92", flag: "🇵🇰", name: "Pakistan", nameAr: "باكستان" },
+  { code: "+880", flag: "🇧🇩", name: "Bangladesh", nameAr: "بنغلاديش" },
+  { code: "+94", flag: "🇱🇰", name: "Sri Lanka", nameAr: "سريلانكا" }
 ];
 
 interface PhoneInputProps {
@@ -92,11 +92,11 @@ export function PhoneInput({ control, className, isLoading = false }: PhoneInput
                   <SelectContent>
                     {countryCodes.map((country) => (
                       <SelectItem key={country.code} value={country.code}>
-                        <span className="flex items-center">
-                          <span className="mr-2">{country.flag}</span>
+                        <span className={`flex items-center ${dir === 'rtl' ? 'flex-row-reverse justify-end' : ''}`}>
+                          <span className={dir === 'rtl' ? 'ml-2' : 'mr-2'}>{country.flag}</span>
                           <span>{country.code}</span>
-                          <span className="ml-2 text-muted-foreground text-xs">
-                            {country.name}
+                          <span className={`${dir === 'rtl' ? 'mr-2' : 'ml-2'} text-muted-foreground text-xs`}>
+                            {dir === 'rtl' ? country.nameAr : country.name}
                           </span>
                         </span>
                       </SelectItem>
