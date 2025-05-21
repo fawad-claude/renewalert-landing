@@ -450,10 +450,9 @@ export function SignupForm() {
   return (
     <Card className="bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-100 transform transition-all hover:shadow-2xl">
       <CardContent className="px-0 py-0" dir={dir}>
-        <h3 className={`text-xl font-semibold text-gray-800 mb-2 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
+        <h3 className={`text-xl font-semibold text-gray-800 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
           {t("form_title")}
         </h3>
-        <p className={`text-gray-600 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>{t("hero_cta")}</p>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`} dir={dir}>
