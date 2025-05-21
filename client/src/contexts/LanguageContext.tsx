@@ -30,7 +30,7 @@ export const translations: TranslationDictionary = {
     "email_me": "Email me",
     "text_me": "Text me",
     "opt_in": "I agree to receive notifications about my document renewals",
-    "privacy_policy": "I agree to the Privacy Policy",
+    "privacy_policy": "I agree to the Privacy Policy *",
     "submit": "Sign Up",
     "success": "Thank you! We'll be in touch soon.",
     
@@ -68,7 +68,7 @@ export const translations: TranslationDictionary = {
     "email_me": "أرسل لي بريدًا إلكترونيًا",
     "text_me": "أرسل لي رسالة نصية",
     "opt_in": "أوافق على تلقي إشعارات حول تجديدات وثائقي",
-    "privacy_policy": "أوافق على سياسة الخصوصية",
+    "privacy_policy": "أوافق على سياسة الخصوصية *",
     "submit": "اشترك",
     "success": "شكرًا لك! سنتواصل معك قريبًا.",
     
