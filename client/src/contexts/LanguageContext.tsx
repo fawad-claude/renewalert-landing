@@ -44,7 +44,7 @@ export const translations: TranslationDictionary = {
     "success": "Thank you! We'll be in touch soon.",
     "success_message": "We'll notify you when RenewAlert launches",
     "contact_recorded": "Your contact details have been recorded. You are now on the early access list",
-    "mobile_instruction": "Please enter a valid mobile number with the country code",
+    "mobile_instruction": "Please enter a valid mobile number without the country code",
     
     // Features
     "feature_timely_title": "Timely Reminders",
