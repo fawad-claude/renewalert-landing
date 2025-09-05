@@ -56,6 +56,12 @@ export const translations: TranslationDictionary = {
     "feature_family_title": "Family Document Management",
     "feature_family_desc": "Track everyone's documents in one place - from children's passports to elderly parents' IDs",
     
+    // Download Buttons
+    "download_on": "Download on the",
+    "get_it_on": "Get it on",
+    "available_now": "Available Now",
+    "app_available_countries": "App Available in GCC, India, Pakistan, Bangladesh",
+    
     // Social Sharing
     "share_heading": "Help friends and family stay updated too!",
     "share_subheading": "Share RenewAlert with your network",
@@ -107,6 +113,12 @@ export const translations: TranslationDictionary = {
     "feature_family_title": "إدارة وثائق العائلة",
     "feature_family_desc": "تتبع وثائق الجميع في مكان واحد - من جوازات سفر الأطفال إلى بطاقات هوية الوالدين",
     
+    // Download Buttons
+    "download_on": "تنزيل على",
+    "get_it_on": "احصل عليه على",
+    "available_now": "متاح الآن",
+    "app_available_countries": "التطبيق متاح في دول مجلس التعاون الخليجي والهند وباكستان وبنغلاديش",
+    
     // Social Sharing
     "share_heading": "ساعد أصدقائك وعائلتك على البقاء على اطلاع أيضاً!",
     "share_subheading": "شارك رينيو ألرت مع شبكتك",
@@ -152,6 +164,12 @@ export const translations: TranslationDictionary = {
     "feature_secure_desc": "आपका डेटा एन्क्रिप्टेड और सुरक्षित रूप से संग्रहीत है",
     "feature_family_title": "परिवार दस्तावेज़ प्रबंधन",
     "feature_family_desc": "सभी के दस्तावेज़ एक ही स्थान पर रखें - बच्चों के पासपोर्ट से लेकर बुजुर्ग माता-पिता के पहचान पत्र तक",
+    
+    // Download Buttons
+    "download_on": "डाउनलोड करें",
+    "get_it_on": "प्राप्त करें",
+    "available_now": "अब उपलब्ध",
+    "app_available_countries": "ऐप GCC, भारत, पाकिस्तान, बांग्लादेश में उपलब्ध",
     
     // Social Sharing
     "share_heading": "दोस्तों और परिवार को भी अपडेट रहने में मदद करें!",

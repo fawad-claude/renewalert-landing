@@ -29,9 +29,9 @@ export function CountriesSection() {
     <div className="py-16 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">{t("countries_title")}</h2>
+          <h2 className="text-3xl font-bold text-gray-900">{t("app_available_countries")}</h2>
           <p className="text-xl text-gray-600 mt-3 max-w-2xl mx-auto">
-            {t("countries_subtitle")}
+            Download RenewAlert now and start managing your documents effortlessly
           </p>
         </div>
         
@@ -51,7 +51,7 @@ export function CountriesSection() {
         </div>
         
         <div className="text-center mt-10 text-gray-500 text-sm">
-          <p>{t("countries_footer")}</p>
+          <p>Available in these regions with more countries being added regularly</p>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from "react";
-import { SignupForm } from "./signup-form";
 import { FeatureItem } from "./feature-item";
+import { IPhoneMockup } from "./iphone-mockup";
+import { DownloadButtons } from "./download-buttons";
 import { Bell, ShieldCheck, Smartphone, Users } from "lucide-react";
 import logoPath from "@assets/Renewal Alert Logo - no BG.png";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,7 +17,7 @@ export function HeroSection() {
           <div className="flex-1 max-w-2xl">
             <div className="text-center lg:text-left mb-8">
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                Coming Soon
+                {t("available_now")}
               </span>
               <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
                 {t("hero_title")}
@@ -59,9 +60,24 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right form section */}
+          {/* Right app showcase section */}
           <div className="lg:w-96 w-full max-w-md">
-            <SignupForm />
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  {t("app_available_countries")}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Download the app and never miss a renewal again
+                </p>
+              </div>
+              
+              <div className="flex justify-center mb-6">
+                <IPhoneMockup className="transform hover:scale-105 transition-transform duration-300" />
+              </div>
+              
+              <DownloadButtons className="justify-center" />
+            </div>
           </div>
         </div>
 
