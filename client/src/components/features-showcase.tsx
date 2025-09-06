@@ -1,6 +1,6 @@
 import React from "react";
 import { IPhoneMockup } from "./iphone-mockup";
-import { Camera, Edit3, Smartphone, DollarSign } from "lucide-react";
+import { Camera, Edit3, Smartphone, DollarSign, Zap, Cloud, Users, Bell } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FeatureShowcaseProps {
@@ -9,9 +9,10 @@ interface FeatureShowcaseProps {
   description: string;
   screenImage?: string;
   reverse?: boolean;
+  comingSoon?: boolean;
 }
 
-function FeatureShowcase({ icon, title, description, screenImage, reverse = false }: FeatureShowcaseProps) {
+function FeatureShowcase({ icon, title, description, screenImage, reverse = false, comingSoon = false }: FeatureShowcaseProps) {
   const { dir } = useLanguage();
   
   return (
@@ -19,10 +20,17 @@ function FeatureShowcase({ icon, title, description, screenImage, reverse = fals
       {/* Feature Description */}
       <div className="flex-1 text-center lg:text-left">
         <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary">
+          <div className={`flex items-center justify-center w-12 h-12 rounded-xl ${comingSoon ? 'bg-blue-100 text-blue-600' : 'bg-primary/10 text-primary'}`}>
             {icon}
           </div>
-          <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+            {comingSoon && (
+              <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                Coming Soon
+              </span>
+            )}
+          </div>
         </div>
         <p className="text-lg text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0">
           {description}
@@ -45,29 +53,63 @@ export function FeaturesShowcase() {
   const { t } = useLanguage();
   
   const features = [
+    // V1 Features (Available Now)
     {
       icon: <Camera size={24} />,
-      title: t("feature_ocr_title"),
-      description: t("feature_ocr_desc"),
-      screenImage: undefined, // You can add actual app screenshots here
+      title: "Smart OCR Scanning",
+      description: "Camera capture with 70-80% accuracy, much faster than manual entry",
+      screenImage: undefined,
+      comingSoon: false,
     },
     {
       icon: <Edit3 size={24} />,
-      title: t("feature_manual_title"),
-      description: t("feature_manual_desc"),
+      title: "Manual Entry & Review",
+      description: "Complete control to edit and verify all document information",
       screenImage: undefined,
+      comingSoon: false,
     },
     {
       icon: <Smartphone size={24} />,
-      title: t("feature_local_title"),
-      description: t("feature_local_desc"),
+      title: "Local Storage",
+      description: "Your documents stay on your device, complete privacy",
       screenImage: undefined,
+      comingSoon: false,
     },
     {
-      icon: <DollarSign size={24} />,
-      title: t("feature_free_title"),
-      description: t("feature_free_desc"),
+      icon: <Bell size={24} />,
+      title: "Renewal Reminders",
+      description: "Get notifications before your documents expire",
       screenImage: undefined,
+      comingSoon: false,
+    },
+    // V2 Features (Coming Soon)
+    {
+      icon: <Zap size={24} />,
+      title: "Enhanced OCR",
+      description: "99%+ accuracy with advanced AI processing",
+      screenImage: undefined,
+      comingSoon: true,
+    },
+    {
+      icon: <Cloud size={24} />,
+      title: "Cloud Sync",
+      description: "Access your documents across all devices with iCloud",
+      screenImage: undefined,
+      comingSoon: true,
+    },
+    {
+      icon: <Users size={24} />,
+      title: "Family Sharing",
+      description: "Share and manage documents for your entire family",
+      screenImage: undefined,
+      comingSoon: true,
+    },
+    {
+      icon: <Bell size={24} />,
+      title: "Advanced Notifications",
+      description: "Custom reminder schedules and multiple alerts",
+      screenImage: undefined,
+      comingSoon: true,
     },
   ];
 
@@ -92,6 +134,7 @@ export function FeaturesShowcase() {
               description={feature.description}
               screenImage={feature.screenImage}
               reverse={index % 2 === 1}
+              comingSoon={feature.comingSoon}
             />
           ))}
         </div>
