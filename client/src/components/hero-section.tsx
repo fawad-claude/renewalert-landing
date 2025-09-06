@@ -17,23 +17,27 @@ export function HeroSection() {
           <div className="flex-1 max-w-2xl">
             <div className="text-center lg:text-left mb-8">
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                {t("available_now")}
+                Coming Soon
               </span>
               <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
-                {t("hero_title")}
+                Never Miss an ID Renewal for You or Your Family
               </h1>
               <h2 className={`text-base md:text-lg text-gray-600 mb-2 ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
-                {t("hero_subtitle")}
+                Get timely reminders for everyone's passports, licenses, residency permits (Iqama), and visas before they expire
               </h2>
             </div>
 
             <div className={`prose prose-sm max-w-none text-gray-600 mb-8 ${dir === 'rtl' ? 'text-right' : 'text-center lg:text-left'}`}>
-              <div className={`text-sm md:text-base whitespace-pre-line ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
-                Whether you're an Expat, Resident, or Citizen managing documents for yourself or your entire family, we get it — keeping track of renewals is a headache. Passports, licenses, residency permits (Iqama), visas for multiple family members — it's overwhelming and easy to miss important dates.
-
-Our upcoming mobile app is designed to send you timely reminders for all your family's important renewals, helping everyone stay ahead and stress-free. Track documents for your spouse, children, and elderly parents all in one place.
-
-Be the first to experience the convenience of staying organized with ease.
+              <div className={`text-sm md:text-base ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
+                <p className="mb-4">
+                  Whether you're an Expat, Resident, or Citizen managing documents for yourself or your entire family, we get it — keeping track of renewals is a headache. Passports, licenses, residency permits (Iqama), visas for multiple family members — it's overwhelming and easy to miss important dates.
+                </p>
+                <p className="mb-4">
+                  Our upcoming mobile app is designed to send you timely reminders for all your family's important renewals, helping everyone stay ahead and stress-free. Track documents for your spouse, children, and elderly parents all in one place.
+                </p>
+                <p>
+                  Be the first to experience the convenience of staying organized with ease.
+                </p>
               </div>
             </div>
 
