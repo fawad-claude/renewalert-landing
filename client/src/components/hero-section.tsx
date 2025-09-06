@@ -90,12 +90,22 @@ function TabbedBenefits() {
       {/* Tab Content */}
       <div className="space-y-4">
         {(activeTab === 'v1' ? v1Benefits : v2Benefits).map((benefit, index) => (
-          <FeatureItem
-            key={benefit.title}
-            icon={benefit.icon}
-            title={benefit.title}
-            description={benefit.description}
-          />
+          <div key={benefit.title} className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-primary/10">
+              {benefit.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h4 className="text-sm font-medium text-gray-900">{benefit.title}</h4>
+                {activeTab === 'v2' && (
+                  <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                    Coming Soon
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-600">{benefit.description}</p>
+            </div>
+          </div>
         ))}
       </div>
     </div>
@@ -192,7 +202,14 @@ function MobileTabbedBenefits() {
             }`}>
               {React.cloneElement(benefit.icon as React.ReactElement, { size: 20 })}
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2">{benefit.title}</h3>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h3 className="font-semibold text-gray-800">{benefit.title}</h3>
+              {activeTab === 'v2' && (
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                  Coming Soon
+                </span>
+              )}
+            </div>
             <p className="text-gray-600 text-sm">
               {benefit.description}
             </p>
