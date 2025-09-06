@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar } from "@/components/navbar";
 import { HeroSection } from "@/components/hero-section";
 import { FeaturesShowcase } from "@/components/features-showcase";
+import { PricingSection } from "@/components/pricing-section";
 import { CountriesSection } from "@/components/countries-section";
 import { Footer } from "@/components/footer";
 
@@ -12,6 +13,7 @@ export default function Home() {
       <main className="flex-grow">
         <HeroSection />
         <FeaturesShowcase />
+        <PricingSection />
         <CountriesSection />
       </main>
       <Footer />

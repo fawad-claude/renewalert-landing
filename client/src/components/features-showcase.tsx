@@ -1,6 +1,6 @@
 import React from "react";
 import { IPhoneMockup } from "./iphone-mockup";
-import { Bell, ShieldCheck, Smartphone, Users } from "lucide-react";
+import { Camera, Edit3, Smartphone, DollarSign } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FeatureShowcaseProps {
@@ -46,27 +46,27 @@ export function FeaturesShowcase() {
   
   const features = [
     {
-      icon: <Smartphone size={24} />,
-      title: t("feature_simple_title"),
-      description: t("feature_simple_desc"),
+      icon: <Camera size={24} />,
+      title: t("feature_ocr_title"),
+      description: t("feature_ocr_desc"),
       screenImage: undefined, // You can add actual app screenshots here
     },
     {
-      icon: <Bell size={24} />,
-      title: t("feature_timely_title"),
-      description: t("feature_timely_desc"),
+      icon: <Edit3 size={24} />,
+      title: t("feature_manual_title"),
+      description: t("feature_manual_desc"),
       screenImage: undefined,
     },
     {
-      icon: <ShieldCheck size={24} />,
-      title: t("feature_secure_title"),
-      description: t("feature_secure_desc"),
+      icon: <Smartphone size={24} />,
+      title: t("feature_local_title"),
+      description: t("feature_local_desc"),
       screenImage: undefined,
     },
     {
-      icon: <Users size={24} />,
-      title: t("feature_family_title"),
-      description: t("feature_family_desc"),
+      icon: <DollarSign size={24} />,
+      title: t("feature_free_title"),
+      description: t("feature_free_desc"),
       screenImage: undefined,
     },
   ];
@@ -79,7 +79,7 @@ export function FeaturesShowcase() {
             {t("key_benefits")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            See how RenewAlert makes document management simple and stress-free
+            Free iOS app for GCC Citizens & Expats - Smart scanning meets complete manual control
           </p>
         </div>
         

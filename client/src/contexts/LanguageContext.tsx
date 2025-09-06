@@ -14,10 +14,10 @@ export type TranslationDictionary = {
 export const translations: TranslationDictionary = {
   en: {
     // Hero Section
-    "hero_title": "Never Miss an ID Renewal for You or Your Family",
-    "hero_subtitle": "Get timely reminders for everyone's passports, licenses, residency permits (Iqama), and visas before they expire",
-    "hero_cta": "Get Early Access",
-    "expat_paragraph": "Whether you're an Expat, Resident, or Citizen managing documents for yourself or your entire family, we get it — keeping track of renewals is a headache. Passports, licenses, residency permits (Iqama), visas for multiple family members — it's overwhelming and easy to miss important dates.\n\nOur upcoming mobile app is designed to send you timely reminders for all your family's important renewals, helping everyone stay ahead and stress-free. Track documents for your spouse, children, and elderly parents all in one place.\n\nBe the first to experience the convenience of staying organized with ease.",
+    "hero_title": "Never Miss a Renewal Again",
+    "hero_subtitle": "Smart OCR scanning + manual entry for Civil IDs, Passports, Driver's Licenses & Insurance Cards",
+    "hero_cta": "Download Free App",
+    "expat_paragraph": "Perfect for GCC Citizens, Expats, and Residents managing government-issued documents. Our free iOS app uses smart camera scanning to quickly capture your document details, then lets you review and correct everything before setting up renewal reminders.\n\n✓ Smart OCR capture (70-80% accuracy)\n✓ Easy manual review and editing\n✓ Local storage - your data stays on your device\n✓ Track up to 3 documents free\n✓ Additional document packs available for $0.99\n\nNo subscriptions, no premium tiers - just a simple, free tool to keep you organized.",
     "key_benefits": "Key Benefits",
     "coming_soon": "Coming Soon",
     "provide_either": "Please provide either a phone number or an email address",
@@ -47,14 +47,14 @@ export const translations: TranslationDictionary = {
     "mobile_instruction": "Please enter a valid mobile number without the country code",
     
     // Features
-    "feature_timely_title": "Timely Reminders",
-    "feature_timely_desc": "Get notifications well before your documents expire",
-    "feature_simple_title": "Simple Process",
-    "feature_simple_desc": "Just upload your documents and we handle the rest",
-    "feature_secure_title": "Secure and Flexible Storage",
-    "feature_secure_desc": "Your Data, Your Choice — on your phone or in the cloud. Encrypted and protected",
-    "feature_family_title": "Family Document Management",
-    "feature_family_desc": "Track everyone's documents in one place - from children's passports to elderly parents' IDs",
+    "feature_ocr_title": "Smart OCR Scanning",
+    "feature_ocr_desc": "Camera capture with 70-80% accuracy - much faster than manual entry, with easy correction",
+    "feature_manual_title": "Full Manual Control",
+    "feature_manual_desc": "Complete manual entry option and easy editing of all scanned information",
+    "feature_local_title": "Local Storage",
+    "feature_local_desc": "Your documents stay on your device - no cloud, no servers, complete privacy",
+    "feature_free_title": "Free Forever",
+    "feature_free_desc": "Track 3 documents free, additional packs for $0.99 - no subscriptions ever",
     
     // Download Buttons
     "download_on": "Download on the",

@@ -1,0 +1,169 @@
+# MVP V1 & V2 Plan
+
+⏺ Here's the updated prompt based on your simplified V1 launch plan:
+
+---
+
+***🚀 RenewAlert V1 MVP - Simplified Launch Strategy***
+
+**📱 V1 MVP FEATURES (LAUNCHING NOW)**
+
+**Core Document Management**
+
+- **Manual Entry**: Complete manual document information input
+
+- **Smart OCR Capture**: Camera/gallery document scanning with Apple Vision Framework
+
+- **OCR Accuracy**: 70-80% accuracy (clearly communicated to users)
+
+- **Document Types**: Civil IDs, Passports, Driver's Licenses, Insurance cards
+
+- **Data Extraction**: Auto-extract names, document numbers, expiry dates with manual review
+
+- **Manual Correction**: Easy editing of OCR results
+
+- **Local Storage**: Core Data with offline-first architecture
+
+**Renewal Notifications**
+
+- **Expiry Alerts**: Smart notifications before document expiration
+
+- **Basic Scheduling**: 30, 15, 7, and 1-day reminder options
+
+- **Native iOS Notifications**: Local push notifications
+
+**User Experience**
+
+- **SwiftUI Native App**: Modern iOS interface with accessibility support
+
+- **Onboarding Flow**: Tutorial for first-time users with OCR accuracy explanation
+
+- **Settings Management**: Basic app configuration and preferences
+
+**💰 V1 TIER STRUCTURE (SINGLE TIER LAUNCH)**
+
+**🆓 BASIC TIER (Free App)**
+
+- **3** **documents (User can use IAP to purchase documents Pack of 3 - 0.99 USD)**
+
+- **Manual entry** (100% user control)
+
+- **Apple Vision OCR** (70-80% accuracy - clearly stated)
+
+- **Standard notifications** (4 preset intervals)
+
+- **Local storage only**
+
+- **Community support**
+
+**📱 NO PREMIUM OR SUBSCRIPTION IN V1**
+
+- **No subscription model** for initial launch
+
+- **No premium features** to maintain simplicity
+
+- **Focus on user adoption** and feedback collection
+
+- **Monetization deferred** to V2
+
+---
+
+**🔮 V2 ROADMAP (COMING SOON)**
+
+**⭐ PREMIUM TIER INTRODUCTION**
+
+- **99%+ OCR Accuracy** with AWS Textract
+
+- **Dual OCR providers** (Apple Vision + AWS Textract)
+
+- **Advanced notifications** (custom intervals, multiple reminders)
+
+- **Subscription model**: $4.99/month or $39.99/year
+
+**🌐 Advanced Features (V2+)**
+
+- **iCloud sync** across devices
+
+- **Document sharing** with family members
+
+- **Multi-language support** (Arabic and English)
+
+**🔒 Enhanced Security (V1)**
+
+- **Biometric authentication** (Face ID, Touch ID)
+
+**🔒 Enhanced Security (V2+)**
+
+- **Document encryption** at rest
+
+- **Secure document sharing**
+
+---
+
+**🎯 V1 LAUNCH STRATEGY**
+
+**Clear Value Communication**
+
+- **Primary Value**: "Never miss a renewal deadline again"
+
+- **OCR Transparency**: "70-80% accuracy OCR with easy manual correction"
+
+- **Convenience Focus**: "5-second capture + quick review vs 5-minute full manual entry"
+
+- **Free Forever**: "All core features completely free"
+
+**User Expectations Management**
+
+- **OCR is a helper tool**, not a replacement for review
+
+- **Manual verification encouraged** for critical documents
+
+- **Accuracy improves with clear, well-lit photos**
+
+- **Fallback to manual entry** always available
+
+**Target Market**
+
+- **Primary**: GCC Citizens and Expats managing Govt Issued ID/ Passport/License renewals
+
+- **Secondary**: Anyone with multiple documents to track
+
+- **Focus**: User adoption over immediate monetization
+
+---
+
+**🛠 TECHNICAL IMPLEMENTATION STATUS**
+
+**✅ V1 READY FEATURES**
+
+- Core OCR processing with Apple Vision (70-80% accuracy)
+
+- Manual entry and editing systems
+
+- Document capture and storage (Core Data)
+
+- Local notifications system
+
+- SwiftUI interface with accessibility
+
+- Onboarding with clear OCR accuracy messaging
+
+-StoreKit 2 IAP implementation
+
+**🔴 REMOVED FROM V1 (Moving to V2)**
+
+- AWS Textract integration
+
+- Premium tier management
+
+- Subscription management
+
+**🟡 V1 POLISH TASKS**
+
+- Clear OCR accuracy messaging in UI
+
+- Robust manual correction flows
+
+- Enhanced error handling for OCR failures
+
+- Performance optimizations

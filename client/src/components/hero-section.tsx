@@ -65,10 +65,10 @@ export function HeroSection() {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
               <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {t("app_available_countries")}
+                  Free iOS App
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  Download the app and never miss a renewal again
+                  3 documents free • Extra packs $0.99 • No subscriptions
                 </p>
               </div>
               
