@@ -2,9 +2,206 @@ import React from "react";
 import { FeatureItem } from "./feature-item";
 import { IPhoneMockup } from "./iphone-mockup";
 import { DownloadButtons } from "./download-buttons";
-import { Bell, ShieldCheck, Smartphone, Users, Camera, Edit3 } from "lucide-react";
+import { Bell, ShieldCheck, Smartphone, Users, Camera, Edit3, Zap, Cloud } from "lucide-react";
 import logoPath from "@assets/Renewal Alert Logo - no BG.png";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useState } from "react";
+
+function TabbedBenefits() {
+  const [activeTab, setActiveTab] = useState<'v1' | 'v2'>('v1');
+
+  const v1Benefits = [
+    {
+      icon: <Camera className="text-primary" />,
+      title: "Smart OCR Scanning",
+      description: "Camera capture with 70-80% accuracy, much faster than manual entry"
+    },
+    {
+      icon: <Edit3 className="text-primary" />,
+      title: "Manual Entry & Review", 
+      description: "Complete control to edit and verify all document information"
+    },
+    {
+      icon: <Smartphone className="text-primary" />,
+      title: "Local Storage",
+      description: "Your documents stay on your device, complete privacy"
+    },
+    {
+      icon: <Bell className="text-primary" />,
+      title: "Renewal Reminders",
+      description: "Get notifications before your documents expire"
+    }
+  ];
+
+  const v2Benefits = [
+    {
+      icon: <Zap className="text-blue-600" />,
+      title: "Enhanced OCR",
+      description: "99%+ accuracy with advanced AI processing"
+    },
+    {
+      icon: <Cloud className="text-blue-600" />,
+      title: "Cloud Sync", 
+      description: "Access your documents across all devices with iCloud"
+    },
+    {
+      icon: <Users className="text-blue-600" />,
+      title: "Family Sharing",
+      description: "Share and manage documents for your entire family"
+    },
+    {
+      icon: <Bell className="text-blue-600" />,
+      title: "Advanced Notifications",
+      description: "Custom reminder schedules and multiple alerts"
+    }
+  ];
+
+  return (
+    <div>
+      <h3 className="text-lg font-medium text-gray-700 mb-4">
+        Key Benefits
+      </h3>
+      
+      {/* Tab Navigation */}
+      <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+        <button
+          onClick={() => setActiveTab('v1')}
+          className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+            activeTab === 'v1'
+              ? 'bg-white text-primary shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Available Now
+        </button>
+        <button
+          onClick={() => setActiveTab('v2')}
+          className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
+            activeTab === 'v2'
+              ? 'bg-white text-blue-600 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Premium Features
+          <span className="ml-1 text-xs">✨</span>
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="space-y-4">
+        {(activeTab === 'v1' ? v1Benefits : v2Benefits).map((benefit, index) => (
+          <FeatureItem
+            key={benefit.title}
+            icon={benefit.icon}
+            title={benefit.title}
+            description={benefit.description}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileTabbedBenefits() {
+  const { dir } = useLanguage();
+  const [activeTab, setActiveTab] = useState<'v1' | 'v2'>('v1');
+
+  const v1Benefits = [
+    {
+      icon: <Camera className="text-primary" />,
+      title: "Smart OCR Scanning",
+      description: "Camera capture with 70-80% accuracy, much faster than manual entry"
+    },
+    {
+      icon: <Edit3 className="text-primary" />,
+      title: "Manual Entry & Review", 
+      description: "Complete control to edit and verify all document information"
+    },
+    {
+      icon: <Smartphone className="text-primary" />,
+      title: "Local Storage",
+      description: "Your documents stay on your device, complete privacy"
+    },
+    {
+      icon: <Bell className="text-primary" />,
+      title: "Renewal Reminders",
+      description: "Get notifications before your documents expire"
+    }
+  ];
+
+  const v2Benefits = [
+    {
+      icon: <Zap className="text-blue-600" />,
+      title: "Enhanced OCR",
+      description: "99%+ accuracy with advanced AI processing"
+    },
+    {
+      icon: <Cloud className="text-blue-600" />,
+      title: "Cloud Sync", 
+      description: "Access your documents across all devices with iCloud"
+    },
+    {
+      icon: <Users className="text-blue-600" />,
+      title: "Family Sharing",
+      description: "Share and manage documents for your entire family"
+    },
+    {
+      icon: <Bell className="text-blue-600" />,
+      title: "Advanced Notifications",
+      description: "Custom reminder schedules and multiple alerts"
+    }
+  ];
+
+  return (
+    <div>
+      <h3 className={`text-xl font-semibold text-gray-800 mb-4 ${dir === 'rtl' ? 'text-right' : 'text-center'}`}>
+        Key Benefits
+      </h3>
+      
+      {/* Tab Navigation */}
+      <div className="flex mb-6 bg-gray-100 rounded-lg p-1 max-w-sm mx-auto">
+        <button
+          onClick={() => setActiveTab('v1')}
+          className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all ${
+            activeTab === 'v1'
+              ? 'bg-white text-primary shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Available Now
+        </button>
+        <button
+          onClick={() => setActiveTab('v2')}
+          className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all relative ${
+            activeTab === 'v2'
+              ? 'bg-white text-blue-600 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Premium Features
+          <span className="ml-1 text-xs">✨</span>
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {(activeTab === 'v1' ? v1Benefits : v2Benefits).map((benefit, index) => (
+          <div key={benefit.title} className="bg-white shadow-sm rounded-lg p-4 text-center">
+            <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-3 ${
+              activeTab === 'v1' ? 'bg-primary/10' : 'bg-blue-100'
+            }`}>
+              {React.cloneElement(benefit.icon as React.ReactElement, { size: 20 })}
+            </div>
+            <h3 className="font-semibold text-gray-800 mb-2">{benefit.title}</h3>
+            <p className="text-gray-600 text-sm">
+              {benefit.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function HeroSection() {
   const { t, dir } = useLanguage();
@@ -42,29 +239,7 @@ export function HeroSection() {
             </div>
 
             <div className="space-y-6 hidden lg:block">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">
-                Key Benefits
-              </h3>
-              <FeatureItem
-                icon={<Camera className="text-primary" />}
-                title="Smart OCR Scanning"
-                description="Camera capture with 70-80% accuracy, much faster than manual entry"
-              />
-              <FeatureItem
-                icon={<Edit3 className="text-primary" />}
-                title="Manual Entry & Review"
-                description="Complete control to edit and verify all document information"
-              />
-              <FeatureItem
-                icon={<Smartphone className="text-primary" />}
-                title="Local Storage"
-                description="Your documents stay on your device, complete privacy"
-              />
-              <FeatureItem
-                icon={<Bell className="text-primary" />}
-                title="Renewal Reminders"
-                description="Get notifications before your documents expire"
-              />
+              <TabbedBenefits />
             </div>
           </div>
 
@@ -91,56 +266,7 @@ export function HeroSection() {
 
         {/* Features section for mobile only */}
         <div className="mt-12 lg:hidden">
-          <h3 className={`text-xl font-semibold text-gray-800 mb-4 ${dir === 'rtl' ? 'text-right' : 'text-center'}`}>
-            Key Benefits
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-                <Camera size={20} />
-              </div>
-              <h3 className="font-semibold text-gray-800">Smart OCR Scanning</h3>
-              <p className="text-gray-600 text-sm">
-                Camera capture with 70-80% accuracy, much faster than manual entry
-              </p>
-            </div>
-
-            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-                <Edit3 size={20} />
-              </div>
-              <h3 className="font-semibold text-gray-800">
-                Manual Entry & Review
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Complete control to edit and verify all document information
-              </p>
-            </div>
-
-            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-                <Smartphone size={20} />
-              </div>
-              <h3 className="font-semibold text-gray-800">
-                Local Storage
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Your documents stay on your device, complete privacy
-              </p>
-            </div>
-            
-            <div className="bg-white shadow-sm rounded-lg p-4 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-                <Bell size={20} />
-              </div>
-              <h3 className="font-semibold text-gray-800">
-                Renewal Reminders
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Get notifications before your documents expire
-              </p>
-            </div>
-          </div>
+          <MobileTabbedBenefits />
         </div>
       </div>
     </div>
