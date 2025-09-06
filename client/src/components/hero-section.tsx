@@ -29,33 +29,37 @@ export function HeroSection() {
 
             <div className={`prose prose-sm max-w-none text-gray-600 mb-8 ${dir === 'rtl' ? 'text-right' : 'text-center lg:text-left'}`}>
               <div className={`text-sm md:text-base whitespace-pre-line ${dir === 'rtl' ? 'text-right w-full' : ''}`}>
-                {t("expat_paragraph")}
+                Whether you're an Expat, Resident, or Citizen managing documents for yourself or your entire family, we get it — keeping track of renewals is a headache. Passports, licenses, residency permits (Iqama), visas for multiple family members — it's overwhelming and easy to miss important dates.
+
+Our upcoming mobile app is designed to send you timely reminders for all your family's important renewals, helping everyone stay ahead and stress-free. Track documents for your spouse, children, and elderly parents all in one place.
+
+Be the first to experience the convenience of staying organized with ease.
               </div>
             </div>
 
             <div className="space-y-6 hidden lg:block">
               <h3 className="text-lg font-medium text-gray-700 mb-2">
-                {t("key_benefits")}
+                Key Benefits
               </h3>
               <FeatureItem
                 icon={<Smartphone className="text-primary" />}
-                title={t("feature_simple_title")}
-                description={t("feature_simple_desc")}
+                title="Simple Process"
+                description="Just upload your documents and we handle the rest"
               />
               <FeatureItem
                 icon={<Bell className="text-primary" />}
-                title={t("feature_timely_title")}
-                description={t("feature_timely_desc")}
+                title="Timely Reminders"
+                description="Get notifications well before your documents expire"
               />
               <FeatureItem
                 icon={<ShieldCheck className="text-primary" />}
-                title={t("feature_secure_title")}
-                description={t("feature_secure_desc")}
+                title="Secure and Flexible Storage"
+                description="Your Data, Your Choice — on your phone or in the cloud. Encrypted and protected"
               />
               <FeatureItem
                 icon={<Users className="text-primary" />}
-                title={t("feature_family_title")}
-                description={t("feature_family_desc")}
+                title="Family Document Management"
+                description="Track everyone's documents in one place - from children's passports to elderly parents' IDs"
               />
             </div>
           </div>
