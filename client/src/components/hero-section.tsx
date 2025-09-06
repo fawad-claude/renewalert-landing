@@ -82,8 +82,12 @@ function TabbedBenefits() {
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          Premium Features
-          <span className="ml-1 text-xs">✨</span>
+          <div className="flex items-center justify-center gap-2">
+            <span>Premium Features</span>
+            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+              Coming Soon
+            </span>
+          </div>
         </button>
       </div>
 
@@ -178,8 +182,12 @@ function MobileTabbedBenefits() {
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          Premium Features
-          <span className="ml-1 text-xs">✨</span>
+          <div className="flex items-center justify-center gap-1">
+            <span>Premium</span>
+            <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+              Coming Soon
+            </span>
+          </div>
         </button>
       </div>
 
