@@ -4,3 +4,16 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Replit files
+.config/
+.local/
+.replit
+replit.nix
+
+# Logs
+logs/
+*.log
+
+# Source screenshots (only GIFs are needed)
+client/src/assets/screenshots/

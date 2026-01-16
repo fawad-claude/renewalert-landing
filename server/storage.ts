@@ -1,5 +1,5 @@
 import { type InsertPhoneNumber, type PhoneNumber, type InsertUser, type User, users, phoneNumbers } from "@shared/schema";
-import { db } from "./db";
+import { db, hasDatabaseUrl } from "./db";
 import { eq, sql } from "drizzle-orm";
 
 // Interface remains the same
@@ -145,5 +145,78 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Use the database storage implementation
-export const storage = new DatabaseStorage();
+// In-memory storage for local development without database
+export class MemoryStorage implements IStorage {
+  private users: User[] = [];
+  private phoneNumberRecords: PhoneNumber[] = [];
+  private nextUserId = 1;
+  private nextPhoneId = 1;
+
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.find(u => u.id === id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return this.users.find(u => u.username === username);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const user: User = {
+      id: this.nextUserId++,
+      username: insertUser.username,
+      password: insertUser.password,
+    };
+    this.users.push(user);
+    return user;
+  }
+
+  async savePhoneNumber(phoneNumberData: InsertPhoneNumber & { createdAt: string, ipAddress: string }): Promise<PhoneNumber> {
+    const submissionCount = await this.getSubmissionsByIp(phoneNumberData.ipAddress) + 1;
+
+    const phoneNumber: PhoneNumber = {
+      id: this.nextPhoneId++,
+      fullName: phoneNumberData.fullName || null,
+      countryCode: phoneNumberData.countryCode || null,
+      phoneNumber: phoneNumberData.phoneNumber || null,
+      email: phoneNumberData.email || null,
+      notes: phoneNumberData.notes || null,
+      optIn: phoneNumberData.optIn || false,
+      privacyPolicy: phoneNumberData.privacyPolicy || false,
+      ipAddress: phoneNumberData.ipAddress,
+      submissionCount: submissionCount,
+      createdAt: phoneNumberData.createdAt,
+    };
+    this.phoneNumberRecords.push(phoneNumber);
+    return phoneNumber;
+  }
+
+  async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
+    return [...this.phoneNumberRecords];
+  }
+
+  async getSubmissionsByIp(ipAddress: string): Promise<number> {
+    const submissions = this.phoneNumberRecords.filter(p => p.ipAddress === ipAddress);
+    if (submissions.length === 0) return 0;
+    return Math.max(...submissions.map(s => s.submissionCount || 0));
+  }
+
+  async deletePhoneNumber(id: number): Promise<boolean> {
+    const index = this.phoneNumberRecords.findIndex(p => p.id === id);
+    if (index === -1) return false;
+    this.phoneNumberRecords.splice(index, 1);
+    return true;
+  }
+
+  async findPhoneNumberByEmail(email: string): Promise<PhoneNumber | undefined> {
+    if (!email) return undefined;
+    return this.phoneNumberRecords.find(p => p.email === email);
+  }
+
+  async findPhoneNumberByPhone(countryCode: string, phoneNumber: string): Promise<PhoneNumber | undefined> {
+    if (!phoneNumber) return undefined;
+    return this.phoneNumberRecords.find(p => p.phoneNumber === phoneNumber && p.countryCode === countryCode);
+  }
+}
+
+// Use database storage if available, otherwise use in-memory storage
+export const storage: IStorage = hasDatabaseUrl ? new DatabaseStorage() : new MemoryStorage();

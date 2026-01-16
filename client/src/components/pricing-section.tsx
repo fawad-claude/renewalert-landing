@@ -79,37 +79,37 @@ export function PricingSection() {
           </div>
 
           {/* V2 Premium */}
-          <div className="bg-gradient-to-b from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200 relative">
+          <div className="bg-gradient-to-b from-orange-50 to-amber-50 rounded-2xl p-6 border-2 border-orange-200 relative">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+              <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 COMING SOON
               </span>
             </div>
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold text-gray-900 mb-2">Premium (V2)</h3>
-              <div className="text-3xl font-bold text-blue-600 mb-1">$4.99</div>
+              <div className="text-3xl font-bold text-orange-600 mb-1">$4.99</div>
               <p className="text-gray-600">Per month</p>
             </div>
             
             <ul className="space-y-3 mb-6">
               <li className="flex items-center gap-3">
-                <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <Check className="w-4 h-4 text-orange-600 flex-shrink-0" />
                 <span className="text-gray-700 text-sm">All Basic features</span>
               </li>
               <li className="flex items-center gap-3">
-                <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <Check className="w-4 h-4 text-orange-600 flex-shrink-0" />
                 <span className="text-gray-700 text-sm">99%+ OCR accuracy</span>
               </li>
               <li className="flex items-center gap-3">
-                <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <Check className="w-4 h-4 text-orange-600 flex-shrink-0" />
                 <span className="text-gray-700 text-sm">iCloud sync</span>
               </li>
               <li className="flex items-center gap-3">
-                <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <Check className="w-4 h-4 text-orange-600 flex-shrink-0" />
                 <span className="text-gray-700 text-sm">Family sharing</span>
               </li>
               <li className="flex items-center gap-3">
-                <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <Check className="w-4 h-4 text-orange-600 flex-shrink-0" />
                 <span className="text-gray-700 text-sm">Advanced notifications</span>
               </li>
             </ul>
