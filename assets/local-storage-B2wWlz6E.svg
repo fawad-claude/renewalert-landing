@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
+  <defs>
+    <!-- Background gradient matching app branding -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7C3AED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9333EA;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Shield gradient -->
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0E7FF;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Document gradient -->
+    <linearGradient id="docGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#F3F4F6;stop-opacity:0.9" />
+    </linearGradient>
+
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Shadow -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="390" height="844" fill="url(#bgGradient)" rx="0" ry="0"/>
+
+  <!-- Decorative circles in background -->
+  <circle cx="50" cy="150" r="80" fill="white" opacity="0.05"/>
+  <circle cx="340" cy="700" r="100" fill="white" opacity="0.05"/>
+  <circle cx="300" cy="200" r="60" fill="white" opacity="0.03"/>
+
+  <!-- Phone outline (representing the device) -->
+  <g transform="translate(95, 280)">
+    <!-- Phone body -->
+    <rect x="0" y="0" width="200" height="340" rx="30" ry="30"
+          fill="white" opacity="0.15" stroke="white" stroke-width="3" stroke-opacity="0.4"/>
+
+    <!-- Phone notch -->
+    <rect x="60" y="8" width="80" height="25" rx="12" fill="white" opacity="0.2"/>
+
+    <!-- Phone home indicator -->
+    <rect x="70" y="310" width="60" height="5" rx="2.5" fill="white" opacity="0.3"/>
+  </g>
+
+  <!-- Main Shield with Lock - centered in phone area -->
+  <g transform="translate(195, 400)" filter="url(#glow)">
+    <!-- Shield shape -->
+    <path d="M0,-80 L60,-60 L60,20 C60,60 30,90 0,100 C-30,90 -60,60 -60,20 L-60,-60 Z"
+          fill="url(#shieldGradient)" filter="url(#shadow)"/>
+
+    <!-- Shield border -->
+    <path d="M0,-80 L60,-60 L60,20 C60,60 30,90 0,100 C-30,90 -60,60 -60,20 L-60,-60 Z"
+          fill="none" stroke="white" stroke-width="3" opacity="0.8"/>
+
+    <!-- Lock body -->
+    <rect x="-20" y="-10" width="40" height="35" rx="5" fill="#4F46E5"/>
+
+    <!-- Lock shackle -->
+    <path d="M-12,-10 L-12,-25 C-12,-40 12,-40 12,-25 L12,-10"
+          fill="none" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- Keyhole -->
+    <circle cx="0" cy="5" r="6" fill="white"/>
+    <rect x="-3" y="5" width="6" height="12" rx="2" fill="white"/>
+  </g>
+
+  <!-- Document icons around the shield -->
+  <!-- Top left document -->
+  <g transform="translate(85, 320)" filter="url(#shadow)">
+    <rect x="0" y="0" width="45" height="55" rx="5" fill="url(#docGradient)"/>
+    <rect x="8" y="12" width="29" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="20" width="22" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="28" width="26" height="3" rx="1.5" fill="#CBD5E1"/>
+    <path d="M30,0 L45,15 L45,0 Z" fill="#E2E8F0"/>
+  </g>
+
+  <!-- Top right document -->
+  <g transform="translate(260, 320)" filter="url(#shadow)">
+    <rect x="0" y="0" width="45" height="55" rx="5" fill="url(#docGradient)"/>
+    <rect x="8" y="12" width="29" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="20" width="22" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="28" width="26" height="3" rx="1.5" fill="#CBD5E1"/>
+    <path d="M30,0 L45,15 L45,0 Z" fill="#E2E8F0"/>
+  </g>
+
+  <!-- Bottom left document -->
+  <g transform="translate(85, 480)" filter="url(#shadow)">
+    <rect x="0" y="0" width="45" height="55" rx="5" fill="url(#docGradient)"/>
+    <rect x="8" y="12" width="29" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="20" width="22" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="28" width="26" height="3" rx="1.5" fill="#CBD5E1"/>
+    <path d="M30,0 L45,15 L45,0 Z" fill="#E2E8F0"/>
+  </g>
+
+  <!-- Bottom right document -->
+  <g transform="translate(260, 480)" filter="url(#shadow)">
+    <rect x="0" y="0" width="45" height="55" rx="5" fill="url(#docGradient)"/>
+    <rect x="8" y="12" width="29" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="20" width="22" height="3" rx="1.5" fill="#CBD5E1"/>
+    <rect x="8" y="28" width="26" height="3" rx="1.5" fill="#CBD5E1"/>
+    <path d="M30,0 L45,15 L45,0 Z" fill="#E2E8F0"/>
+  </g>
+
+  <!-- "ON DEVICE" text banner -->
+  <g transform="translate(195, 600)">
+    <!-- Banner background -->
+    <rect x="-70" y="-18" width="140" height="36" rx="18" fill="white" opacity="0.95" filter="url(#shadow)"/>
+
+    <!-- Text -->
+    <text x="0" y="6" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+          font-size="16" font-weight="700" fill="#4F46E5" text-anchor="middle" letter-spacing="2">
+      ON DEVICE
+    </text>
+  </g>
+
+  <!-- Checkmark badge on shield -->
+  <g transform="translate(235, 350)">
+    <circle cx="0" cy="0" r="16" fill="#10B981" filter="url(#shadow)"/>
+    <path d="M-6,0 L-2,5 L7,-5" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Top header text -->
+  <text x="195" y="180" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="24" font-weight="600" fill="white" text-anchor="middle" opacity="0.95">
+    Your Data Stays
+  </text>
+  <text x="195" y="215" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="28" font-weight="700" fill="white" text-anchor="middle">
+    Private &amp; Secure
+  </text>
+
+  <!-- Bottom descriptive text -->
+  <text x="195" y="680" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="14" fill="white" text-anchor="middle" opacity="0.8">
+    No cloud uploads
+  </text>
+  <text x="195" y="705" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="14" fill="white" text-anchor="middle" opacity="0.8">
+    No third-party access
+  </text>
+  <text x="195" y="730" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="14" fill="white" text-anchor="middle" opacity="0.8">
+    100% on your device
+  </text>
+
+  <!-- Small decorative lock icons in corners -->
+  <g transform="translate(50, 750)" opacity="0.2">
+    <rect x="-8" y="-5" width="16" height="14" rx="2" fill="white"/>
+    <path d="M-4,-5 L-4,-10 C-4,-15 4,-15 4,-10 L4,-5" fill="none" stroke="white" stroke-width="3"/>
+  </g>
+
+  <g transform="translate(340, 750)" opacity="0.2">
+    <rect x="-8" y="-5" width="16" height="14" rx="2" fill="white"/>
+    <path d="M-4,-5 L-4,-10 C-4,-15 4,-15 4,-10 L4,-5" fill="none" stroke="white" stroke-width="3"/>
+  </g>
+</svg>
