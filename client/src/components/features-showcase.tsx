@@ -8,6 +8,7 @@ import scanOcrGif from "@/assets/gifs/scan-ocr.gif";
 import uploadDocsGif from "@/assets/gifs/upload-docs.gif";
 import manualEntryImg from "@/assets/gifs/manual-entry.png";
 import remindersGif from "@/assets/gifs/reminders.gif";
+import localStorageImg from "@/assets/gifs/local-storage.svg";
 
 interface Feature {
   icon: React.ReactNode;
@@ -48,7 +49,7 @@ export function FeaturesShowcase() {
       icon: <Smartphone size={28} />,
       title: "Local Storage",
       description: "Your sensitive documents stay on your device. No cloud uploads, no third-party access. Complete privacy and security for your personal information.",
-      screenImage: undefined,
+      screenImage: localStorageImg,
       comingSoon: false,
     },
     {
